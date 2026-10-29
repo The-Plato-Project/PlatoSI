@@ -4,6 +4,7 @@
 /data/greek-morphology/
 /data/indexes/
 /data/plugin-config.json
+/data/reader-profiles.json
 /indexes/
 /models/
 *.gguf

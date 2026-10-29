@@ -12,8 +12,9 @@ can implement the same capability; their results remain separate.
 `CorpusProvider` offers `search` and `passage`, `DictionaryProvider` offers
 `lookup`, and `MorphologyProvider` offers `analyze`. The
 `LanguageModelProvider` and general `ScholarlyResourceProvider` protocols
-reserve interfaces for future independently installed resources. No model or
-general analytical provider is implemented. Provider code executes locally:
+define interfaces for future independently installed resources. `retrieve`
+passes a JSON object to selected scholarly providers implementing `retrieve`;
+no general analytical or model provider is currently implemented. Provider code executes locally:
 install only trusted plugins. The core does not make an interpretation or
 generate hypotheses.
 
@@ -49,8 +50,12 @@ unrelated operations continue. A corrupt index or plugin error is surfaced,
 not silently treated as a successful empty search.
 Retrieval responses list `available_providers`; if none supports the operation,
 an explicit `message` distinguishes that condition from a search with no
-matches. The `providers` status list explains which installed providers are
-disabled or unavailable.
+matches. `selected_resources` reports missing, disabled, unavailable,
+unsupported and text-first-suppressed choices. The `providers` list describes
+installed resources and their enabled and selected states. Its `available`
+value is null when availability was not checked, such as for an unselected
+provider; unselected provider code is not loaded by retrieval. Use `status`
+to check availability of all enabled providers.
 
 To change paths, add a `config` object for the provider in
 `data/plugin-config.json`; values override its manifest, and may be absolute
@@ -71,6 +76,41 @@ the provider manifest rather than attributing new data to the pinned revision.
 GLEM is disabled by default and isolated: its list and derived index are not
 packaged or copied into another provider. Its commercial use and
 redistribution are **not cleared**. See `glem-licensing-review.md`.
+
+## Reader profiles and inquiry selection
+
+Profiles are stored in the ignored `data/reader-profiles.json`, independently
+of provider manifests, enablement, indexes and language models. Each named
+profile is an object containing an ordered `resources` array of provider IDs
+and a boolean `text_first`. The order is global across provider types; within
+an operation it determines provider invocation and result order, not a
+ranking of truth. Multiple results and conflicting source assertions remain
+separate, with each provider's attribution intact.
+
+Use `profile save NAME --resource ID ...` to create or replace a profile;
+add `--text-first` to enable that mode. `profile show NAME` and
+`profile list` inspect saved settings. Saving replaces the whole profile,
+including its mode, and an empty resource list intentionally selects nothing.
+IDs need not currently be installed. A missing, disabled, unsupported or
+unavailable selection is reported, not deleted from the profile or silently
+enabled. If it later becomes available, it can be selected again.
+
+For `search`, `passage`, `lookup`, `analyze` and `retrieve`, `--profile NAME`
+chooses the saved preference list. Without a profile, all installed providers
+are considered in registry order, preserving the previous default. Repeated
+`--include ID` options instead select exactly those IDs in the supplied order
+for this inquiry, including IDs absent from the profile. Repeated `--exclude
+ID` options remove IDs from that inquiry; an ID cannot be both included and
+excluded. Overrides never mutate the profile or bypass global enablement.
+The response echoes the overrides and includes selection diagnostics.
+
+Text-first mode considers only providers whose manifest type is `corpus`
+unless an explicit `--include` list is supplied for the inquiry. This applies
+even to an explicit dictionary, morphology or scholarly operation; include
+the desired provider to consult it. No provider is invoked automatically by
+another operation, and each command only calls providers advertising its
+capability. `retrieve` accepts a JSON-object query whose interpretation is
+provider-specific; its provider results are not merged or normalized.
 
 ## Matching and source text
 

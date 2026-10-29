@@ -24,6 +24,7 @@ and does not include a UI.
 - `docs/retrieval.md` - provider architecture, search semantics and limitations.
 - `tests/` - offline retrieval and provider-isolation tests.
 - `data/indexes/` - independently generated, local SQLite indexes.
+- `data/reader-profiles.json` - local reader preferences, independent of plugin state.
 
 Downloaded data, generated indexes and model files are ignored by Git. The
 small inventory and manifest are intended to be tracked.
@@ -65,6 +66,29 @@ providers are shown in `status` and do not block unrelated lookups. Run tests
 from the project root with `& $python -m unittest discover -s tests -v`.
 See `docs/retrieval.md` for precise matching, evidence, configuration and
 indexing behavior, including important editorial and coverage limitations.
+
+## Reader profiles
+
+Profiles store ordered provider IDs and a text-first setting locally. To create
+a text-first profile and use it in individual inquiries:
+
+```powershell
+& $python scripts\platosi.py profile save reader --text-first --resource perseus-plato --resource lsj-logeion
+& $python scripts\platosi.py profile show reader
+& $python scripts\platosi.py search 'κατέβην' --profile reader
+& $python scripts\platosi.py lookup 'καταβαίνω' --profile reader --include lsj-logeion
+& $python scripts\platosi.py search 'κατέβην' --profile reader --exclude perseus-plato
+```
+
+`profile list` shows saved profiles. Repeating `profile save` replaces the
+named profile; list every resource and the desired mode each time. Repeated
+`--resource` options set priority. An explicit `--include` list replaces the
+profile's selection for that inquiry, in the order supplied; `--exclude`
+removes IDs for that inquiry. Neither changes the profile or enables a
+provider. In text-first mode, non-corpus resources require explicit inclusion,
+even for a direct `lookup` or `analyze` request. Without a profile, existing
+commands continue to use all enabled, available providers for the operation.
+The profile file is ignored by Git.
 
 ## Download and validate Plato
 

@@ -62,11 +62,11 @@ class Registry:
                 if provider.available():
                     yield registration, provider
 
-    def statuses(self):
+    def statuses(self, check_availability: bool = True):
         result = []
         for registration in self.providers.values():
             m = registration.manifest
-            provider = registration.load() if registration.enabled else None
+            provider = registration.load() if registration.enabled and check_availability else None
             available = provider.available() if provider else None
             result.append({"id": m["id"], "type": m["type"], "version": m["version"],
                            "capabilities": m["capabilities"], "enabled": registration.enabled,
