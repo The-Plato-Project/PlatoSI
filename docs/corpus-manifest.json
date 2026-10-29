@@ -1,0 +1,801 @@
+﻿{
+    "repository":  "https://github.com/PerseusDL/canonical-greekLit",
+    "revision":  "a6eb0cc3e6f6e382934a2c8b33577d2fb4371e00",
+    "validation_scope":  "Git blob integrity and XML well-formedness; CTS metadata linkage, TEI language, body content and identifier, and citation declarations. Not TEI/EpiDoc schema validation or scholarly completeness.",
+    "expected_files":  75,
+    "verified_files":  75,
+    "parsed_xml_files":  73,
+    "work_count":  36,
+    "edition_count":  36,
+    "works":  [
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg001",
+                      "title":  "Euthyphro",
+                      "metadata_path":  "data/tlg0059/tlg001/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg001.perseus-grc1",
+                                           "label":  "Εὐθύφρων",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\" matchPattern=\"(\\w+)\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg002",
+                      "title":  "Apology",
+                      "metadata_path":  "data/tlg0059/tlg002/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg002.perseus-grc2",
+                                           "label":  "Ἀπολογία Σωκράτους",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg002/tlg0059.tlg002.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section",
+                                                                   "speech"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg003",
+                      "title":  "Crito",
+                      "metadata_path":  "data/tlg0059/tlg003/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg003.perseus-grc2",
+                                           "label":  "Κρίτων",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg003/tlg0059.tlg003.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section.\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg004",
+                      "title":  "Phaedo",
+                      "metadata_path":  "data/tlg0059/tlg004/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg004.perseus-grc2",
+                                           "label":  "Φαίδων",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg004/tlg0059.tlg004.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg005",
+                      "title":  "Cratylus",
+                      "metadata_path":  "data/tlg0059/tlg005/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg005.perseus-grc2",
+                                           "label":  "Κρατύλος",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg005/tlg0059.tlg005.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg006",
+                      "title":  "Theaetetus",
+                      "metadata_path":  "data/tlg0059/tlg006/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg006.perseus-grc2",
+                                           "label":  "Θεαίτητος",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg006/tlg0059.tlg006.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg007",
+                      "title":  "Sophist",
+                      "metadata_path":  "data/tlg0059/tlg007/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg007.perseus-grc2",
+                                           "label":  "Σοφιστής",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg007/tlg0059.tlg007.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg008",
+                      "title":  "Statesman",
+                      "metadata_path":  "data/tlg0059/tlg008/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg008.perseus-grc2",
+                                           "label":  "Πολιτικός",
+                                           "description":  "Platonis Opera, Tomus I: Tetralogia I-II. Burnet, John, 1863-1928, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg008/tlg0059.tlg008.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg009",
+                      "title":  "Parmenides",
+                      "metadata_path":  "data/tlg0059/tlg009/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg009.perseus-grc2",
+                                           "label":  "Παρμενίδης",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg009/tlg0059.tlg009.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg010",
+                      "title":  "Philebus",
+                      "metadata_path":  "data/tlg0059/tlg010/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg010.perseus-grc2",
+                                           "label":  "Φίληβος",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg010/tlg0059.tlg010.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg011",
+                      "title":  "Symposium",
+                      "metadata_path":  "data/tlg0059/tlg011/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg011.perseus-grc2",
+                                           "label":  "Συμπόσιον",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg011/tlg0059.tlg011.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg012",
+                      "title":  "Phaedrus",
+                      "metadata_path":  "data/tlg0059/tlg012/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg012.perseus-grc2",
+                                           "label":  "Φαῖδρος",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg012/tlg0059.tlg012.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg013",
+                      "title":  "Alcibiades 1",
+                      "metadata_path":  "data/tlg0059/tlg013/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg013.perseus-grc2",
+                                           "label":  "Ἀλκιβιάδης αʹ",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg013/tlg0059.tlg013.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg014",
+                      "title":  "Alcibiades 2",
+                      "metadata_path":  "data/tlg0059/tlg014/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg014.perseus-grc2",
+                                           "label":  "Ἀλκιβιάδης βʹ",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg014/tlg0059.tlg014.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg015",
+                      "title":  "Hipparchus",
+                      "metadata_path":  "data/tlg0059/tlg015/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg015.perseus-grc2",
+                                           "label":  "Ἵππαρχος",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg015/tlg0059.tlg015.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg016",
+                      "title":  "Lovers",
+                      "metadata_path":  "data/tlg0059/tlg016/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg016.perseus-grc2",
+                                           "label":  "Ἐρασταί",
+                                           "description":  "Platonis Opera, Tomus II: Tetralogia III-IV. Burnet, John, editor. Oxford: Clarendon Press, 1910.",
+                                           "path":  "data/tlg0059/tlg016/tlg0059.tlg016.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg017",
+                      "title":  "Theages",
+                      "metadata_path":  "data/tlg0059/tlg017/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg017.perseus-grc2",
+                                           "label":  "Θεάγης",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg017/tlg0059.tlg017.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg018",
+                      "title":  "Charmides",
+                      "metadata_path":  "data/tlg0059/tlg018/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg018.perseus-grc2",
+                                           "label":  "Χαρμίδης",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1913.",
+                                           "path":  "data/tlg0059/tlg018/tlg0059.tlg018.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg019",
+                      "title":  "Laches",
+                      "metadata_path":  "data/tlg0059/tlg019/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg019.perseus-grc2",
+                                           "label":  "Λάχης",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg019/tlg0059.tlg019.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg020",
+                      "title":  "Lysis",
+                      "metadata_path":  "data/tlg0059/tlg020/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg020.perseus-grc2",
+                                           "label":  "Λύσις",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg020/tlg0059.tlg020.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg021",
+                      "title":  "Euthydemus",
+                      "metadata_path":  "data/tlg0059/tlg021/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg021.perseus-grc2",
+                                           "label":  "Εὐθύδημος",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg021/tlg0059.tlg021.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg022",
+                      "title":  "Protagoras",
+                      "metadata_path":  "data/tlg0059/tlg022/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg022.perseus-grc2",
+                                           "label":  "Πρωταγόρας",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg022/tlg0059.tlg022.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg023",
+                      "title":  "Gorgias",
+                      "metadata_path":  "data/tlg0059/tlg023/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg023.perseus-grc2",
+                                           "label":  "Γοργίας",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg023/tlg0059.tlg023.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg024",
+                      "title":  "Meno",
+                      "metadata_path":  "data/tlg0059/tlg024/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg024.perseus-grc2",
+                                           "label":  "Μένων",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg024/tlg0059.tlg024.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg025",
+                      "title":  "Greater Hippias",
+                      "metadata_path":  "data/tlg0059/tlg025/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg025.perseus-grc2",
+                                           "label":  "Ἱππίας μείζων",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg025/tlg0059.tlg025.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg026",
+                      "title":  "Lesser Hippias",
+                      "metadata_path":  "data/tlg0059/tlg026/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg026.perseus-grc2",
+                                           "label":  "Ἱππίας ἐλάττων",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg026/tlg0059.tlg026.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg027",
+                      "title":  "Ion",
+                      "metadata_path":  "data/tlg0059/tlg027/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg027.perseus-grc2",
+                                           "label":  "Ἴων",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg027/tlg0059.tlg027.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg028",
+                      "title":  "Menexenus",
+                      "metadata_path":  "data/tlg0059/tlg028/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg028.perseus-grc2",
+                                           "label":  "Μενέξενος",
+                                           "description":  "Platonis Opera, Tomus III: Tetralogia V-VII. Burnet, John, editor. Oxford: Clarendon Press, 1903.",
+                                           "path":  "data/tlg0059/tlg028/tlg0059.tlg028.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg029",
+                      "title":  "Cleitophon",
+                      "metadata_path":  "data/tlg0059/tlg029/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg029.perseus-grc2",
+                                           "label":  "Κλειτοφῶν",
+                                           "description":  "Platonis Opera Tomus IV: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg029/tlg0059.tlg029.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg030",
+                      "title":  "Republic",
+                      "metadata_path":  "data/tlg0059/tlg030/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg030.perseus-grc2",
+                                           "label":  "Πολιτεία",
+                                           "description":  "Platonis Opera Tomus IV: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+).(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027]/tei:div[@n=\u0027$2\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts book and section\u003c/p\u003e\u003c/cRefPattern\u003e\u003ccRefPattern n=\"book\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts book\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003crefState unit=\"book\" /\u003e\u003crefState unit=\"section\" /\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"book\" delim=\":\" match=\"div/div[@subtype=\u0027book\u0027]\" use=\"@n\"\u003e\u003cciteStructure unit=\"section\" delim=\".\" match=\"div[@subtype=\u0027section\u0027]\" use=\"@n\" n=\"chunk\" /\u003e\u003c/citeStructure\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg031",
+                      "title":  "Timaeus",
+                      "metadata_path":  "data/tlg0059/tlg031/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg031.perseus-grc2",
+                                           "label":  "Τίμαιος",
+                                           "description":  "Platonis Opera Tomus IV: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg031/tlg0059.tlg031.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg032",
+                      "title":  "Critias",
+                      "metadata_path":  "data/tlg0059/tlg032/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg032.perseus-grc2",
+                                           "label":  "Κριτίας",
+                                           "description":  "Platonis Opera Tomus IV: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1905.",
+                                           "path":  "data/tlg0059/tlg032/tlg0059.tlg032.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg033",
+                      "title":  "Minos",
+                      "metadata_path":  "data/tlg0059/tlg033/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg033.perseus-grc2",
+                                           "label":  "Μίνως",
+                                           "description":  "Platonis Opera, Tomus V: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1914.",
+                                           "path":  "data/tlg0059/tlg033/tlg0059.tlg033.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg034",
+                      "title":  "Laws",
+                      "metadata_path":  "data/tlg0059/tlg034/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg034.perseus-grc2",
+                                           "label":  "Νόμοι",
+                                           "description":  "Platonis Opera, Tomus V: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1914.",
+                                           "path":  "data/tlg0059/tlg034/tlg0059.tlg034.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+).(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027]/tei:div[@n=\u0027$2\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts book and section\u003c/p\u003e\u003c/cRefPattern\u003e\u003ccRefPattern n=\"book\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts book\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003crefState unit=\"book\" /\u003e\u003crefState unit=\"section\" /\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"book\" delim=\":\" match=\"div/div[@subtype=\u0027book\u0027]\" use=\"@n\"\u003e\u003cciteStructure unit=\"section\" delim=\".\" match=\"div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg035",
+                      "title":  "Epinomis",
+                      "metadata_path":  "data/tlg0059/tlg035/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg035.perseus-grc2",
+                                           "label":  "Ἐπινομίς",
+                                           "description":  "Platonis Opera, Tomus V: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1914.",
+                                           "path":  "data/tlg0059/tlg035/tlg0059.tlg035.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts section\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure unit=\"section\" delim=\":\" match=\"div/div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  },
+                  {
+                      "urn":  "urn:cts:greekLit:tlg0059.tlg036",
+                      "title":  "Letters",
+                      "metadata_path":  "data/tlg0059/tlg036/__cts__.xml",
+                      "editions":  [
+                                       {
+                                           "urn":  "urn:cts:greekLit:tlg0059.tlg036.perseus-grc2",
+                                           "label":  "Ἐπιστολαί",
+                                           "description":  "Platonis Opera, Tomus V: Tetralogia VIII. Burnet, John, editor. Oxford: Clarendon Press, 1914.",
+                                           "path":  "data/tlg0059/tlg036/tlg0059.tlg036.perseus-grc2.xml",
+                                           "citation_declarations_xml":  [
+                                                                             "\u003crefsDecl n=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003ccRefPattern n=\"section\" matchPattern=\"(\\w+).(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027]/tei:div[@n=\u0027$2\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts letter and section\u003c/p\u003e\u003c/cRefPattern\u003e\u003ccRefPattern n=\"letter\" matchPattern=\"(\\w+)\" replacementPattern=\"#xpath(/tei:TEI/tei:text/tei:body/tei:div/tei:div[@n=\u0027$1\u0027])\"\u003e\u003cp\u003eThis pointer pattern extracts letter\u003c/p\u003e\u003c/cRefPattern\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003crefState unit=\"letter\" /\u003e\u003crefState unit=\"section\" /\u003e\u003c/refsDecl\u003e",
+                                                                             "\u003crefsDecl xml:id=\"CTS\" xmlns=\"http://www.tei-c.org/ns/1.0\"\u003e\u003cciteStructure match=\"/TEI/text/body\" use=\"@xml:base\"\u003e\u003cciteStructure match=\"div/div[@subtype=\u0027letter\u0027]\" use=\"@n\" unit=\"letter\" delim=\":\"\u003e\u003cciteStructure unit=\"section\" delim=\".\" match=\"div[@subtype=\u0027section\u0027]\" use=\"@n\" /\u003e\u003c/citeStructure\u003e\u003c/citeStructure\u003e\u003c/refsDecl\u003e"
+                                                                         ],
+                                           "milestone_units":  [
+                                                                   "page",
+                                                                   "para",
+                                                                   "section"
+                                                               ]
+                                       }
+                                   ]
+                  }
+              ],
+    "issues":  [
+
+               ]
+}

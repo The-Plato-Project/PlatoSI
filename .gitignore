@@ -1,0 +1,14 @@
+/data/tlg0059/
+/data/upstream/
+/data/indexes/
+/indexes/
+/models/
+*.gguf
+*.ggml
+*.safetensors
+*.pt
+*.pth
+*.bin
+__pycache__/
+.venv/
+.vscode/
