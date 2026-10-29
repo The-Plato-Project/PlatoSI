@@ -2,14 +2,15 @@
 
 A new, independent local AI project for Ancient Greek, initially focused on
 Plato. The longer-term aim is to give a local language model reliable access
-to Greek primary texts and linguistic references. The current offline retrieval
-layer is model-agnostic. It does not connect to Chora, Ollama or any model,
-and does not include a UI.
+to Greek primary texts and linguistic references. The offline retrieval layer
+is model-agnostic; an optional local Ollama plugin supports grounded inquiries.
+The project does not connect to Chora or include a graphical UI.
 
 ## Layout
 
 - `src/platosi/` - provider contracts, registry, Unicode search and CLI.
 - `plugins/` - independent corpus, dictionary and optional morphology providers.
+- `plugins/ollama/` - replaceable local Ollama language-model adapter.
 - `scripts/` - download, validation and retrieval/indexing entry points.
 - `data/tlg0059/` - original Plato Greek XML and CTS metadata, downloaded locally.
 - `data/upstream/` - the source repository's README and license.
@@ -89,6 +90,35 @@ provider. In text-first mode, non-corpus resources require explicit inclusion,
 even for a direct `lookup` or `analyze` request. Without a profile, existing
 commands continue to use all enabled, available providers for the operation.
 The profile file is ignored by Git.
+
+## Ask a local model
+
+Start Ollama separately and ensure a local model is installed. No model is
+downloaded automatically. Discover available local models and ask about the
+opening of the Republic:
+
+```powershell
+& $python scripts\platosi.py models --provider ollama
+& $python scripts\platosi.py inquire 'What movement opens this passage, and what might it suggest?' `
+  --provider ollama --model 'qwen3.5:9b' --include perseus-plato `
+  --edition 'urn:cts:greekLit:tlg0059.tlg030.perseus-grc2' --citation 327a
+```
+
+The answer includes numbered evidence and source attribution. Add `--json`
+for complete machine-readable evidence and diagnostics. Without a profile
+or explicit inclusion, inquiries use corpus providers only. To use selected
+scholarship, supply a profile or repeat `--include` for each desired provider,
+including the corpus provider. `--headword` and `--form` supply explicit
+dictionary and morphology queries; otherwise Greek words in the question or
+`--text` are used literally. Without a passage reference, `--text` supplies
+an exact Greek search phrase; if omitted, Greek words in the question are
+searched. The system does not guess references or infer lemmas.
+
+The default Ollama model and generation settings are configurable independently
+of resource profiles. See `docs/retrieval.md` for options, replacement,
+limits and attribution. Model responses can contain errors even when cited:
+verify them against the returned evidence. GLEM remains optional and its
+licensing is unresolved.
 
 ## Download and validate Plato
 

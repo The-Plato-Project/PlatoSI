@@ -12,14 +12,16 @@ can implement the same capability; their results remain separate.
 `CorpusProvider` offers `search` and `passage`, `DictionaryProvider` offers
 `lookup`, and `MorphologyProvider` offers `analyze`. The
 `LanguageModelProvider` and general `ScholarlyResourceProvider` protocols
-define interfaces for future independently installed resources. `retrieve`
+define interfaces for independently installed resources. `retrieve`
 passes a JSON object to selected scholarly providers implementing `retrieve`;
-no general analytical or model provider is currently implemented. Provider code executes locally:
-install only trusted plugins. The core does not make an interpretation or
-generate hypotheses.
+no general analytical provider is currently implemented. The Ollama model
+provider is independent of the resource providers. Provider code executes
+locally: install only trusted plugins. The retrieval core does not make an
+interpretation or generate hypotheses; the model inquiry layer may offer
+explicitly tentative interpretations.
 
-Every result identifies its provider and version, upstream repository and
-revision, attribution, license status, and a source location. Corpus results
+Each supplied adapter's result identifies its provider and version, upstream
+repository and revision, attribution, license status, and a source location. Corpus results
 represent source-edition evidence, LSJ entries are scholarly classifications,
 and GLEM results are *candidate* mappings, not verified contextual analyses.
 `editorial_text` marks search matches overlapping the explicitly indexed
@@ -111,6 +113,89 @@ the desired provider to consult it. No provider is invoked automatically by
 another operation, and each command only calls providers advertising its
 capability. `retrieve` accepts a JSON-object query whose interpretation is
 provider-specific; its provider results are not merged or normalized.
+
+## Local model inquiries
+
+The `LanguageModelProvider` contract exposes availability, model discovery
+and generation. The registry loads the `ollama` adapter like any other
+plugin; no corpus or scholarly provider imports it. `models --provider ollama`
+discovers currently installed local models. If exactly one enabled model
+provider supports the operation, `--provider` may be omitted; if several do,
+the reader must choose one. Implement the same interface in another trusted
+model plugin to replace Ollama without rebuilding indexes or changing profiles.
+
+The Ollama adapter connects only to a loopback HTTP origin, uses no HTTP proxy
+or redirect following, excludes models advertised as remote/cloud, and never
+pulls a model. Start the server and install a model separately. Its default
+model is `qwen3.5:9b`, but availability is checked against the live model
+list: a missing model causes an explicit error. Use `--model NAME` to select
+another, or update the `ollama` config entry in ignored
+`data/plugin-config.json`. The adapter's `endpoint`, `model`,
+`timeout_seconds`, `think` and `generation` settings can be overridden there
+without changing other provider configuration. For example, an `ollama` entry
+can contain:
+
+```json
+{
+  "config": {
+    "model": "qwen3.5:4b",
+    "generation": {"temperature": 0.2, "num_predict": 500}
+  }
+}
+```
+
+`--generation` supplies a JSON object of per-inquiry generation settings
+that override adapter defaults; the available keys depend on the adapter.
+In Windows PowerShell 5.1, escape the JSON quotes when passing it to a native
+program, for example `--generation '{\"temperature\":0.1}'`.
+The Ollama server and each model have separate licensing terms; inspect those
+terms before use.
+
+`inquire` accepts a question, `--profile`, per-inquiry `--include` and
+`--exclude`, and either `--edition` plus `--citation` or `--text` for an
+exact Greek word or phrase. It searches Greek words in the question if no
+reference or explicit search text is provided. It does not resolve an English
+reference or perform semantic search. Search uses the existing matching mode,
+with `--mode accent-insensitive` available explicitly.
+
+Unlike standalone lookups, an inquiry with no profile and no explicit
+inclusions selects only corpus providers. A profile enables its selected
+scholarly resources; text-first profiles suppress them unless explicitly
+included for the inquiry. An `--include` list replaces the selection, so
+include a corpus provider alongside any desired scholarly providers.
+Selection never enables a disabled provider. Missing or unavailable selections
+are reported without changing saved preferences.
+
+Dictionary and morphology providers receive literal reader-supplied
+`--headword` and `--form` terms, or, if omitted, Greek words present in the
+question or `--text`. They do not receive model-generated terms or
+automatically inferred lemmas, and no GLEM result is fed into LSJ. Repeated
+options supply multiple terms. `--scholarly-query` supplies a JSON object to
+selected general scholarly providers; none is invoked without that query.
+The per-provider, per-operation `--limit` defaults to three, and reaching it
+is reported as possibly truncated.
+
+Only retrieved records are sent to the model, with source metadata and
+distinct evidence IDs. For passage retrieval, the exact returned match span
+is sent rather than the larger surrounding textpart; editorial markup spans
+are adjusted accordingly. Search results can include a larger textpart and
+their Stephanus reference applies at the match, not necessarily throughout
+that context. If no Greek passage is retrieved, the model is not called and
+the response explicitly reports the missing evidence.
+
+The prompt asks for textual observations to be distinguished from tentative
+interpretation, for scholarly claims to be attributed, and for unsupported
+facts not to be invented. The readable output shows model attribution,
+evidence IDs, sources and Greek text; `--json` includes full records,
+selection diagnostics and warnings. Unknown `[E<number>]` citations and
+responses without evidence IDs produce warnings, but IDs are not semantic
+fact checking. **A model can still invent or misinterpret claims even with
+these instructions and valid citations.** In live testing, one response
+incorrectly named a festival without evidence and another supplied an
+unrequested morphological analysis without a morphology provider. The
+prompt was tightened after those results, but this is not a guarantee. Treat
+model output as unverified, and compare it with the returned records and the
+original XML before accepting a claim.
 
 ## Matching and source text
 

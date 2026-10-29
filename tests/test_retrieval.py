@@ -46,7 +46,8 @@ class PluginFixtureTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        shutil.copytree(ROOT / "plugins", self.root / "plugins", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "plugins", self.root / "plugins",
+                        ignore=shutil.ignore_patterns("__pycache__", "ollama"))
         for manifest_path in (self.root / "plugins").glob("*/plugin.json"):
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             del manifest["config"]["inventory"]

@@ -1,0 +1,25 @@
+{
+  "id": "ollama",
+  "type": "language-model",
+  "version": "1.0",
+  "module": "provider.py",
+  "capabilities": ["models", "generate"],
+  "enabled_by_default": true,
+  "config": {
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen3.5:9b",
+    "timeout_seconds": 300,
+    "think": false,
+    "generation": {"temperature": 0.2, "num_predict": 500}
+  },
+  "source": {
+    "repository": "https://github.com/ollama/ollama",
+    "revision": "local installation",
+    "attribution": "Ollama; selected models have their own provenance and licenses."
+  },
+  "license": {
+    "status": "Review the selected model's license separately",
+    "terms": "Ollama software and individual models have separate licenses.",
+    "url": "https://github.com/ollama/ollama"
+  }
+}

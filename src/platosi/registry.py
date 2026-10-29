@@ -71,7 +71,7 @@ class Registry:
             result.append({"id": m["id"], "type": m["type"], "version": m["version"],
                            "capabilities": m["capabilities"], "enabled": registration.enabled,
                            "available": available, "config": m["config"],
-                           "unavailable_reason": ("Source or current index missing; check configuration and rebuild."
+                           "unavailable_reason": ("Provider unavailable; check its configuration and status."
                                                   if provider and not available else None),
                            "source": m["source"], "license": m["license"]})
         return result
