@@ -1,0 +1,19 @@
+{
+  "id": "lsj-logeion",
+  "type": "dictionary",
+  "version": "1.0",
+  "module": "provider.py",
+  "capabilities": ["lookup"],
+  "enabled_by_default": true,
+  "config": {"source": "data/lsj-logeion", "index": "data/indexes/lsj-logeion.sqlite", "inventory": "docs/lsj-inventory.json"},
+  "source": {
+    "repository": "https://github.com/helmadik/LSJLogeion",
+    "revision": "ae135f548e0399d43cd09d45fed129cbec0e9b5c",
+    "attribution": "Perseus Tufts and Helma Dik/Logeion"
+  },
+  "license": {
+    "status": "Upstream license",
+    "terms": "CC BY-SA 4.0",
+    "url": "https://github.com/helmadik/LSJLogeion/blob/ae135f548e0399d43cd09d45fed129cbec0e9b5c/LICENSE.md"
+  }
+}

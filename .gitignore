@@ -1,7 +1,9 @@
 /data/tlg0059/
 /data/upstream/
 /data/lsj-logeion/
+/data/greek-morphology/
 /data/indexes/
+/data/plugin-config.json
 /indexes/
 /models/
 *.gguf

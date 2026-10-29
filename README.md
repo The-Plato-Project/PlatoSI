@@ -2,23 +2,69 @@
 
 A new, independent local AI project for Ancient Greek, initially focused on
 Plato. The longer-term aim is to give a local language model reliable access
-to Greek primary texts and linguistic references. This setup does not connect
-to Chora, Ollama or any model, and does not include search tools or a UI.
+to Greek primary texts and linguistic references. The current offline retrieval
+layer is model-agnostic. It does not connect to Chora, Ollama or any model,
+and does not include a UI.
 
 ## Layout
 
-- `src/` - reserved for future project code.
-- `scripts/` - corpus download and validation scripts.
+- `src/platosi/` - provider contracts, registry, Unicode search and CLI.
+- `plugins/` - independent corpus, dictionary and optional morphology providers.
+- `scripts/` - download, validation and retrieval/indexing entry points.
 - `data/tlg0059/` - original Plato Greek XML and CTS metadata, downloaded locally.
 - `data/upstream/` - the source repository's README and license.
 - `data/lsj-logeion/` - original Logeion LSJ XML and source metadata, downloaded locally.
+- `data/greek-morphology/` - original GLEM lists and Euthyphro treebank, downloaded locally.
 - `docs/corpus-inventory.json` - pinned upstream file paths, sizes and Git blob hashes.
 - `docs/corpus-manifest.json` - work and edition metadata, citation declarations and validation results.
 - `docs/lsj-inventory.json` - pinned LSJ file paths, sizes, hashes and source information.
 - `docs/lsj-manifest.json` - LSJ entry counts and validation results.
+- `docs/morphology-inventory.json` and `docs/morphology-manifest.json` - pinned morphology sources and validation results.
+- `docs/morphology-research.md` - resource comparisons, provenance and licensing caveats.
+- `docs/retrieval.md` - provider architecture, search semantics and limitations.
+- `tests/` - offline retrieval and provider-isolation tests.
+- `data/indexes/` - independently generated, local SQLite indexes.
 
 Downloaded data, generated indexes and model files are ignored by Git. The
 small inventory and manifest are intended to be tracked.
+
+## Index and retrieve locally
+
+Install Python 3.10 or later; no third-party packages are required. On this
+computer, Python 3.12 was installed for the current Windows user. In
+PowerShell from the project root:
+
+```powershell
+$python = Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312\python.exe'
+& $python scripts\platosi.py index perseus-plato
+& $python scripts\platosi.py index lsj-logeion
+& $python scripts\platosi.py status
+& $python scripts\platosi.py search 'κατέβην χθὲς εἰς Πειραιᾶ'
+& $python scripts\platosi.py lookup 'καταβαίνω'
+& $python scripts\platosi.py passage 'urn:cts:greekLit:tlg0059.tlg030.perseus-grc2' '327a'
+```
+
+On another computer set `$python` to the path of its Python executable.
+`search`, `lookup`, `passage` and `analyze` produce JSON, including source
+and license metadata. Use `--mode accent-insensitive` explicitly for a broader
+match and `--limit N` to change the per-provider result limit.
+
+GLEM is **disabled by default**. Its data and the generated GLEM index must
+not be distributed or used commercially without resolving the licensing
+questions. To enable it locally for research:
+
+```powershell
+& $python scripts\platosi.py enable glem
+& $python scripts\platosi.py index glem
+& $python scripts\platosi.py analyze 'κατέβην'
+& $python scripts\platosi.py disable glem
+```
+
+Disable or enable any installed provider by ID. Missing, disabled or unindexed
+providers are shown in `status` and do not block unrelated lookups. Run tests
+from the project root with `& $python -m unittest discover -s tests -v`.
+See `docs/retrieval.md` for precise matching, evidence, configuration and
+indexing behavior, including important editorial and coverage limitations.
 
 ## Download and validate Plato
 
@@ -84,6 +130,34 @@ are ongoing and only a few supplement changes are incorporated. The upstream
 license specifies CC BY-SA 4.0; its README asks users to credit both Perseus
 Tufts and Helma Dik/Logeion. Preserve that attribution and the license for
 reuse, and consult the original metadata for details.
+
+## Download and validate morphological evidence
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\download-morphology.ps1
+```
+
+The script obtains the files pinned in `docs/morphology-inventory.json`,
+checks their Git blob hashes and runs offline validation. It replaces local
+morphology files that differ from the pinned versions; keep edits elsewhere.
+The downloaded files are ignored by Git and remain independent of any model.
+To repeat validation without downloading, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-morphology.ps1
+```
+
+The selected GLEM word lists contain candidate form-lemma-tag mappings, not
+a running analyzer or guaranteed context-sensitive analyses. The AGDT XML
+provides contextual annotations for *Euthyphro* only. Validation checks
+integrity, UTF-8, XML, list structure and selected attested forms; it also
+measures simple exact-form overlap with Plato. This is not linguistic
+accuracy or exhaustive coverage. See
+`docs/morphology-research.md`, `docs/glem-licensing-review.md`, and the
+manifest for licensing and limitations. Commercial use and redistribution of
+the GLEM word lists are not cleared: they incorporate PROIEL material, and
+the GLEM authors' paper states noncommercial terms despite later GPL software
+metadata.
 
 ## Plato source and reuse
 

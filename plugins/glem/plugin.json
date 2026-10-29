@@ -1,0 +1,23 @@
+{
+  "id": "glem",
+  "type": "morphology",
+  "version": "1.0",
+  "module": "provider.py",
+  "capabilities": ["analyze"],
+  "enabled_by_default": false,
+  "config": {
+    "source": "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+    "index": "data/indexes/glem.sqlite",
+    "inventory": "docs/morphology-inventory.json"
+  },
+  "source": {
+    "repository": "https://github.com/GreekPerspective/glem",
+    "revision": "590175899090aa5c3fe647149a85412351463da2",
+    "attribution": "GLEM; merged PROIEL and Perseus-derived mappings. Individual row provenance is not supplied."
+  },
+  "license": {
+    "status": "UNRESOLVED: commercial use and redistribution not cleared",
+    "terms": "GLEM paper states CC BY-NC-SA 3.0; upstream PROIEL data is noncommercial; software metadata declares GPL-3.0-only. See docs/glem-licensing-review.md.",
+    "url": "https://github.com/GreekPerspective/glem"
+  }
+}

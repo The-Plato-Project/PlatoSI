@@ -1,0 +1,10 @@
+[
+  {"form":"κατέβην","expected_lemma":"καταβαίνω","plato_path":"data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml","reference":"Republic 327a"},
+  {"form":"βουλόμενος","expected_lemma":"βούλομαι","plato_path":"data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml","reference":"Republic 327a"},
+  {"form":"ἔδοξεν","expected_lemma":"δοκέω","plato_path":"data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml","reference":"Republic 327a"},
+  {"form":"ἐφαίνετο","expected_lemma":"φαίνω","plato_path":"data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml","reference":"Republic 327a"},
+  {"form":"καταλιπὼν","expected_lemma":"καταλείπω","treebank_expected":true,"plato_path":"data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml","reference":"Euthyphro opening"},
+  {"form":"διατρίβεις","expected_lemma":"διατρίβω","treebank_expected":true,"plato_path":"data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml","reference":"Euthyphro opening"},
+  {"form":"γέγονεν","expected_lemma":"γίγνομαι","treebank_expected":true,"plato_path":"data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml","reference":"Euthyphro opening"},
+  {"form":"προσευξόμενός","expected_lemma":null,"plato_path":"data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml","reference":"Republic 327a; expected exact-form miss"}
+]

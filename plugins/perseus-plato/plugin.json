@@ -1,0 +1,19 @@
+{
+  "id": "perseus-plato",
+  "type": "corpus",
+  "version": "1.0",
+  "module": "provider.py",
+  "capabilities": ["search", "passage"],
+  "enabled_by_default": true,
+  "config": {"source": "data/tlg0059", "index": "data/indexes/perseus-plato.sqlite", "inventory": "docs/corpus-inventory.json"},
+  "source": {
+    "repository": "https://github.com/PerseusDL/canonical-greekLit",
+    "revision": "a6eb0cc3e6f6e382934a2c8b33577d2fb4371e00",
+    "attribution": "Perseus Digital Library; consult each edition's TEI header."
+  },
+  "license": {
+    "status": "Review individual edition rights",
+    "terms": "Repository generally CC BY-SA 4.0 unless otherwise indicated; individual material may differ.",
+    "url": "https://github.com/PerseusDL/canonical-greekLit/blob/a6eb0cc3e6f6e382934a2c8b33577d2fb4371e00/license.md"
+  }
+}

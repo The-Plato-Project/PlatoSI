@@ -1,0 +1,653 @@
+﻿{
+    "sources":  [
+                    {
+                        "id":  "glem",
+                        "repository":  "https://github.com/GreekPerspective/glem",
+                        "revision":  "590175899090aa5c3fe647149a85412351463da2",
+                        "description":  "GLEM\u0027s three form-lemma-tag lists and accompanying provenance and software metadata.",
+                        "license_note":  "GLEM software metadata declares GPL-3.0-only. The repository does not clearly specify separate licensing and provenance for each derived word list; verify underlying rights, including PROIEL restrictions, before redistribution or commercial use."
+                    },
+                    {
+                        "id":  "agdt-euthyphro",
+                        "repository":  "https://github.com/PerseusDL/treebank_data",
+                        "revision":  "bf4334f0af5e13d16b04c1cccd6237e683ac6f5f",
+                        "description":  "AGDT 2.1\u0027s annotated Euthyphro, its tagset and source documentation; not the full AGDT.",
+                        "license_note":  "The repository README states CC BY-SA 3.0 United States, subject to third-party rights; credit the Perseus Digital Library and the annotators named in the Greek README and XML header."
+                    }
+                ],
+    "validation_scope":  "Pinned Git blob hashes; strict UTF-8 for text; XML well-formedness; word-list column counts; treebank attribute completeness; exact NFC sample matches and Plato attestation. Not linguistic accuracy, exhaustive coverage or XML schema validation.",
+    "expected_files":  12,
+    "verified_files":  12,
+    "word_lists_and_tagset":  [
+                                  {
+                                      "path":  "data/greek-morphology/glem/glem/extra-wlt.txt",
+                                      "format":  "wlt",
+                                      "lines":  10324,
+                                      "lines_with_greek_form":  0,
+                                      "malformed_lines":  0,
+                                      "malformed_examples":  [
+
+                                                             ]
+                                  },
+                                  {
+                                      "path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                      "format":  "wlt",
+                                      "lines":  377255,
+                                      "lines_with_greek_form":  377255,
+                                      "malformed_lines":  0,
+                                      "malformed_examples":  [
+
+                                                             ]
+                                  },
+                                  {
+                                      "path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                      "format":  "wltf",
+                                      "lines":  34494,
+                                      "lines_with_greek_form":  34491,
+                                      "malformed_lines":  3,
+                                      "malformed_examples":  [
+                                                                 {
+                                                                     "line":  378,
+                                                                     "text":  "τόσου τόσος Pd-s---ng- 3Τί"
+                                                                 },
+                                                                 {
+                                                                     "line":  1014,
+                                                                     "text":  "Ὑμεῖς ὑμεῖς Pp2p---pn- 3τῶ"
+                                                                 },
+                                                                 {
+                                                                     "line":  1523,
+                                                                     "text":  "ὅτοις ὅστις Pi-p---md- 0ἐμέ"
+                                                                 }
+                                                             ]
+                                  },
+                                  {
+                                      "path":  "data/greek-morphology/agdt-euthyphro/v2.1/Greek/TAGSETS.xml",
+                                      "format":  "xml",
+                                      "root":  "AncientGreekTagset"
+                                  }
+                              ],
+    "euthyphro_treebank":  {
+                               "path":  "data/greek-morphology/agdt-euthyphro/v2.1/Greek/texts/tlg0059.tlg001.perseus-grc1.tb.xml",
+                               "cts":  "urn:cts:greekLit:tlg0059.tlg001.perseus-grc1.tb",
+                               "word_nodes":  6349,
+                               "artificial_word_nodes":  252,
+                               "missing_forms":  0,
+                               "missing_lemmas":  265,
+                               "missing_tags":  252,
+                               "non_artificial_empty_lemmas":  13,
+                               "non_artificial_empty_tags":  0,
+                               "non_artificial_placeholder_tags":  10,
+                               "annotation_problem_examples":  [
+                                                                   {
+                                                                       "form":  "Μέλητον",
+                                                                       "lemma":  "",
+                                                                       "tag":  "n-s---ma-",
+                                                                       "sentence_id":  "2857972",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "Μέλητον",
+                                                                       "lemma":  "",
+                                                                       "tag":  "n-s---ma-",
+                                                                       "sentence_id":  "2857973",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "ἐπεξῇσθα",
+                                                                       "lemma":  "",
+                                                                       "tag":  "v2s-i----",
+                                                                       "sentence_id":  "2858025",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "Μέλητος",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858039",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "στασινυς",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858237",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "ξψπρια",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858237",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "φρ",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858237",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "20",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858237",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "ὅρα",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858262",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "δὴ",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858262",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "τὸ",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858262",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "μετὰ",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858262",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   },
+                                                                   {
+                                                                       "form":  "τοῦτο",
+                                                                       "lemma":  "",
+                                                                       "tag":  "---------",
+                                                                       "sentence_id":  "2858262",
+                                                                       "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                   }
+                                                               ]
+                           },
+    "plato_exact_form_overlap":  {
+                                     "method":  "NFC and case-sensitive exact matching against the GLEM merged list. Greek-block letters and combining marks are tokenized as runs; apostrophes, punctuation, Latin letters and digits split tokens. This is orthographic overlap, not validated contextual analyses.",
+                                     "expected_editions":  36,
+                                     "measured_editions":  36,
+                                     "complete":  true,
+                                     "tokens":  574387,
+                                     "matched_tokens":  522158,
+                                     "distinct_forms":  51191,
+                                     "matched_distinct_forms":  42587,
+                                     "editions":  [
+                                                      {
+                                                          "path":  "data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml",
+                                                          "tokens":  5402,
+                                                          "matched_tokens":  4763
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg002/tlg0059.tlg002.perseus-grc2.xml",
+                                                          "tokens":  8751,
+                                                          "matched_tokens":  8148
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg003/tlg0059.tlg003.perseus-grc2.xml",
+                                                          "tokens":  4278,
+                                                          "matched_tokens":  3922
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg004/tlg0059.tlg004.perseus-grc2.xml",
+                                                          "tokens":  22443,
+                                                          "matched_tokens":  20814
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg005/tlg0059.tlg005.perseus-grc2.xml",
+                                                          "tokens":  19004,
+                                                          "matched_tokens":  16963
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg006/tlg0059.tlg006.perseus-grc2.xml",
+                                                          "tokens":  23547,
+                                                          "matched_tokens":  20955
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg007/tlg0059.tlg007.perseus-grc2.xml",
+                                                          "tokens":  17205,
+                                                          "matched_tokens":  14830
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg008/tlg0059.tlg008.perseus-grc2.xml",
+                                                          "tokens":  18315,
+                                                          "matched_tokens":  15743
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg009/tlg0059.tlg009.perseus-grc2.xml",
+                                                          "tokens":  15261,
+                                                          "matched_tokens":  14439
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg010/tlg0059.tlg010.perseus-grc2.xml",
+                                                          "tokens":  18857,
+                                                          "matched_tokens":  16255
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg011/tlg0059.tlg011.perseus-grc2.xml",
+                                                          "tokens":  17350,
+                                                          "matched_tokens":  15956
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg012/tlg0059.tlg012.perseus-grc2.xml",
+                                                          "tokens":  17018,
+                                                          "matched_tokens":  15403
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg013/tlg0059.tlg013.perseus-grc2.xml",
+                                                          "tokens":  11180,
+                                                          "matched_tokens":  9477
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg014/tlg0059.tlg014.perseus-grc2.xml",
+                                                          "tokens":  4360,
+                                                          "matched_tokens":  3869
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg015/tlg0059.tlg015.perseus-grc2.xml",
+                                                          "tokens":  2402,
+                                                          "matched_tokens":  2102
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg016/tlg0059.tlg016.perseus-grc2.xml",
+                                                          "tokens":  2393,
+                                                          "matched_tokens":  2233
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg017/tlg0059.tlg017.perseus-grc2.xml",
+                                                          "tokens":  3603,
+                                                          "matched_tokens":  3179
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg018/tlg0059.tlg018.perseus-grc2.xml",
+                                                          "tokens":  8323,
+                                                          "matched_tokens":  7696
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg019/tlg0059.tlg019.perseus-grc2.xml",
+                                                          "tokens":  7948,
+                                                          "matched_tokens":  7076
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg020/tlg0059.tlg020.perseus-grc2.xml",
+                                                          "tokens":  6953,
+                                                          "matched_tokens":  6406
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg021/tlg0059.tlg021.perseus-grc2.xml",
+                                                          "tokens":  12572,
+                                                          "matched_tokens":  11313
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg022/tlg0059.tlg022.perseus-grc2.xml",
+                                                          "tokens":  17618,
+                                                          "matched_tokens":  16109
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg023/tlg0059.tlg023.perseus-grc2.xml",
+                                                          "tokens":  27383,
+                                                          "matched_tokens":  24468
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg024/tlg0059.tlg024.perseus-grc2.xml",
+                                                          "tokens":  10266,
+                                                          "matched_tokens":  8928
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg025/tlg0059.tlg025.perseus-grc2.xml",
+                                                          "tokens":  8811,
+                                                          "matched_tokens":  7832
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg026/tlg0059.tlg026.perseus-grc2.xml",
+                                                          "tokens":  4412,
+                                                          "matched_tokens":  3825
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg027/tlg0059.tlg027.perseus-grc2.xml",
+                                                          "tokens":  4015,
+                                                          "matched_tokens":  3505
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg028/tlg0059.tlg028.perseus-grc2.xml",
+                                                          "tokens":  4856,
+                                                          "matched_tokens":  4550
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg029/tlg0059.tlg029.perseus-grc2.xml",
+                                                          "tokens":  1558,
+                                                          "matched_tokens":  1444
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                                                          "tokens":  88231,
+                                                          "matched_tokens":  82554
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg031/tlg0059.tlg031.perseus-grc2.xml",
+                                                          "tokens":  23790,
+                                                          "matched_tokens":  21924
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg032/tlg0059.tlg032.perseus-grc2.xml",
+                                                          "tokens":  4972,
+                                                          "matched_tokens":  4646
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg033/tlg0059.tlg033.perseus-grc2.xml",
+                                                          "tokens":  3018,
+                                                          "matched_tokens":  2637
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg034/tlg0059.tlg034.perseus-grc2.xml",
+                                                          "tokens":  104966,
+                                                          "matched_tokens":  96727
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg035/tlg0059.tlg035.perseus-grc2.xml",
+                                                          "tokens":  6362,
+                                                          "matched_tokens":  5874
+                                                      },
+                                                      {
+                                                          "path":  "data/tlg0059/tlg036/tlg0059.tlg036.perseus-grc2.xml",
+                                                          "tokens":  16964,
+                                                          "matched_tokens":  15593
+                                                      }
+                                                  ]
+                                 },
+    "sample_tests":  [
+                         {
+                             "form":  "κατέβην",
+                             "reference":  "Republic 327a",
+                             "plato_path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "καταβαίνω",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  156508,
+                                                      "form":  "κατέβην",
+                                                      "lemma":  "καταβαίνω",
+                                                      "tag":  "V-1saia---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  9921,
+                                                      "form":  "κατέβην",
+                                                      "lemma":  "καταβαίνω",
+                                                      "tag":  "V-1saia---",
+                                                      "frequency":  1
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+
+                                                            ],
+                             "expected_treebank_lemma_found":  null
+                         },
+                         {
+                             "form":  "βουλόμενος",
+                             "reference":  "Republic 327a",
+                             "plato_path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "βούλομαι",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  348442,
+                                                      "form":  "βουλόμενος",
+                                                      "lemma":  "βούλομαι",
+                                                      "tag":  "V--sppmmn-",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  5871,
+                                                      "form":  "βουλόμενος",
+                                                      "lemma":  "βούλομαι",
+                                                      "tag":  "V--sppmmn-",
+                                                      "frequency":  27
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+
+                                                            ],
+                             "expected_treebank_lemma_found":  null
+                         },
+                         {
+                             "form":  "ἔδοξεν",
+                             "reference":  "Republic 327a",
+                             "plato_path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "δοκέω",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  95058,
+                                                      "form":  "ἔδοξεν",
+                                                      "lemma":  "δοκέω",
+                                                      "tag":  "V-3saia---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  30628,
+                                                      "form":  "ἔδοξεν",
+                                                      "lemma":  "δοκέω",
+                                                      "tag":  "V-3saia---",
+                                                      "frequency":  2
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+
+                                                            ],
+                             "expected_treebank_lemma_found":  null
+                         },
+                         {
+                             "form":  "ἐφαίνετο",
+                             "reference":  "Republic 327a",
+                             "plato_path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "φαίνω",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  68031,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siip---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  68032,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siim---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  68033,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siie---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  30143,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siie---",
+                                                      "frequency":  1
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  30144,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siim---",
+                                                      "frequency":  2
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  30145,
+                                                      "form":  "ἐφαίνετο",
+                                                      "lemma":  "φαίνω",
+                                                      "tag":  "V-3siip---",
+                                                      "frequency":  6
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+
+                                                            ],
+                             "expected_treebank_lemma_found":  null
+                         },
+                         {
+                             "form":  "καταλιπὼν",
+                             "reference":  "Euthyphro opening",
+                             "plato_path":  "data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "καταλείπω",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  200557,
+                                                      "form":  "καταλιπὼν",
+                                                      "lemma":  "καταλείπω",
+                                                      "tag":  "V--sapamn-",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  10274,
+                                                      "form":  "καταλιπὼν",
+                                                      "lemma":  "καταλείπω",
+                                                      "tag":  "V--sapamn-",
+                                                      "frequency":  9
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+                                                                {
+                                                                    "form":  "καταλιπὼν",
+                                                                    "lemma":  "καταλείπω",
+                                                                    "tag":  "v-sapamn-",
+                                                                    "sentence_id":  "2857961",
+                                                                    "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                }
+                                                            ],
+                             "expected_treebank_lemma_found":  true
+                         },
+                         {
+                             "form":  "διατρίβεις",
+                             "reference":  "Euthyphro opening",
+                             "plato_path":  "data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "διατρίβω",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  26542,
+                                                      "form":  "διατρίβεις",
+                                                      "lemma":  "διατρίβω",
+                                                      "tag":  "V-2spia---",
+                                                      "frequency":  null
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+                                                                {
+                                                                    "form":  "διατρίβεις",
+                                                                    "lemma":  "διατρίβω",
+                                                                    "tag":  "v2spia---",
+                                                                    "sentence_id":  "2857961",
+                                                                    "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                }
+                                                            ],
+                             "expected_treebank_lemma_found":  true
+                         },
+                         {
+                             "form":  "γέγονεν",
+                             "reference":  "Euthyphro opening",
+                             "plato_path":  "data/tlg0059/tlg001/tlg0059.tlg001.perseus-grc1.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  "γίγνομαι",
+                             "expected_lemma_found":  true,
+                             "glem_matches":  [
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",
+                                                      "line":  154796,
+                                                      "form":  "γέγονεν",
+                                                      "lemma":  "γίγνομαι",
+                                                      "tag":  "V-3sria---",
+                                                      "frequency":  null
+                                                  },
+                                                  {
+                                                      "source_path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                                                      "line":  6014,
+                                                      "form":  "γέγονεν",
+                                                      "lemma":  "γίγνομαι",
+                                                      "tag":  "V-3sria---",
+                                                      "frequency":  21
+                                                  }
+                                              ],
+                             "euthyphro_treebank_matches":  [
+                                                                {
+                                                                    "form":  "γέγονεν",
+                                                                    "lemma":  "γίγνομαι",
+                                                                    "tag":  "v3sria---",
+                                                                    "sentence_id":  "2857961",
+                                                                    "citation":  "urn:cts:greekLit:tlg0059.tlg001:1"
+                                                                }
+                                                            ],
+                             "expected_treebank_lemma_found":  true
+                         },
+                         {
+                             "form":  "προσευξόμενός",
+                             "reference":  "Republic 327a; expected exact-form miss",
+                             "plato_path":  "data/tlg0059/tlg030/tlg0059.tlg030.perseus-grc2.xml",
+                             "attested_in_plato":  true,
+                             "expected_lemma":  null,
+                             "expected_lemma_found":  null,
+                             "glem_matches":  [
+
+                                              ],
+                             "euthyphro_treebank_matches":  [
+
+                                                            ],
+                             "expected_treebank_lemma_found":  null
+                         }
+                     ],
+    "limitations":  [
+                        "GLEM lists contain candidate form-lemma-tag associations, not a context-aware analyzer; they do not supply text citations per row and may omit forms or contain ambiguity.",
+                        "The AGDT selection provides contextual annotations for Euthyphro only, not the full Platonic corpus; its README reports remaining annotation issues.",
+                        "The corpus-wide exact form overlap is sensitive to case, accents, punctuation, editions and tokenization; a match is not proof of a contextually correct analysis.",
+                        "GLEM software declares GPL-3.0-only; rights for the derived data and upstream components need clarification before redistribution or commercial use."
+                    ],
+    "issues":  [
+                   {
+                       "severity":  "warning",
+                       "path":  "data/greek-morphology/glem/glem/list_proiel_word_lemma_POS_freq",
+                       "message":  "3 lines do not match the expected column format."
+                   },
+                   {
+                       "severity":  "warning",
+                       "path":  "data/greek-morphology/agdt-euthyphro/v2.1/Greek/texts/tlg0059.tlg001.perseus-grc1.tb.xml",
+                       "message":  "Non-artificial nodes: 13 empty lemmas, 0 empty tags, 10 all-placeholder tags; 0 nodes have empty forms."
+                   }
+               ]
+}
