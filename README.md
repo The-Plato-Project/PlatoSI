@@ -11,13 +11,16 @@ to Chora, Ollama or any model, and does not include search tools or a UI.
 - `scripts/` - corpus download and validation scripts.
 - `data/tlg0059/` - original Plato Greek XML and CTS metadata, downloaded locally.
 - `data/upstream/` - the source repository's README and license.
+- `data/lsj-logeion/` - original Logeion LSJ XML and source metadata, downloaded locally.
 - `docs/corpus-inventory.json` - pinned upstream file paths, sizes and Git blob hashes.
 - `docs/corpus-manifest.json` - work and edition metadata, citation declarations and validation results.
+- `docs/lsj-inventory.json` - pinned LSJ file paths, sizes, hashes and source information.
+- `docs/lsj-manifest.json` - LSJ entry counts and validation results.
 
 Downloaded data, generated indexes and model files are ignored by Git. The
 small inventory and manifest are intended to be tracked.
 
-## Download and validate
+## Download and validate Plato
 
 On Windows, run from the project root using Windows PowerShell 5.1 or later:
 
@@ -47,7 +50,42 @@ status. Citation declarations are recorded as XML from the original TEI
 headers, alongside observed milestone units; they are not normalized into a
 new citation scheme.
 
-## Source and reuse
+## Download and validate the Logeion LSJ
+
+On Windows, run from the project root:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\download-lsj.ps1
+```
+
+This downloads all `greatscott*.xml` files and the original README and license
+from a pinned revision of [helmadik/LSJLogeion](https://github.com/helmadik/LSJLogeion).
+The script verifies upstream Git blob hashes, regenerates the LSJ inventory and
+manifest, and replaces local LSJ files that differ from that revision; keep
+edits elsewhere. GitHub access is required and API rate limits apply. The
+data stays separate from the Plato corpus and is ignored by Git.
+
+To recheck downloaded files offline:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-lsj.ps1
+```
+
+The validator checks integrity, strict UTF-8, XML well-formedness, entry IDs
+and types, and Greek letters in entry headwords. It counts `div2` elements directly under
+`text/div1`, including entries marked as glosses, but excludes front matter.
+It records problem counts and examples per file. Errors produce a nonzero exit
+status; warnings identify source data needing review, including duplicate IDs.
+This is not TEI schema validation or a guarantee of lexical accuracy or coverage.
+
+The upstream repository describes this as Logeion's edited version of the
+Perseus LSJ, not the entire Logeion site or its other dictionaries. Corrections
+are ongoing and only a few supplement changes are incorporated. The upstream
+license specifies CC BY-SA 4.0; its README asks users to credit both Perseus
+Tufts and Helma Dik/Logeion. Preserve that attribution and the license for
+reuse, and consult the original metadata for details.
+
+## Plato source and reuse
 
 The corpus comes from [PerseusDL/canonical-greekLit](https://github.com/PerseusDL/canonical-greekLit).
 The pinned revision and exact inventory are recorded in the manifest and

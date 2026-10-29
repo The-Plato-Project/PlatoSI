@@ -1,0 +1,538 @@
+﻿{
+    "repository":  "https://github.com/helmadik/LSJLogeion",
+    "revision":  "ae135f548e0399d43cd09d45fed129cbec0e9b5c",
+    "selection":  "All greatscott XML files, README.md, and LICENSE.md from the pinned repository tree.",
+    "format":  "UTF-8 TEI P4-style XML; lexical entries are div2 elements with head children.",
+    "attribution":  "Perseus Tufts and Helma Dik/Logeion, as requested by the upstream README.",
+    "license":  "CC BY-SA 4.0, as stated in the upstream LICENSE.md.",
+    "files":  [
+                  {
+                      "source_path":  "greatscott01.xml",
+                      "local_path":  "data/lsj-logeion/greatscott01.xml",
+                      "git_blob_sha1":  "f31e6c3e6078d490789888454be5c69850c0e728",
+                      "size":  381778
+                  },
+                  {
+                      "source_path":  "greatscott02.xml",
+                      "local_path":  "data/lsj-logeion/greatscott02.xml",
+                      "git_blob_sha1":  "986c4e14439d9574de6e88f6d3a7cb1a590cc445",
+                      "size":  1826231
+                  },
+                  {
+                      "source_path":  "greatscott03.xml",
+                      "local_path":  "data/lsj-logeion/greatscott03.xml",
+                      "git_blob_sha1":  "431df0280fece5f041f6dac4b3f18a92fd4159d4",
+                      "size":  1764009
+                  },
+                  {
+                      "source_path":  "greatscott04.xml",
+                      "local_path":  "data/lsj-logeion/greatscott04.xml",
+                      "git_blob_sha1":  "2736c00c71b0fe86342f3564b7153077ce16d5a9",
+                      "size":  1768071
+                  },
+                  {
+                      "source_path":  "greatscott05.xml",
+                      "local_path":  "data/lsj-logeion/greatscott05.xml",
+                      "git_blob_sha1":  "29d367ce68ba4401cb209ba2a3a0a9ac4a0a4d64",
+                      "size":  1969959
+                  },
+                  {
+                      "source_path":  "greatscott06.xml",
+                      "local_path":  "data/lsj-logeion/greatscott06.xml",
+                      "git_blob_sha1":  "16ac59ceda32255b154f16fb6cafcbc931cc9777",
+                      "size":  1620509
+                  },
+                  {
+                      "source_path":  "greatscott07.xml",
+                      "local_path":  "data/lsj-logeion/greatscott07.xml",
+                      "git_blob_sha1":  "75d0dfd1e2aa773e501b1ac4966894fd510895d1",
+                      "size":  1797290
+                  },
+                  {
+                      "source_path":  "greatscott08.xml",
+                      "local_path":  "data/lsj-logeion/greatscott08.xml",
+                      "git_blob_sha1":  "a820a1826e5e15a5fa422a178531a49baa3e4e8b",
+                      "size":  1954675
+                  },
+                  {
+                      "source_path":  "greatscott09.xml",
+                      "local_path":  "data/lsj-logeion/greatscott09.xml",
+                      "git_blob_sha1":  "bc9fcf4825e2845899d4d984339a699ee0633c64",
+                      "size":  1826287
+                  },
+                  {
+                      "source_path":  "greatscott10.xml",
+                      "local_path":  "data/lsj-logeion/greatscott10.xml",
+                      "git_blob_sha1":  "5ee7d0b2beeee74fc26ee0fbded848e3d552f72e",
+                      "size":  1811312
+                  },
+                  {
+                      "source_path":  "greatscott11.xml",
+                      "local_path":  "data/lsj-logeion/greatscott11.xml",
+                      "git_blob_sha1":  "be6d704dabdd2e5c6194aa9f3c8d18825d471d5b",
+                      "size":  920958
+                  },
+                  {
+                      "source_path":  "greatscott12.xml",
+                      "local_path":  "data/lsj-logeion/greatscott12.xml",
+                      "git_blob_sha1":  "5b6faea5e1134b8868e5723b8a89238b3b181779",
+                      "size":  980453
+                  },
+                  {
+                      "source_path":  "greatscott13.xml",
+                      "local_path":  "data/lsj-logeion/greatscott13.xml",
+                      "git_blob_sha1":  "ad06b016f01bbd0820728bf1d157c65128269bda",
+                      "size":  1091833
+                  },
+                  {
+                      "source_path":  "greatscott14.xml",
+                      "local_path":  "data/lsj-logeion/greatscott14.xml",
+                      "git_blob_sha1":  "c1c2cc8f917a6972b6965b4eefec5debcb6b8510",
+                      "size":  622706
+                  },
+                  {
+                      "source_path":  "greatscott15.xml",
+                      "local_path":  "data/lsj-logeion/greatscott15.xml",
+                      "git_blob_sha1":  "17f6de615516f730590ca1bcd367ec012ea238be",
+                      "size":  1081380
+                  },
+                  {
+                      "source_path":  "greatscott16.xml",
+                      "local_path":  "data/lsj-logeion/greatscott16.xml",
+                      "git_blob_sha1":  "d379b6f0ba61bd17cb4f8fadeb3c51ec89e69107",
+                      "size":  772130
+                  },
+                  {
+                      "source_path":  "greatscott17.xml",
+                      "local_path":  "data/lsj-logeion/greatscott17.xml",
+                      "git_blob_sha1":  "8f12242d49d2919bf01d11e444e074b3ad281a53",
+                      "size":  2044784
+                  },
+                  {
+                      "source_path":  "greatscott18.xml",
+                      "local_path":  "data/lsj-logeion/greatscott18.xml",
+                      "git_blob_sha1":  "ff5b87d8baefae420527b227cd15b96a8f30dc1b",
+                      "size":  1785974
+                  },
+                  {
+                      "source_path":  "greatscott19.xml",
+                      "local_path":  "data/lsj-logeion/greatscott19.xml",
+                      "git_blob_sha1":  "14478b5238e5a54365f259e17518aff052833e42",
+                      "size":  1351140
+                  },
+                  {
+                      "source_path":  "greatscott20.xml",
+                      "local_path":  "data/lsj-logeion/greatscott20.xml",
+                      "git_blob_sha1":  "f2dfa17a7e91637eccd3fac66fd0f4031b175c8a",
+                      "size":  152713
+                  },
+                  {
+                      "source_path":  "greatscott21.xml",
+                      "local_path":  "data/lsj-logeion/greatscott21.xml",
+                      "git_blob_sha1":  "b84ba7392058e0583845ce2bc2de6be4ff3f86c9",
+                      "size":  2165333
+                  },
+                  {
+                      "source_path":  "greatscott22.xml",
+                      "local_path":  "data/lsj-logeion/greatscott22.xml",
+                      "git_blob_sha1":  "8508b9e7da9d8b3662415e64e1863b6c37e837f8",
+                      "size":  1915956
+                  },
+                  {
+                      "source_path":  "greatscott23.xml",
+                      "local_path":  "data/lsj-logeion/greatscott23.xml",
+                      "git_blob_sha1":  "a0772dd86423eb7e199775c763b43b977ec5b84e",
+                      "size":  1909988
+                  },
+                  {
+                      "source_path":  "greatscott24.xml",
+                      "local_path":  "data/lsj-logeion/greatscott24.xml",
+                      "git_blob_sha1":  "46461806da605542c206cf15afb94a76e109576c",
+                      "size":  1930485
+                  },
+                  {
+                      "source_path":  "greatscott25.xml",
+                      "local_path":  "data/lsj-logeion/greatscott25.xml",
+                      "git_blob_sha1":  "23f77ceb4ca31bad32e2d563eb93eff0dac6c6e8",
+                      "size":  2059444
+                  },
+                  {
+                      "source_path":  "greatscott26.xml",
+                      "local_path":  "data/lsj-logeion/greatscott26.xml",
+                      "git_blob_sha1":  "4afc305911b5908df8ca4d374ea53ea62775938f",
+                      "size":  2015731
+                  },
+                  {
+                      "source_path":  "greatscott27.xml",
+                      "local_path":  "data/lsj-logeion/greatscott27.xml",
+                      "git_blob_sha1":  "448a5c8dda64bd6a358c9e79815c54807eb22091",
+                      "size":  2098778
+                  },
+                  {
+                      "source_path":  "greatscott28.xml",
+                      "local_path":  "data/lsj-logeion/greatscott28.xml",
+                      "git_blob_sha1":  "84f9137ea2388eb90cd714637c39036217635b41",
+                      "size":  2112923
+                  },
+                  {
+                      "source_path":  "greatscott29.xml",
+                      "local_path":  "data/lsj-logeion/greatscott29.xml",
+                      "git_blob_sha1":  "a894c6f780585d5b28a034f25df38f3012bdac42",
+                      "size":  48856
+                  },
+                  {
+                      "source_path":  "greatscott30.xml",
+                      "local_path":  "data/lsj-logeion/greatscott30.xml",
+                      "git_blob_sha1":  "86338460c064106e56327dd4e19513901b4f2d94",
+                      "size":  6605
+                  },
+                  {
+                      "source_path":  "greatscott31.xml",
+                      "local_path":  "data/lsj-logeion/greatscott31.xml",
+                      "git_blob_sha1":  "d8f77c955b1adf54cf62053e1b17ac3053d6961f",
+                      "size":  507232
+                  },
+                  {
+                      "source_path":  "greatscott32.xml",
+                      "local_path":  "data/lsj-logeion/greatscott32.xml",
+                      "git_blob_sha1":  "701fe2fb6c55e1bd655e4ba8d7daafeb5f3ef9ab",
+                      "size":  1176200
+                  },
+                  {
+                      "source_path":  "greatscott33.xml",
+                      "local_path":  "data/lsj-logeion/greatscott33.xml",
+                      "git_blob_sha1":  "46512614b9923b14b65231e663087ccf6595ebaa",
+                      "size":  372490
+                  },
+                  {
+                      "source_path":  "greatscott34.xml",
+                      "local_path":  "data/lsj-logeion/greatscott34.xml",
+                      "git_blob_sha1":  "5067b6210fe5e5d7cffcad31ee2eb33475646ce3",
+                      "size":  1578847
+                  },
+                  {
+                      "source_path":  "greatscott35.xml",
+                      "local_path":  "data/lsj-logeion/greatscott35.xml",
+                      "git_blob_sha1":  "c391dadd26623dcbf546afacaa552fe8c922634a",
+                      "size":  410124
+                  },
+                  {
+                      "source_path":  "greatscott36.xml",
+                      "local_path":  "data/lsj-logeion/greatscott36.xml",
+                      "git_blob_sha1":  "e29333124a1325366a23e3ce82d2616143e5c613",
+                      "size":  1499497
+                  },
+                  {
+                      "source_path":  "greatscott37.xml",
+                      "local_path":  "data/lsj-logeion/greatscott37.xml",
+                      "git_blob_sha1":  "2a6c9b124ae139a138b1ddc35b1734abecd23ad2",
+                      "size":  626626
+                  },
+                  {
+                      "source_path":  "greatscott38.xml",
+                      "local_path":  "data/lsj-logeion/greatscott38.xml",
+                      "git_blob_sha1":  "96942455f18e5a51b3813742dea755b54c8c5366",
+                      "size":  1838102
+                  },
+                  {
+                      "source_path":  "greatscott39.xml",
+                      "local_path":  "data/lsj-logeion/greatscott39.xml",
+                      "git_blob_sha1":  "5370d17cfadb58074a460c739896d70eab68638d",
+                      "size":  2066239
+                  },
+                  {
+                      "source_path":  "greatscott40.xml",
+                      "local_path":  "data/lsj-logeion/greatscott40.xml",
+                      "git_blob_sha1":  "6543aa3d11383d958e06318fc7ce90b242161619",
+                      "size":  1926701
+                  },
+                  {
+                      "source_path":  "greatscott41.xml",
+                      "local_path":  "data/lsj-logeion/greatscott41.xml",
+                      "git_blob_sha1":  "8c6021e1180f016fe3b4c091d47ee0a6a165802b",
+                      "size":  1934722
+                  },
+                  {
+                      "source_path":  "greatscott42.xml",
+                      "local_path":  "data/lsj-logeion/greatscott42.xml",
+                      "git_blob_sha1":  "d6637239e9dc845c0c2ad60b4665fb5bf5613a58",
+                      "size":  1329620
+                  },
+                  {
+                      "source_path":  "greatscott43.xml",
+                      "local_path":  "data/lsj-logeion/greatscott43.xml",
+                      "git_blob_sha1":  "484267ae4f6d7f1710ccc667058e7e723e6b10da",
+                      "size":  595329
+                  },
+                  {
+                      "source_path":  "greatscott44.xml",
+                      "local_path":  "data/lsj-logeion/greatscott44.xml",
+                      "git_blob_sha1":  "89b622107ae77b87c3cd614dc7637a6017a0ba50",
+                      "size":  1824905
+                  },
+                  {
+                      "source_path":  "greatscott45.xml",
+                      "local_path":  "data/lsj-logeion/greatscott45.xml",
+                      "git_blob_sha1":  "6e2040ff5aeec3f4a667fc7d317882cf0fb558e8",
+                      "size":  369715
+                  },
+                  {
+                      "source_path":  "greatscott46.xml",
+                      "local_path":  "data/lsj-logeion/greatscott46.xml",
+                      "git_blob_sha1":  "25549b90a2a2b9b37cf77802c9d8c2e01209ac74",
+                      "size":  1607465
+                  },
+                  {
+                      "source_path":  "greatscott47.xml",
+                      "local_path":  "data/lsj-logeion/greatscott47.xml",
+                      "git_blob_sha1":  "201a8c54dd975fdfaeaa9a3a3aed65f8cea269a6",
+                      "size":  2188457
+                  },
+                  {
+                      "source_path":  "greatscott48.xml",
+                      "local_path":  "data/lsj-logeion/greatscott48.xml",
+                      "git_blob_sha1":  "ec330510a400c28666127f9e3bd84a16abc37bf8",
+                      "size":  1270977
+                  },
+                  {
+                      "source_path":  "greatscott49.xml",
+                      "local_path":  "data/lsj-logeion/greatscott49.xml",
+                      "git_blob_sha1":  "75da953359db1edea99cb4eaca5133d6420dcabf",
+                      "size":  348788
+                  },
+                  {
+                      "source_path":  "greatscott50.xml",
+                      "local_path":  "data/lsj-logeion/greatscott50.xml",
+                      "git_blob_sha1":  "7f2cb8dd70ea21f0ad952542a266b753511e91ad",
+                      "size":  1324556
+                  },
+                  {
+                      "source_path":  "greatscott51.xml",
+                      "local_path":  "data/lsj-logeion/greatscott51.xml",
+                      "git_blob_sha1":  "fe25bb57f1fa99e91f02bd82f877d34dfe279db9",
+                      "size":  378996
+                  },
+                  {
+                      "source_path":  "greatscott52.xml",
+                      "local_path":  "data/lsj-logeion/greatscott52.xml",
+                      "git_blob_sha1":  "4ae2365093715a45ee01e47d2e1e15200d1f4339",
+                      "size":  225950
+                  },
+                  {
+                      "source_path":  "greatscott53.xml",
+                      "local_path":  "data/lsj-logeion/greatscott53.xml",
+                      "git_blob_sha1":  "6caf8a158e4be6bd8579c979080cfcec501a2354",
+                      "size":  1925055
+                  },
+                  {
+                      "source_path":  "greatscott54.xml",
+                      "local_path":  "data/lsj-logeion/greatscott54.xml",
+                      "git_blob_sha1":  "d7dc83b04cbc3b4327f1fce6e85e7847f489a2e0",
+                      "size":  2340749
+                  },
+                  {
+                      "source_path":  "greatscott55.xml",
+                      "local_path":  "data/lsj-logeion/greatscott55.xml",
+                      "git_blob_sha1":  "6220ee23c4bdab152fe0bab3015a3403d84c3e47",
+                      "size":  472873
+                  },
+                  {
+                      "source_path":  "greatscott56.xml",
+                      "local_path":  "data/lsj-logeion/greatscott56.xml",
+                      "git_blob_sha1":  "6e8c9d0c7b9c61bac96c849da4e1eb40d3633d95",
+                      "size":  1522315
+                  },
+                  {
+                      "source_path":  "greatscott57.xml",
+                      "local_path":  "data/lsj-logeion/greatscott57.xml",
+                      "git_blob_sha1":  "c3bad09b6a44400750d22119fdccbc121ab9f812",
+                      "size":  2103932
+                  },
+                  {
+                      "source_path":  "greatscott58.xml",
+                      "local_path":  "data/lsj-logeion/greatscott58.xml",
+                      "git_blob_sha1":  "e830dace8754a7a59c5d0acb66e6e3db8a705a7b",
+                      "size":  2063037
+                  },
+                  {
+                      "source_path":  "greatscott59.xml",
+                      "local_path":  "data/lsj-logeion/greatscott59.xml",
+                      "git_blob_sha1":  "d88cfab124437ca91d39530f02c316c20007411f",
+                      "size":  2214895
+                  },
+                  {
+                      "source_path":  "greatscott60.xml",
+                      "local_path":  "data/lsj-logeion/greatscott60.xml",
+                      "git_blob_sha1":  "db0a51ea9a1bd31542670464f1866fabaa072c0c",
+                      "size":  1886014
+                  },
+                  {
+                      "source_path":  "greatscott61.xml",
+                      "local_path":  "data/lsj-logeion/greatscott61.xml",
+                      "git_blob_sha1":  "b14f249f154c9a1bcd9a1e333b788547896855d0",
+                      "size":  1936566
+                  },
+                  {
+                      "source_path":  "greatscott62.xml",
+                      "local_path":  "data/lsj-logeion/greatscott62.xml",
+                      "git_blob_sha1":  "da4272067563c1427cbc3160c86f7c88f61ff3a2",
+                      "size":  1956064
+                  },
+                  {
+                      "source_path":  "greatscott63.xml",
+                      "local_path":  "data/lsj-logeion/greatscott63.xml",
+                      "git_blob_sha1":  "550e9889ab8125674315ec4505467d5e5b3fd1c1",
+                      "size":  2036728
+                  },
+                  {
+                      "source_path":  "greatscott64.xml",
+                      "local_path":  "data/lsj-logeion/greatscott64.xml",
+                      "git_blob_sha1":  "cac5db3af2a0f5ce05bdb23d2729640cb3daf0ce",
+                      "size":  7961
+                  },
+                  {
+                      "source_path":  "greatscott65.xml",
+                      "local_path":  "data/lsj-logeion/greatscott65.xml",
+                      "git_blob_sha1":  "884da89c7d1fcdfbd2928fe7fad87e626dff55fa",
+                      "size":  5387
+                  },
+                  {
+                      "source_path":  "greatscott66.xml",
+                      "local_path":  "data/lsj-logeion/greatscott66.xml",
+                      "git_blob_sha1":  "c285413e2a8369f82499870adbf1c6b8a268a1bd",
+                      "size":  19425
+                  },
+                  {
+                      "source_path":  "greatscott67.xml",
+                      "local_path":  "data/lsj-logeion/greatscott67.xml",
+                      "git_blob_sha1":  "cd0aa771dd691b04c97f0b0c830520f24eb25765",
+                      "size":  918529
+                  },
+                  {
+                      "source_path":  "greatscott68.xml",
+                      "local_path":  "data/lsj-logeion/greatscott68.xml",
+                      "git_blob_sha1":  "62928d44796f8af93401cf1f2dd659bc4e18264a",
+                      "size":  1001446
+                  },
+                  {
+                      "source_path":  "greatscott69.xml",
+                      "local_path":  "data/lsj-logeion/greatscott69.xml",
+                      "git_blob_sha1":  "114489a0242a08f0a592254244febbaea68a5d63",
+                      "size":  1801281
+                  },
+                  {
+                      "source_path":  "greatscott70.xml",
+                      "local_path":  "data/lsj-logeion/greatscott70.xml",
+                      "git_blob_sha1":  "27ccda4ca8325213d837da7bb7bd9a28b2490691",
+                      "size":  2193527
+                  },
+                  {
+                      "source_path":  "greatscott71.xml",
+                      "local_path":  "data/lsj-logeion/greatscott71.xml",
+                      "git_blob_sha1":  "92e31985396dd0c8933563a232746ae0812b4212",
+                      "size":  2064391
+                  },
+                  {
+                      "source_path":  "greatscott72.xml",
+                      "local_path":  "data/lsj-logeion/greatscott72.xml",
+                      "git_blob_sha1":  "4b474ee4db10b6c71d93936e79031715b92a01e1",
+                      "size":  2256277
+                  },
+                  {
+                      "source_path":  "greatscott73.xml",
+                      "local_path":  "data/lsj-logeion/greatscott73.xml",
+                      "git_blob_sha1":  "10c52dfdac83e736af2656e8462e464690bd57f2",
+                      "size":  117392
+                  },
+                  {
+                      "source_path":  "greatscott74.xml",
+                      "local_path":  "data/lsj-logeion/greatscott74.xml",
+                      "git_blob_sha1":  "8a9d70ed8f29b519d03905d463c8cef2929aab2f",
+                      "size":  2324518
+                  },
+                  {
+                      "source_path":  "greatscott75.xml",
+                      "local_path":  "data/lsj-logeion/greatscott75.xml",
+                      "git_blob_sha1":  "9c1402ae73787b537cbd7111006efa443b9e9e54",
+                      "size":  2208342
+                  },
+                  {
+                      "source_path":  "greatscott76.xml",
+                      "local_path":  "data/lsj-logeion/greatscott76.xml",
+                      "git_blob_sha1":  "b5ffbe3110ddab2ae16e736c7d8eedf7853cde22",
+                      "size":  128083
+                  },
+                  {
+                      "source_path":  "greatscott77.xml",
+                      "local_path":  "data/lsj-logeion/greatscott77.xml",
+                      "git_blob_sha1":  "a8c47779463e4eff65758db19d626640ab98045f",
+                      "size":  1752747
+                  },
+                  {
+                      "source_path":  "greatscott78.xml",
+                      "local_path":  "data/lsj-logeion/greatscott78.xml",
+                      "git_blob_sha1":  "2108fef5b62c25ef216eda332fa61a64b125db08",
+                      "size":  2028412
+                  },
+                  {
+                      "source_path":  "greatscott79.xml",
+                      "local_path":  "data/lsj-logeion/greatscott79.xml",
+                      "git_blob_sha1":  "501a4b9ff01a808b3f864186fe03e6ae4c08eba7",
+                      "size":  8300
+                  },
+                  {
+                      "source_path":  "greatscott80.xml",
+                      "local_path":  "data/lsj-logeion/greatscott80.xml",
+                      "git_blob_sha1":  "d75842b0c7470d68c1a2e3cf57494c3d6c8c19fe",
+                      "size":  2156103
+                  },
+                  {
+                      "source_path":  "greatscott81.xml",
+                      "local_path":  "data/lsj-logeion/greatscott81.xml",
+                      "git_blob_sha1":  "0e1b38a6866a1a1f21d477e2ca3cbcbf9ce2aec6",
+                      "size":  1082946
+                  },
+                  {
+                      "source_path":  "greatscott82.xml",
+                      "local_path":  "data/lsj-logeion/greatscott82.xml",
+                      "git_blob_sha1":  "0322e87aec5de35e7c953072ccfbcf37bd36102e",
+                      "size":  1279590
+                  },
+                  {
+                      "source_path":  "greatscott83.xml",
+                      "local_path":  "data/lsj-logeion/greatscott83.xml",
+                      "git_blob_sha1":  "9943c843fe4fba05c7fc6f44e84c71304b9e6dd5",
+                      "size":  1331535
+                  },
+                  {
+                      "source_path":  "greatscott84.xml",
+                      "local_path":  "data/lsj-logeion/greatscott84.xml",
+                      "git_blob_sha1":  "2c09a4d580d2cff1ee298774599ef7e2d7aae4fb",
+                      "size":  673142
+                  },
+                  {
+                      "source_path":  "greatscott85.xml",
+                      "local_path":  "data/lsj-logeion/greatscott85.xml",
+                      "git_blob_sha1":  "60d60bd907a731cf858437708c1e6f41e642421e",
+                      "size":  28377
+                  },
+                  {
+                      "source_path":  "greatscott86.xml",
+                      "local_path":  "data/lsj-logeion/greatscott86.xml",
+                      "git_blob_sha1":  "b60d74a129da949fdde36d7ceef7b3ecb776fede",
+                      "size":  630810
+                  },
+                  {
+                      "source_path":  "LICENSE.md",
+                      "local_path":  "data/lsj-logeion/LICENSE.md",
+                      "git_blob_sha1":  "f2f21f8d80079d78e20aea93fc029733884949fd",
+                      "size":  164
+                  },
+                  {
+                      "source_path":  "README.md",
+                      "local_path":  "data/lsj-logeion/README.md",
+                      "git_blob_sha1":  "dd0d6a49eae4c989af8500b86e0b343e58cd2afd",
+                      "size":  1896
+                  }
+              ]
+}

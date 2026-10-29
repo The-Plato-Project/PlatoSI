@@ -1,0 +1,2235 @@
+﻿{
+    "repository":  "https://github.com/helmadik/LSJLogeion",
+    "revision":  "ae135f548e0399d43cd09d45fed129cbec0e9b5c",
+    "selection":  "All greatscott XML files, README.md, and LICENSE.md from the pinned repository tree.",
+    "format":  "UTF-8 TEI P4-style XML; lexical entries are div2 elements with head children.",
+    "attribution":  "Perseus Tufts and Helma Dik/Logeion, as requested by the upstream README.",
+    "license":  "CC BY-SA 4.0, as stated in the upstream LICENSE.md.",
+    "validation_scope":  "Git blob integrity, strict UTF-8 decoding, XML well-formedness, TEI root, div2 headword and entry ID checks. Not TEI schema validation, lexicographic accuracy or coverage validation.",
+    "expected_files":  88,
+    "verified_files":  88,
+    "expected_xml_files":  86,
+    "parsed_xml_files":  86,
+    "counts_complete":  true,
+    "lexical_entries":  117168,
+    "heads_with_greek_letters":  117168,
+    "duplicate_entry_id_occurrences":  29,
+    "duplicate_entry_ids":  [
+                                {
+                                    "id":  "crossa)dmai/nein",
+                                    "first_path":  "data/lsj-logeion/greatscott02.xml",
+                                    "first_head":  "ἀδμαίνειν",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott02.xml",
+                                    "duplicate_head":  "ἀδμηλοῖ"
+                                },
+                                {
+                                    "id":  "crossa)mfekte/on",
+                                    "first_path":  "data/lsj-logeion/greatscott04.xml",
+                                    "first_head":  "ἀμφεκτέον",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott04.xml",
+                                    "duplicate_head":  "ἀμφεκτήρ"
+                                },
+                                {
+                                    "id":  "crossa)mfekte/on",
+                                    "first_path":  "data/lsj-logeion/greatscott04.xml",
+                                    "first_head":  "ἀμφεκτέον",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott04.xml",
+                                    "duplicate_head":  "ἀμφελαΐς"
+                                },
+                                {
+                                    "id":  "crossa)posxola/zw",
+                                    "first_path":  "data/lsj-logeion/greatscott08.xml",
+                                    "first_head":  "ἀποσχολάζω",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott08.xml",
+                                    "duplicate_head":  "ἀποσχολέομαι"
+                                },
+                                {
+                                    "id":  "crosse)/qw",
+                                    "first_path":  "data/lsj-logeion/greatscott21.xml",
+                                    "first_head":  "ἔθω",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott21.xml",
+                                    "duplicate_head":  "εἴωθα"
+                                },
+                                {
+                                    "id":  "crossei)sparadu/omai",
+                                    "first_path":  "data/lsj-logeion/greatscott21.xml",
+                                    "first_head":  "εἰσπαραδέχομαι",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott21.xml",
+                                    "duplicate_head":  "εἰσπαραδύομαι"
+                                },
+                                {
+                                    "id":  "crosse)/peite",
+                                    "first_path":  "data/lsj-logeion/greatscott25.xml",
+                                    "first_head":  "ἔπειτε",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott25.xml",
+                                    "duplicate_head":  "ἐπείτοιγε"
+                                },
+                                {
+                                    "id":  "crosse(/ws",
+                                    "first_path":  "data/lsj-logeion/greatscott29.xml",
+                                    "first_head":  "ἕως",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott29.xml",
+                                    "duplicate_head":  "ἕως"
+                                },
+                                {
+                                    "id":  "crossh)e/2",
+                                    "first_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "first_head":  "ἠέ",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "duplicate_head":  "ᾖε"
+                                },
+                                {
+                                    "id":  "crossh)/qi^sis",
+                                    "first_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "first_head":  "ἤθισις",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "duplicate_head":  "ἠθμάριον"
+                                },
+                                {
+                                    "id":  "crossh)=|san",
+                                    "first_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "first_head":  "ᾖσαν",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott32.xml",
+                                    "duplicate_head":  "ἥσατο"
+                                },
+                                {
+                                    "id":  "cross*qriw/",
+                                    "first_path":  "data/lsj-logeion/greatscott34.xml",
+                                    "first_head":  "Θριώ",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott34.xml",
+                                    "duplicate_head":  "θρόδαξ"
+                                },
+                                {
+                                    "id":  "crossi)/e2",
+                                    "first_path":  "data/lsj-logeion/greatscott35.xml",
+                                    "first_head":  "ἴε",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott35.xml",
+                                    "duplicate_head":  "ἱέμεν"
+                                },
+                                {
+                                    "id":  "crossi(/n",
+                                    "first_path":  "data/lsj-logeion/greatscott36.xml",
+                                    "first_head":  "ἵν",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott36.xml",
+                                    "duplicate_head":  "ἵν"
+                                },
+                                {
+                                    "id":  "crosske/rna",
+                                    "first_path":  "data/lsj-logeion/greatscott40.xml",
+                                    "first_head":  "κέρνα",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott40.xml",
+                                    "duplicate_head":  "κέρνα"
+                                },
+                                {
+                                    "id":  "crosskoba_lei/a",
+                                    "first_path":  "data/lsj-logeion/greatscott41.xml",
+                                    "first_head":  "κόβακτρα",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott41.xml",
+                                    "duplicate_head":  "κοβαλεία"
+                                },
+                                {
+                                    "id":  "crosskronta=|",
+                                    "first_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "first_head":  "κροντᾷ",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "duplicate_head":  "κρόξ"
+                                },
+                                {
+                                    "id":  "crosskronta=|",
+                                    "first_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "first_head":  "κροντᾷ",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "duplicate_head":  "κρόπιον"
+                                },
+                                {
+                                    "id":  "crosskwlh=",
+                                    "first_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "first_head":  "κωλετίναις",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott42.xml",
+                                    "duplicate_head":  "κωλῆ"
+                                },
+                                {
+                                    "id":  "crosslu_si^ma/xeios",
+                                    "first_path":  "data/lsj-logeion/greatscott45.xml",
+                                    "first_head":  "Λυσιμάχειος",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott45.xml",
+                                    "duplicate_head":  "λυσιμάχειος"
+                                },
+                                {
+                                    "id":  "crossneophgh/s",
+                                    "first_path":  "data/lsj-logeion/greatscott50.xml",
+                                    "first_head":  "νεοπηγής",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott50.xml",
+                                    "duplicate_head":  "νεόπηκτος"
+                                },
+                                {
+                                    "id":  "crossoi(=",
+                                    "first_path":  "data/lsj-logeion/greatscott53.xml",
+                                    "first_head":  "οἷ",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott53.xml",
+                                    "duplicate_head":  "οἷ"
+                                },
+                                {
+                                    "id":  "crosso(/_ti",
+                                    "first_path":  "data/lsj-logeion/greatscott54.xml",
+                                    "first_head":  "ὅ τι",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott54.xml",
+                                    "duplicate_head":  "ὅτι"
+                                },
+                                {
+                                    "id":  "crosspurso/s",
+                                    "first_path":  "data/lsj-logeion/greatscott63.xml",
+                                    "first_head":  "πυρσός",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott63.xml",
+                                    "duplicate_head":  "πυρσός"
+                                },
+                                {
+                                    "id":  "crossr(e/on",
+                                    "first_path":  "data/lsj-logeion/greatscott67.xml",
+                                    "first_head":  "ῥέον",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott67.xml",
+                                    "duplicate_head":  "ῥέον"
+                                },
+                                {
+                                    "id":  "crosssai/rw1",
+                                    "first_path":  "data/lsj-logeion/greatscott68.xml",
+                                    "first_head":  "σαίρω",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott68.xml",
+                                    "duplicate_head":  "σέσηρα"
+                                },
+                                {
+                                    "id":  "crossti_mh=nta",
+                                    "first_path":  "data/lsj-logeion/greatscott74.xml",
+                                    "first_head":  "τιμῆντα",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott74.xml",
+                                    "duplicate_head":  "τιμηρύειν"
+                                },
+                                {
+                                    "id":  "crossti_mh=nta",
+                                    "first_path":  "data/lsj-logeion/greatscott74.xml",
+                                    "first_head":  "τιμῆντα",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott74.xml",
+                                    "duplicate_head":  "τιμῆς"
+                                },
+                                {
+                                    "id":  "crossfe/nnos",
+                                    "first_path":  "data/lsj-logeion/greatscott80.xml",
+                                    "first_head":  "φέννος",
+                                    "duplicate_path":  "data/lsj-logeion/greatscott80.xml",
+                                    "duplicate_head":  "φένω"
+                                }
+                            ],
+    "files":  [
+                  {
+                      "path":  "data/lsj-logeion/greatscott01.xml",
+                      "entries":  0,
+                      "entries_by_type":  [
+
+                                          ],
+                      "excluded_div2_elements":  2,
+                      "heads_with_greek_letters":  0,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott02.xml",
+                      "entries":  2023,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  166
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1857
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2023,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott03.xml",
+                      "entries":  2034,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  117
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1917
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2034,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott04.xml",
+                      "entries":  2067,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  182
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1885
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2067,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott05.xml",
+                      "entries":  2009,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  92
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1916
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2009,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott06.xml",
+                      "entries":  2003,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  83
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1920
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2003,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott07.xml",
+                      "entries":  2005,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  82
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1923
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2005,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott08.xml",
+                      "entries":  2005,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  52
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1953
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2005,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott09.xml",
+                      "entries":  2008,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  109
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1899
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2008,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott10.xml",
+                      "entries":  2010,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  110
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1900
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2010,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott11.xml",
+                      "entries":  951,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  87
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  864
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  951,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott12.xml",
+                      "entries":  1073,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  118
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  955
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1073,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott13.xml",
+                      "entries":  1371,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  126
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1245
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1371,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott14.xml",
+                      "entries":  657,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  69
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  588
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  657,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott15.xml",
+                      "entries":  1145,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  78
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1067
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1145,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott16.xml",
+                      "entries":  852,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  75
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  777
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  852,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott17.xml",
+                      "entries":  2009,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  76
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1933
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2009,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott18.xml",
+                      "entries":  1999,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  71
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1928
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1999,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott19.xml",
+                      "entries":  1849,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  76
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1772
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1849,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott20.xml",
+                      "entries":  158,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  19
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  139
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  158,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott21.xml",
+                      "entries":  2018,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  82
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1936
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2018,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott22.xml",
+                      "entries":  2016,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  84
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1932
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2016,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott23.xml",
+                      "entries":  2009,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  85
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1924
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2009,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott24.xml",
+                      "entries":  2015,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  114
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1901
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2015,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott25.xml",
+                      "entries":  2009,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  52
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1957
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2009,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott26.xml",
+                      "entries":  2007,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  42
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1965
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2007,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott27.xml",
+                      "entries":  2011,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "dialectcross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  99
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1911
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2011,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott28.xml",
+                      "entries":  2003,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  48
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1955
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2003,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott29.xml",
+                      "entries":  23,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  22
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  23,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott30.xml",
+                      "entries":  1,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott31.xml",
+                      "entries":  534,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  21
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  513
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  534,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott32.xml",
+                      "entries":  1142,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  27
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1115
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1142,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott33.xml",
+                      "entries":  331,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  9
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  322
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  331,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott34.xml",
+                      "entries":  1640,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  78
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1562
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1640,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott35.xml",
+                      "entries":  399,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  17
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  382
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  399,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott36.xml",
+                      "entries":  1569,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  82
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1487
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1569,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott37.xml",
+                      "entries":  456,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  23
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  433
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  456,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott38.xml",
+                      "entries":  2019,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  102
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1917
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2019,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott39.xml",
+                      "entries":  2001,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  33
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1968
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2001,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott40.xml",
+                      "entries":  2032,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  121
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1911
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2032,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott41.xml",
+                      "entries":  2038,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  123
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1915
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2038,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott42.xml",
+                      "entries":  1412,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  87
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1325
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1412,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott43.xml",
+                      "entries":  613,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  84
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  529
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  613,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott44.xml",
+                      "entries":  2007,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  117
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1890
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2007,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott45.xml",
+                      "entries":  357,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  26
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  331
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  357,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott46.xml",
+                      "entries":  1655,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  67
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1588
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1655,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott47.xml",
+                      "entries":  2006,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  48
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1958
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2006,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott48.xml",
+                      "entries":  1618,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  88
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1530
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1618,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott49.xml",
+                      "entries":  405,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  17
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  388
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  405,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott50.xml",
+                      "entries":  1391,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  50
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1341
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1391,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott51.xml",
+                      "entries":  454,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  9
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  445
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  454,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott52.xml",
+                      "entries":  154,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  10
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  144
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  154,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott53.xml",
+                      "entries":  2000,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  85
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1915
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2000,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott54.xml",
+                      "entries":  2010,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  70
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1939
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2010,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott55.xml",
+                      "entries":  359,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  13
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  346
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  359,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott56.xml",
+                      "entries":  1640,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  41
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1599
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1640,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott57.xml",
+                      "entries":  2012,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  24
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1988
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2012,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott58.xml",
+                      "entries":  2012,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  20
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1991
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2012,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott59.xml",
+                      "entries":  2008,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  61
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1947
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2008,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott60.xml",
+                      "entries":  2002,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  27
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1975
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2002,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott61.xml",
+                      "entries":  2002,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  23
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1979
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2002,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott62.xml",
+                      "entries":  2002,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  10
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1992
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2002,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott63.xml",
+                      "entries":  1984,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  3
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  35
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1946
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1984,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott64.xml",
+                      "entries":  1,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott65.xml",
+                      "entries":  1,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott66.xml",
+                      "entries":  21,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  2
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  19
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  21,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott67.xml",
+                      "entries":  936,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  53
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  883
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  936,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott68.xml",
+                      "entries":  1080,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  78
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1002
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1080,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott69.xml",
+                      "entries":  2017,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  118
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1899
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2017,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott70.xml",
+                      "entries":  2011,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  85
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1926
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2011,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott71.xml",
+                      "entries":  2009,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  11
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1998
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2009,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott72.xml",
+                      "entries":  2012,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "crossref",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  42
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1969
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2012,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott73.xml",
+                      "entries":  78,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  3
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  75
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  78,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott74.xml",
+                      "entries":  1920,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  57
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1863
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1920,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott75.xml",
+                      "entries":  1992,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "cross",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  76
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1915
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1992,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott76.xml",
+                      "entries":  74,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  73
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  74,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott77.xml",
+                      "entries":  1923,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  51
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1872
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1923,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott78.xml",
+                      "entries":  2002,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  44
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1958
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2002,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott79.xml",
+                      "entries":  8,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  7
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  8,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott80.xml",
+                      "entries":  2000,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  43
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1956
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  2000,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  1,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott81.xml",
+                      "entries":  875,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  25
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  850
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  875,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott82.xml",
+                      "entries":  1128,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  27
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1101
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1128,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott83.xml",
+                      "entries":  1213,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  25
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  1188
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  1213,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott84.xml",
+                      "entries":  778,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  54
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  724
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  778,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott85.xml",
+                      "entries":  15,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  1
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  14
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  15,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  },
+                  {
+                      "path":  "data/lsj-logeion/greatscott86.xml",
+                      "entries":  470,
+                      "entries_by_type":  [
+                                              {
+                                                  "type":  "gloss",
+                                                  "count":  19
+                                              },
+                                              {
+                                                  "type":  "main",
+                                                  "count":  451
+                                              }
+                                          ],
+                      "excluded_div2_elements":  0,
+                      "heads_with_greek_letters":  470,
+                      "missing_or_empty_heads":  0,
+                      "heads_without_greek_letters":  0,
+                      "missing_entry_ids":  0,
+                      "missing_entry_types":  0,
+                      "problem_examples":  [
+
+                                           ]
+                  }
+              ],
+    "issues":  [
+                   {
+                       "severity":  "warning",
+                       "path":  "data/lsj-logeion/greatscott80.xml",
+                       "message":  "1 entries have no type attribute."
+                   },
+                   {
+                       "severity":  "warning",
+                       "path":  "data/lsj-logeion",
+                       "message":  "29 entry ID occurrences duplicate earlier entries. See duplicate_entry_ids."
+                   }
+               ],
+    "coverage_notes":  [
+                           "This is the edited Logeion LSJ repository, not all Logeion dictionaries or the website.",
+                           "The upstream README describes ongoing corrections and says only a few supplement changes have been incorporated."
+                       ]
+}
