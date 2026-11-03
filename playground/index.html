@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlatoSI Playground</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <div><h1>PlatoSI Playground</h1><p>Experimental, local conversation</p></div>
+    <div><a href="/">Explore Plato's texts</a><a href="/reader">Open word reader</a><a href="/dilemma">Dilemma laboratory</a> <button id="new" type="button">New Conversation</button></div>
+  </header>
+  <main>
+    <section class="conversation" aria-label="Conversation">
+      <div id="messages" class="messages" role="log" aria-live="polite">
+        <p class="welcome">Share a thought, a dream, or a passage. Your conversation stays in this browser session.</p>
+      </div>
+      <div id="status" role="status" aria-live="polite">Loading local models…</div>
+      <form id="form">
+        <label for="message">Your message</label>
+        <textarea id="message" rows="7" placeholder="Write or paste as much as you need…" required></textarea>
+        <div class="actions">
+          <button id="send" type="submit">Send message</button>
+          <button id="stop" type="button" disabled>Stop generation</button>
+        </div>
+      </form>
+    </section>
+    <aside aria-label="Settings">
+      <h2>Settings</h2>
+      <label for="model">Local model</label>
+      <select id="model"></select>
+      <label for="temperature">Temperature <span id="temperature-value">0.7</span></label>
+      <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.7">
+      <label for="max-tokens">Maximum response tokens</label>
+      <input id="max-tokens" type="number" min="1" max="8192" value="1024">
+      <label for="mode">Interaction mode</label>
+      <select id="mode">
+        <option value="free">Free Conversation</option>
+        <option value="grounded">Text-Grounded Inquiry</option>
+      </select>
+      <p id="mode-description">Direct conversation. No scholarly retrieval is invoked.</p>
+      <div id="grounded" hidden>
+        <label for="profile">Reader profile</label>
+        <select id="profile"><option value="">No profile — text only</option></select>
+        <label><input id="override" type="checkbox"> Use only selected resources for this inquiry</label>
+        <div id="resources" class="resources"></div>
+        <p>Explicit resource selection overrides the profile, including text-first mode. Include a corpus provider.</p>
+        <label for="text">Greek word or passage to search</label>
+        <textarea id="text" rows="3" placeholder="Optional exact Greek text"></textarea>
+        <p>Or enter an edition and citation:</p>
+        <label for="edition">Edition identifier</label>
+        <input id="edition" type="text" placeholder="urn:cts:greekLit:…">
+        <label for="citation">Citation</label>
+        <input id="citation" type="text" placeholder="e.g. 327a">
+        <label for="headword">Dictionary headword (optional)</label>
+        <input id="headword" type="text">
+        <label for="morph-form">Morphological form (optional)</label>
+        <input id="morph-form" type="text">
+        <details><summary>Additional grounding instructions sent to the model</summary><pre id="grounding-prompt"></pre></details>
+      </div>
+      <label for="system-prompt">System prompt</label>
+      <textarea id="system-prompt" rows="12"></textarea>
+      <button id="reset-prompt" type="button">Reset system prompt</button>
+      <p>Changes apply to the next message. Model output may be mistaken; inspect sources before relying on it.</p>
+    </aside>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

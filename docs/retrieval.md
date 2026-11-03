@@ -79,6 +79,46 @@ GLEM is disabled by default and isolated: its list and derived index are not
 packaged or copied into another provider. Its commercial use and
 redistribution are **not cleared**. See `glem-licensing-review.md`.
 
+## Experimental word exploration
+
+The separate browser reader uses the optional `reading` corpus capability
+to retrieve exact indexed source text, citation milestones and editorial
+markup. Greek-word offsets are Unicode code-point offsets into that text;
+browser rendering preserves the original form. The reader calls enabled,
+selected morphology and dictionary providers locally and keeps each analysis
+and its provenance separate. Failures are reported without discarding results
+from other providers. A profile's text-first setting and explicit overrides
+have the same meaning as elsewhere.
+
+The optional `match_forms` morphology capability accepts a candidate lemma
+and surface forms from the current source scope. GLEM and Dilemma return
+their own direct lookup mappings; the reader joins those mappings to actual
+text offsets and citations. This does not establish contextual correctness
+or exhaustive coverage, and does not infer compounds or roots. It does not
+reconstruct corpus passages with a model.
+
+Dilemma requires its separate Python package and local data, and is disabled
+by default. The adapter calls verbose lemmatization with `guess=False` under
+both article-resolution settings. It labels lookup candidates and
+rule-generated suggestions separately; this is not an exhaustive enumeration
+and neither class is authoritative. Occurrences use direct lookup rows only.
+The artifact revision in configuration is an unverified declaration, and
+the reported file-metadata fingerprint is not a content hash. Dilemma's
+process-wide data directory is fixed on import: restart after changing it.
+See `dilemma-phase1-evaluation.md` for the evaluation and unresolved artifact
+licenses.
+
+Optional AI examination sends a bounded, attributed package to each selected
+model independently; the validator never receives the primary model's answer.
+Long dictionary entries are explicitly marked as truncated. The adapter
+requests structured JSON where supported and checks candidate names, evidence
+IDs and completeness, but this cannot establish semantic accuracy. Invalid,
+truncated and unavailable responses are shown rather than cached as success.
+The ignored SQLite cache contains evidence and outputs, is keyed by evidence,
+prompt, provider identity and configuration digest, model digest and settings,
+and is only used when both model digests are available. Reader notes and
+exploration choices remain in browser local storage and are not included.
+
 ## Reader profiles and inquiry selection
 
 Profiles are stored in the ignored `data/reader-profiles.json`, independently
@@ -196,6 +236,44 @@ unrequested morphological analysis without a morphology provider. The
 prompt was tightened after those results, but this is not a guarantee. Treat
 model output as unverified, and compare it with the returned records and the
 original XML before accepting a claim.
+
+## Experimental browser playground
+
+The separate `scripts/playground.py` server and `playground/` browser assets
+provide an in-memory conversation without changing provider indexes or reader
+profiles. By default it listens only on `127.0.0.1`. The opt-in `--lan` mode
+binds `0.0.0.0`, displays detected private IPv4 URLs, and requires a
+per-process, randomly generated access token. Successful login creates an
+in-memory, HttpOnly, SameSite=Strict session cookie. LAN mode rejects public
+client addresses and unknown host headers; both modes enforce matching
+host/origin checks on POST requests. The server does not modify Windows
+Firewall. See the README for the Private-profile, local-subnet firewall rule.
+Ollama remains local to the Lenovo.
+
+LAN HTTP is not encrypted, so the token and conversation are observable on
+the network. Use it only on a trusted private network and do not port-forward,
+expose a public tunnel, or put it behind a reverse proxy. Application checks
+and Private firewall rules cannot prevent exposure caused by unsafe router or
+proxy configuration.
+
+Model adapters may advertise `chat` and implement `ChatLanguageModelProvider`:
+`chat(messages, options, cancellation)` receives explicit system/user/assistant
+messages and must stop its in-flight request when the cancellation token is
+triggered. The Ollama adapter uses its local chat endpoint and closes the
+active connection on cancellation; adapters without this capability remain
+usable through the existing CLI but are not listed in the playground. The
+playground's editable system prompt is sent as the system message. It adds no
+retrieval instructions in Free Conversation and never calls resource
+providers in that mode.
+
+Text-Grounded Inquiry calls `inquire` with the selected profile and optional
+resource override, then uses the chat adapter for generation. The existing
+grounding instructions are displayed in the interface and sent along with
+the retrieved evidence; the editable system prompt is also sent. Previous
+conversation messages are retained in browser memory and supplied with the
+next request, but the complete prior evidence records are not automatically
+re-retrieved. New Conversation clears the browser history and cancels any
+active generation. A page reload also clears browser history.
 
 ## Matching and source text
 

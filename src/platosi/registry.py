@@ -1,9 +1,10 @@
 """Discover providers from manifests without importing provider-specific code."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import importlib.util
 import json
 from pathlib import Path
+import threading
 from typing import Any
 
 
@@ -13,17 +14,22 @@ class RegisteredProvider:
     directory: Path
     root: Path
     enabled: bool
+    _instance: Any = field(default=None, init=False, repr=False, compare=False)
+    _lock: Any = field(default_factory=threading.Lock, init=False, repr=False, compare=False)
 
     def load(self):
-        module_path = self.directory / self.manifest["module"]
-        spec = importlib.util.spec_from_file_location(
-            "platosi_plugin_" + self.manifest["id"].replace("-", "_"), module_path
-        )
-        if spec is None or spec.loader is None:
-            raise ImportError(f"Cannot load provider module: {module_path}")
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module.create_provider(self.manifest, self.root)
+        with self._lock:
+            if self._instance is None:
+                module_path = self.directory / self.manifest["module"]
+                spec = importlib.util.spec_from_file_location(
+                    "platosi_plugin_" + self.manifest["id"].replace("-", "_"), module_path
+                )
+                if spec is None or spec.loader is None:
+                    raise ImportError(f"Cannot load provider module: {module_path}")
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                self._instance = module.create_provider(self.manifest, self.root)
+            return self._instance
 
 
 class Registry:

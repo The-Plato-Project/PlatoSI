@@ -3,7 +3,7 @@
   "type": "language-model",
   "version": "1.0",
   "module": "provider.py",
-  "capabilities": ["models", "generate"],
+  "capabilities": ["models", "generate", "chat"],
   "enabled_by_default": true,
   "config": {
     "endpoint": "http://127.0.0.1:11434",

@@ -3,7 +3,7 @@
   "type": "corpus",
   "version": "1.0",
   "module": "provider.py",
-  "capabilities": ["search", "passage"],
+  "capabilities": ["search", "passage", "reading"],
   "enabled_by_default": true,
   "config": {"source": "data/tlg0059", "index": "data/indexes/perseus-plato.sqlite", "inventory": "docs/corpus-inventory.json"},
   "source": {

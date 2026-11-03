@@ -55,6 +55,51 @@ class GlemProvider:
                 "tag": row["tag"], "search_mode": mode,
             } for row in rows]
 
+    def match_forms(self, lemma, forms):
+        lemma = key(lemma)
+        result = []
+        with read_index(self.index) as db:
+            for start in range(0, len(forms), 400):
+                group = forms[start:start + 400]
+                if not group:
+                    continue
+                placeholders = ",".join("?" for _ in group)
+                sql = f"SELECT * FROM mappings WHERE exact IN ({placeholders}) AND lemma = ? ORDER BY line"
+                for row in db.execute(sql, [*(key(form) for form in group), lemma]):
+                    result.append({
+                        "evidence_type": "candidate_analysis", "provider": self.manifest["id"],
+                        "provider_version": self.manifest["version"], "source": self.manifest["source"],
+                        "license": self.manifest["license"], "source_path": self.manifest["config"]["source"],
+                        "source_line": row["line"], "form": row["form"], "lemma": row["lemma"],
+                        "tag": row["tag"], "search_mode": "exact",
+                    })
+        return result
+
+    def lemma_forms(self, lemma, limit):
+        lemma = key(lemma)
+        with read_index(self.index) as db:
+            rows = db.execute(
+                "SELECT * FROM mappings WHERE lemma = ? ORDER BY line LIMIT ?",
+                (lemma, limit + 1),
+            ).fetchall()
+        if len(rows) > limit:
+            raise ValueError(f"GLEM lemma form inventory exceeds {limit} records")
+        return [{
+            "evidence_type": "candidate_analysis",
+            "provider": self.manifest["id"],
+            "provider_version": self.manifest["version"],
+            "source": self.manifest["source"],
+            "license": self.manifest["license"],
+            "source_path": self.manifest["config"]["source"],
+            "source_line": row["line"],
+            "form": row["form"],
+            "lemma": row["lemma"],
+            "tag": row["tag"],
+            "method": "lookup",
+            "classification": "direct_lookup",
+            "search_mode": "exact",
+        } for row in rows]
+
 
 def create_provider(manifest, root):
     return GlemProvider(manifest, root)

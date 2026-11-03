@@ -3,6 +3,7 @@
 import json
 import os
 from pathlib import Path
+import sqlite3
 import tempfile
 from typing import Any
 
@@ -63,7 +64,8 @@ class Profiles:
 
 
 def select(registry, capability: str, profile: dict[str, Any] | None = None,
-           include: list[str] | None = None, exclude: list[str] | None = None):
+           include: list[str] | None = None, exclude: list[str] | None = None,
+           *, tolerate_errors: bool = False):
     """Resolve an inquiry without changing reader preferences or provider state."""
     include = _validate_resources(include or [])
     exclude = _validate_resources(exclude or [])
@@ -95,10 +97,16 @@ def select(registry, capability: str, profile: dict[str, Any] | None = None,
         elif capability not in manifest["capabilities"]:
             state["reason"] = f"does not support {capability}"
         else:
-            provider = registration.load()
-            state["available"] = provider.available()
-            if state["available"]:
-                active.append((registration, provider))
-            else:
-                state["reason"] = "source or current index unavailable"
+            try:
+                provider = registration.load()
+                state["available"] = provider.available()
+                if state["available"]:
+                    active.append((registration, provider))
+                else:
+                    state["reason"] = "source or current index unavailable"
+            except (OSError, RuntimeError, ValueError, ImportError, sqlite3.Error) as error:
+                if not tolerate_errors:
+                    raise
+                state["available"] = False
+                state["reason"] = f"provider error: {error}"
     return selected, active

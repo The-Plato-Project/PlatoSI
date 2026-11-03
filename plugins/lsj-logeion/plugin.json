@@ -1,9 +1,9 @@
 {
   "id": "lsj-logeion",
   "type": "dictionary",
-  "version": "1.0",
+  "version": "1.1",
   "module": "provider.py",
-  "capabilities": ["lookup"],
+  "capabilities": ["lookup", "lemma_relations"],
   "enabled_by_default": true,
   "config": {"source": "data/lsj-logeion", "index": "data/indexes/lsj-logeion.sqlite", "inventory": "docs/lsj-inventory.json"},
   "source": {

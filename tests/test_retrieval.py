@@ -47,7 +47,7 @@ class PluginFixtureTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         shutil.copytree(ROOT / "plugins", self.root / "plugins",
-                        ignore=shutil.ignore_patterns("__pycache__", "ollama"))
+                        ignore=shutil.ignore_patterns("__pycache__", "ollama", "dilemma"))
         for manifest_path in (self.root / "plugins").glob("*/plugin.json"):
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             del manifest["config"]["inventory"]
@@ -68,8 +68,13 @@ class PluginFixtureTests(unittest.TestCase):
         lsj = self.root / "data" / "lsj-logeion"
         lsj.mkdir(parents=True)
         (lsj / "greatscott02.xml").write_text(
-            '<tei.2><text><div1><div2 id="duplicate"><head>καταβαίνω</head>first</div2>'
-            '<div2 id="duplicate"><head>καταβαίνω</head>second</div2></div1></text></tei.2>',
+            '<tei.2><text><div1><div2 id="duplicate"><head>καταβαίνω</head>'
+            '<etym lang="grc">βαίνω</etym>first</div2>'
+            '<div2 id="duplicate"><head>καταβαίνω</head>second</div2>'
+            '<div2 id="base"><head>βαίνω</head>go</div2>'
+            '<div2 id="distance"><head>πόρρω</head>'
+            '<orth extent="suff">πόρρ-ωθεν</orth><orth extent="suff">-ος</orth>afar'
+            '</div2></div1></text></tei.2>',
             encoding="utf-8")
         glem = self.root / "data" / "greek-morphology" / "glem" / "glem"
         glem.mkdir(parents=True)
@@ -111,6 +116,18 @@ class PluginFixtureTests(unittest.TestCase):
         self.assertEqual([r["entry_id"] for r in results], ["duplicate", "duplicate"])
         self.assertNotEqual(results[0]["entry_ordinal"], results[1]["entry_ordinal"])
         self.assertEqual(results[0]["evidence_type"], "scholarly_classification")
+        relations = dictionary.lemma_relations("καταβαίνω", 10)
+        self.assertEqual(len(relations), 1)
+        self.assertEqual(relations[0]["target_lemma"], "βαίνω")
+        self.assertEqual(relations[0]["relation_type"], "etymological_relation")
+        self.assertEqual(relations[0]["classification"], "explicit_dictionary_markup")
+        variant = dictionary.lookup("πόρρωθεν", "exact", 10)
+        self.assertEqual(len(variant), 1)
+        self.assertEqual(variant[0]["headword"], "πόρρω")
+        self.assertEqual(variant[0]["matched_term"], "πόρρωθεν")
+        self.assertEqual(variant[0]["match_kind"], "explicit_orthographic_variant")
+        self.assertIn("πόρρ-ωθεν", variant[0]["match_fragment"])
+        self.assertEqual(dictionary.lookup("ος", "exact", 10), [])
         morph = self.registry.providers["glem"].load()
         analyses = morph.analyze("κατέβην", "exact", 10)
         self.assertEqual(len(analyses), 2)

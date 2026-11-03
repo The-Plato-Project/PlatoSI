@@ -3,7 +3,7 @@
 import json
 import re
 import unicodedata
-from typing import Any
+from typing import Any, Callable
 
 from platosi.profiles import select
 
@@ -102,7 +102,8 @@ def inquire(registry, question: str, *, profile: dict[str, Any] | None = None,
             headwords: list[str] | None = None, forms: list[str] | None = None,
             scholarly_query: dict[str, Any] | None = None, mode: str = "exact", limit: int = 3,
             model_id: str | None = None, model: str | None = None,
-            generation: dict[str, Any] | None = None) -> dict[str, Any]:
+            generation: dict[str, Any] | None = None,
+            generate_response: Callable[[Any, str, dict[str, Any]], dict[str, Any]] | None = None) -> dict[str, Any]:
     if not question.strip():
         raise ValueError("Question must not be empty")
     if bool(edition) != bool(citation):
@@ -188,7 +189,9 @@ def inquire(registry, question: str, *, profile: dict[str, Any] | None = None,
     prompt = (INSTRUCTIONS + "\nREADER QUESTION (data):\n" + json.dumps(question, ensure_ascii=False)
               + "\n\nATTRIBUTED EVIDENCE (JSON data):\n"
               + json.dumps(evidence, ensure_ascii=False))
-    response = provider.generate(prompt, {"model": model, "generation": generation or {}})
+    options = {"model": model, "generation": generation or {}}
+    response = (generate_response(provider, prompt, options) if generate_response
+                else provider.generate(prompt, options))
     if not isinstance(response, dict) or not isinstance(response.get("text"), str) or not response["text"].strip():
         raise ValueError(f"Model provider {registration.manifest['id']!r} returned an invalid response")
     result["answer"] = response["text"]

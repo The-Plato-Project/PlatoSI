@@ -142,6 +142,7 @@ class PlatoProvider:
             row = db.execute("SELECT * FROM editions WHERE urn = ?", (edition,)).fetchone()
             if row is None:
                 return results
+
             divisions = json.loads(row["divisions"])
             for d in divisions:
                 path = ".".join(str(p["n"]) for p in d["path"])
@@ -154,6 +155,36 @@ class PlatoProvider:
                         end = next((m["offset"] for m in milestones[i + 1:] if m["unit"] == "section"), len(row["text"]))
                         results.append(self.record(row, marker["offset"], end))
         return results
+
+    def reading(self, edition, citation):
+        with read_index(self.index) as db:
+            row = db.execute("SELECT * FROM editions WHERE urn = ?", (edition,)).fetchone()
+            if row is None:
+                return []
+            scope = next((d for d in json.loads(row["divisions"])
+                          if ".".join(str(p["n"]) for p in d["path"]) == citation), None)
+            if scope is None:
+                return []
+            start, end = scope["start"], scope["end"]
+            milestones = json.loads(row["milestones"])
+            before = {}
+            for milestone in milestones:
+                if milestone["offset"] > start:
+                    break
+                before[milestone["unit"]] = milestone["n"]
+            return [{
+                "provider": self.manifest["id"], "provider_version": self.manifest["version"],
+                "source": self.manifest["source"], "license": self.manifest["license"],
+                "source_path": row["source_path"], "work": row["work"], "edition": row["urn"],
+                "scope": citation, "text": row["text"][start:end],
+                "initial_citation": before,
+                "milestones": [{**m, "offset": m["offset"] - start} for m in milestones
+                               if start < m["offset"] < end],
+                "source_markup": [{**m, "start": max(m["start"], start) - start,
+                                   "end": min(m["end"], end) - start}
+                                  for m in json.loads(row["markup"])
+                                  if m["start"] < end and m["end"] > start],
+            }]
 
 
 def create_provider(manifest, root):

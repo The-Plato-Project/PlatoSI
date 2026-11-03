@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlatoSI Playground Access</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header><div><h1>PlatoSI Playground</h1><p>Local network access</p></div></header>
+  <main class="login">
+    <form method="post" action="/login">
+      <h2>Enter the access token</h2>
+      <p>Use the token displayed in the Lenovo's playground terminal.</p>
+      <label for="token">Access token</label>
+      <input id="token" name="token" type="password" autocomplete="off" required>
+      <button type="submit">Open playground</button>
+      <p>Connections use unencrypted HTTP. Use only a trusted private network.</p>
+    </form>
+  </main>
+</body>
+</html>

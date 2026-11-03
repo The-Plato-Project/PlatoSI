@@ -1,0 +1,31 @@
+{
+  "contract": "platosi.location.v1",
+  "dialogue": "fixture-dialogue",
+  "text_version": "sha256:c1b344ee2d18b1d520f7f053194f8be7f095e66ce49921d12c683128c741ab2d",
+  "sections": [
+    { "stephanus": "327a", "segments": ["κατέβην χθὲς", "Πειραιᾶ"] },
+    { "stephanus": "327b", "segments": ["πομπὴ 🏛 ἔπεμπον"] },
+    { "stephanus": "327c", "segments": ["ἄνθρωπος", "λόγος"] }
+  ],
+  "valid": [
+    { "name": "opening word", "start": ["327a", 0], "end": ["327a", 7], "text": "κατέβην" },
+    { "name": "two paragraphs", "start": ["327a", 8], "end": ["327a", 20], "text": "χθὲς\nΠειραιᾶ" },
+    { "name": "two sections", "start": ["327a", 13], "end": ["327b", 5], "text": "Πειραιᾶ\nπομπὴ" },
+    { "name": "section separator", "start": ["327a", 20], "end": ["327b", 0], "text": "\n" },
+    { "name": "supplementary character", "start": ["327b", 6], "end": ["327b", 8], "text": "🏛" },
+    { "name": "after supplementary character", "start": ["327b", 9], "end": ["327b", 16], "text": "ἔπεμπον" },
+    { "name": "empty position", "start": ["327b", 8], "end": ["327b", 8], "text": "" },
+    { "name": "multiple sections", "start": ["327a", 20], "end": ["327c", 8], "text": "\nπομπὴ 🏛 ἔπεμπον\nἄνθρωπος" }
+  ],
+  "invalid": [
+    { "name": "unknown dialogue", "dialogue": "other", "start": ["327a", 0], "end": ["327a", 7], "error": "UNKNOWN_DIALOGUE" },
+    { "name": "wrong version", "text_version": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "start": ["327a", 0], "end": ["327a", 7], "error": "VERSION_MISMATCH" },
+    { "name": "unknown citation", "start": ["327z", 0], "end": ["327a", 1], "error": "UNKNOWN_REFERENCE" },
+    { "name": "negative", "start": ["327a", -1], "end": ["327a", 1], "error": "INVALID_OFFSET" },
+    { "name": "too large", "start": ["327a", 0], "end": ["327a", 21], "error": "INVALID_OFFSET" },
+    { "name": "fractional", "start": ["327a", 0], "end": ["327a", 1.5], "error": "INVALID_OFFSET" },
+    { "name": "split surrogate", "start": ["327b", 7], "end": ["327b", 8], "error": "INVALID_OFFSET" },
+    { "name": "reversed section", "start": ["327b", 0], "end": ["327a", 1], "error": "REVERSED_RANGE" },
+    { "name": "reversed offsets", "start": ["327a", 2], "end": ["327a", 1], "error": "REVERSED_RANGE" }
+  ]
+}

@@ -3,7 +3,7 @@
   "type": "morphology",
   "version": "1.0",
   "module": "provider.py",
-  "capabilities": ["analyze"],
+  "capabilities": ["analyze", "match_forms", "lemma_forms"],
   "enabled_by_default": false,
   "config": {
     "source": "data/greek-morphology/glem/glem/list_proiel_perseus_merged_word_lemma_POS_nofreq",

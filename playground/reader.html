@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlatoSI Word Reader</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <div><h1>PlatoSI Word Reader</h1><p>Explore the words of Plato's Greek text.</p></div>
+    <div><a href="/">Explore Plato's texts</a><a href="/conversation">Model conversation</a><a href="/dilemma">Dilemma laboratory</a></div>
+  </header>
+  <main class="reader-layout">
+    <section class="reading" aria-label="Greek text">
+      <div class="reader-controls">
+        <label for="work">Work</label>
+        <select id="work"><option value="urn:cts:greekLit:tlg0059.tlg030.perseus-grc2">The Republic</option></select>
+        <label for="scope">Book</label>
+        <select id="scope">
+          <option value="1">Book 1</option><option value="2">Book 2</option>
+          <option value="3">Book 3</option><option value="4">Book 4</option>
+          <option value="5">Book 5</option><option value="6">Book 6</option>
+          <option value="7">Book 7</option><option value="8">Book 8</option>
+          <option value="9">Book 9</option><option value="10">Book 10</option>
+        </select>
+        <details>
+          <summary>Other texts and source settings</summary>
+          <label for="corpus">Text source</label><select id="corpus"></select>
+          <label><input type="checkbox" id="custom-reading"> Use a different text</label>
+          <label for="edition">Text identifier</label>
+          <input id="edition" type="text" value="urn:cts:greekLit:tlg0059.tlg030.perseus-grc2">
+          <label for="custom-scope">Text division</label><input id="custom-scope" type="text" value="1">
+        </details>
+        <button id="load" type="button">Open reading</button>
+      </div>
+      <p>Click a Greek word to explore it. Occurrences link back to this text.</p>
+      <div id="reading-status" role="status"></div>
+      <div id="reading-text" class="greek-text"></div>
+    </section>
+    <aside class="word-panel" aria-label="Word exploration">
+      <h2>Word exploration</h2>
+      <details>
+        <summary>Dictionary and analysis sources</summary>
+        <label for="profile">Reader profile</label><select id="profile"><option value="">All enabled resources</option></select>
+        <label><input type="checkbox" id="override"> Use only selected resources</label>
+        <div id="resources" class="resources"></div>
+      </details>
+      <div id="word-status" role="status">Select a word in the text.</div>
+      <div id="word-results"></div>
+      <section id="notes-section" hidden>
+        <label for="notes">Your notes and connections</label>
+        <textarea id="notes" rows="5"></textarea>
+        <button id="save-notes" type="button">Save notes on this device</button>
+        <p>Notes are stored in this browser, not sent to the model.</p>
+        <div id="notes-status" role="status"></div>
+      </section>
+      <details id="ai-section" hidden>
+        <summary>Examine with AI</summary>
+        <p>Both models examine the same evidence separately. Their answers are unverified.</p>
+        <button id="discover" type="button">Find available models</button>
+        <label for="primary">Primary model</label><select id="primary"></select>
+        <label for="validation">Validation model</label><select id="validation"></select>
+        <label for="temperature">Temperature</label><input id="temperature" type="number" min="0" max="2" step="0.1" value="0.2">
+        <label for="max-tokens">Maximum response tokens</label><input id="max-tokens" type="number" min="1" max="8192" value="1024">
+        <label><input type="checkbox" id="fresh"> Request fresh examination</label>
+        <button id="examine" type="button">Examine selected evidence</button>
+        <div id="ai-status" role="status"></div>
+        <div id="ai-results"></div>
+      </details>
+    </aside>
+  </main>
+  <script src="/reader.js"></script>
+</body>
+</html>

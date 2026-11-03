@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore Plato's Texts - PlatoSI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <div><h1>Explore Plato's Texts</h1><p>Begin with a word or passage in Plato.</p></div>
+    <nav aria-label="Other ways to explore">
+      <a href="/reader">Read the Republic</a>
+      <a href="/conversation">Model conversation</a>
+      <a href="/dilemma">Dilemma laboratory</a>
+    </nav>
+  </header>
+  <main class="lookup-layout">
+    <section class="lookup-choices" aria-label="Lookups">
+      <h2>What would you like to look up?</h2>
+      <p>Explore Plato's words and passages, and follow the evidence back to the text.</p>
+      <div id="availability" role="status">Checking what is available…</div>
+      <form id="word-form">
+        <h3>A Greek word</h3>
+        <p>Explore possible forms and dictionary entries for a word in Plato. Dictionary entries may also describe uses beyond Plato.</p>
+        <label for="word">Word or headword</label>
+        <input id="word" type="text" placeholder="κατέβην" required>
+        <button type="submit">Explore word</button>
+      </form>
+      <form id="search-form">
+        <h3>Words in the text</h3>
+        <p>Find an exact word or phrase across the available Greek texts of Plato.</p>
+        <label for="search">Greek word or phrase</label>
+        <input id="search" type="text" placeholder="κατέβην" required>
+        <button type="submit">Find in texts</button>
+      </form>
+      <form id="passage-form">
+        <h3>A passage</h3>
+        <p>Open a passage from the Republic.</p>
+        <label for="citation">Stephanus citation or book and section</label>
+        <input id="citation" type="text" placeholder="327a" required>
+        <button type="submit">Open passage</button>
+      </form>
+    </section>
+    <section class="lookup-output" aria-label="Lookup results">
+      <h2 id="result-title">Your exploration</h2>
+      <div id="result-status" role="status" aria-live="polite">Choose a lookup to begin.</div>
+      <div id="results"></div>
+    </section>
+  </main>
+  <script src="/lookup.js"></script>
+</body>
+</html>

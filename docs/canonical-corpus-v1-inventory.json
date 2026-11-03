@@ -1,0 +1,362 @@
+{
+  "contract": "platosi.location.v1",
+  "source_repository": "https://github.com/PerseusDL/canonical-greekLit",
+  "source_revision": "9a424880e535b7b24258feda413fa37580f8971f",
+  "baseline": "Chora generated snapshots at 3ce6aeebb869e8e82285463741b42fc11e9d1c6b",
+  "source_metadata": {
+    "README.md": "9733e53be0cb9adf77c1e3359fffc81911bbf0dc17b9095b3912768b1a663275",
+    "license.md": "ccf0e8ce183761bf82700126cc45a4e907b2cede024e65e3fef5c2338b9b7063"
+  },
+  "works": [
+    {
+      "dialogue": "euthyphro",
+      "tlg": "tlg001",
+      "edition": "perseus-grc1",
+      "title": "Euthyphro",
+      "title_greek": "Εὐθύφρων",
+      "text_version": "sha256:06d7c63eee3293db28bfa49b57fe51dc2ef5e821de17ed86d51369fbdfda9fd6",
+      "segments_sha256": "3560cd389cb126ef30f62ec2b1d5684ab63ebe3abdaebbb39e6fddb56d5f3e80",
+      "source_lf_sha256": "451503e2c63b2d04fd22794b2d95e3a1e09231408799ee7dcd7c2fe5aa6824db"
+    },
+    {
+      "dialogue": "apology",
+      "tlg": "tlg002",
+      "edition": "perseus-grc2",
+      "title": "Apology",
+      "title_greek": "Ἀπολογία Σωκράτους",
+      "text_version": "sha256:e7b179b072aefe7f2ded5289cdc591b0c17c15200fb0ad6e8ea014f2d8bd72b1",
+      "segments_sha256": "3f802ca70b13ee88b3b2ed9181de4fc5d10ac7d7aa04d8912ad7dc311649c793",
+      "source_lf_sha256": "eeb130acb6146e1a8ee3c8f3d5de9a70fda6aef849f4f2200360fa811a302aaa"
+    },
+    {
+      "dialogue": "crito",
+      "tlg": "tlg003",
+      "edition": "perseus-grc2",
+      "title": "Crito",
+      "title_greek": "Κρίτων",
+      "text_version": "sha256:94fd4764a58cb491f531f41db2724e79dab49743c9aed43197ef6de98e9544b3",
+      "segments_sha256": "f0c8bd1e555be2b1728c6bf7535ec16ca50f4155a7325c43724c4cdeb38f262c",
+      "source_lf_sha256": "6ea953bd4e89b3141f02a6646ad2418dd1708f8f1aa7f98df9e64d7244c2da53"
+    },
+    {
+      "dialogue": "phaedo",
+      "tlg": "tlg004",
+      "edition": "perseus-grc2",
+      "title": "Phaedo",
+      "title_greek": "Φαίδων",
+      "text_version": "sha256:d06b1c10b634c4299351f9df1e10f07477f24930c8e462b7892e030a78bbab87",
+      "segments_sha256": "790fc9ffd3b864bff3c94b885b02ca9ea76f61c2f7f03f7907a923d8cac03819",
+      "source_lf_sha256": "4c9dca94a11ed9a9b4f2f24d0a65f1cefb2b8b794f23b6997b5a33a355e13e9a"
+    },
+    {
+      "dialogue": "cratylus",
+      "tlg": "tlg005",
+      "edition": "perseus-grc2",
+      "title": "Cratylus",
+      "title_greek": "Κρατύλος",
+      "text_version": "sha256:2f1eaf1d01bd5e5dc341cf8d97154514542b39060076dcad84539684d7301ffe",
+      "segments_sha256": "7c40ad12702c7d795bc24d05c0c9c5657d0b2f2f7e7425ff5ac5983d6afe9d22",
+      "source_lf_sha256": "c3332c9b18dd929ad225a244353b397f6011a0274d968b14775be4241c8baf1e"
+    },
+    {
+      "dialogue": "theaetetus",
+      "tlg": "tlg006",
+      "edition": "perseus-grc2",
+      "title": "Theaetetus",
+      "title_greek": "Θεαίτητος",
+      "text_version": "sha256:ae2712aa6b0fefe6b494ee3ca0a4337f2f9faf8c9361d37e3e424aecebc594d5",
+      "segments_sha256": "7edaebbe7e8c134d825ef0d2f521db1d147d427d41cc3ea4520764607863146d",
+      "source_lf_sha256": "87594a9b47bbb0011b377d56e77f2a56a01bdf8e3c52094fd487b34f34bde96e"
+    },
+    {
+      "dialogue": "sophist",
+      "tlg": "tlg007",
+      "edition": "perseus-grc2",
+      "title": "Sophist",
+      "title_greek": "Σοφιστής",
+      "text_version": "sha256:eda0723aedcfe6a025e688f9e182c88f13808d1e348b436314dc331aeda8481e",
+      "segments_sha256": "e0ceb4a66efd066c2e1cb2fb0d94626addb11e3399b9480bf8d141a063ec3a06",
+      "source_lf_sha256": "5f77096d05f13d62bfdc5cffa588e46ab6576beb63fa7c1b1af835e3abf82d3b"
+    },
+    {
+      "dialogue": "statesman",
+      "tlg": "tlg008",
+      "edition": "perseus-grc2",
+      "title": "Statesman",
+      "title_greek": "Πολιτικός",
+      "text_version": "sha256:45176cc39955ce0344bee6368babdb4fdf66c065bb640ccafe82f0d71961794d",
+      "segments_sha256": "e1a3190d191e8ac4ac77ae7e5c8828590d7f38edbd70adb3fd68da85369b4948",
+      "source_lf_sha256": "74c507549b04ecc26dba0c6e115f3dd33835eeda0aa1cfe356b0b0d752a26a1b"
+    },
+    {
+      "dialogue": "parmenides",
+      "tlg": "tlg009",
+      "edition": "perseus-grc2",
+      "title": "Parmenides",
+      "title_greek": "Παρμενίδης",
+      "text_version": "sha256:5adda1d6b5cef19df9d58924e1d89f7ca25e9433a0666e0f1efed4de40ff54ab",
+      "segments_sha256": "43d567611ae655b548471de9780186bb58f51951ad26213a1a9c3e78f3da6ed4",
+      "source_lf_sha256": "2136b83bd8913ab60cf591e1a5342bff2608ca5288d1d13968633fe8fa212e0a"
+    },
+    {
+      "dialogue": "philebus",
+      "tlg": "tlg010",
+      "edition": "perseus-grc2",
+      "title": "Philebus",
+      "title_greek": "Φίληβος",
+      "text_version": "sha256:a59d2f8b5eea8cd29c3c40343d188943536c885de4b4f6a65aed3a8bc7d2c524",
+      "segments_sha256": "43972242bf0f502df92630903d127f716d6c403a1c55514198cf52e7bc1ddc46",
+      "source_lf_sha256": "fdb4ac57f6d1d898704334e5713f7213f0a17a5d8123f30f0f0ab10259b06f4e"
+    },
+    {
+      "dialogue": "symposium",
+      "tlg": "tlg011",
+      "edition": "perseus-grc2",
+      "title": "Symposium",
+      "title_greek": "Συμπόσιον",
+      "text_version": "sha256:69bce71c10119a3ec94c21812c1602b9326d6da7d9d69b999ab218cdabca12d1",
+      "segments_sha256": "0f9d6a32508ff090001c51e2d769db521b93f6c54281d2307b886bf0ff8bdb65",
+      "source_lf_sha256": "4378dee4cb07a0b5f9aa1d14f48d6da81d962b6feed8d4ad42c3072666761e5c"
+    },
+    {
+      "dialogue": "phaedrus",
+      "tlg": "tlg012",
+      "edition": "perseus-grc2",
+      "title": "Phaedrus",
+      "title_greek": "Φαῖδρος",
+      "text_version": "sha256:f1376f40680c01b299f198332b4118944e90465321fd2d98faa21b6f8797a8db",
+      "segments_sha256": "0a592cd3951b1c64a8dec68822dcceee63f6b4a489ec2427c4af618578615471",
+      "source_lf_sha256": "093ffd99183cf5c54d966328f869f5a130bc38f4ec656b6f91b9ba7ed54b3e57"
+    },
+    {
+      "dialogue": "alcibiades-1",
+      "tlg": "tlg013",
+      "edition": "perseus-grc2",
+      "title": "Alcibiades 1",
+      "title_greek": "Ἀλκιβιάδης αʹ",
+      "text_version": "sha256:9628e194cf68f6740a768f085cd4bed731f59f809be9986b829ad986248fc189",
+      "segments_sha256": "05dff8fff3c9aee4452927ea215e3d6c2e73b6275065d07b023d156d7fe14bef",
+      "source_lf_sha256": "1fd0f174b5267d7792adb383359444e5721ce8d9fd84db1e279ac89304c6610e"
+    },
+    {
+      "dialogue": "alcibiades-2",
+      "tlg": "tlg014",
+      "edition": "perseus-grc2",
+      "title": "Alcibiades 2",
+      "title_greek": "Ἀλκιβιάδης βʹ",
+      "text_version": "sha256:5e71dd3d448a5fd9b6315dcf3a6f5c703170b48cb04f9ee5c9351438eff14d34",
+      "segments_sha256": "4e975b921b4ee62c3419e3eceabc40b273adae863fe4ee648ce978c08e9d3df0",
+      "source_lf_sha256": "45877fc9bea70443a19f6b3804e0adee4ea4cd6d5d12569a5c3db0f39bc2d255"
+    },
+    {
+      "dialogue": "hipparchus",
+      "tlg": "tlg015",
+      "edition": "perseus-grc2",
+      "title": "Hipparchus",
+      "title_greek": "Ἵππαρχος",
+      "text_version": "sha256:b66b8f75ff4605c141b5030c56bc656881169b1b6e0457a67e3a8db41e721883",
+      "segments_sha256": "ef35839e1f1ac58f11b876a6e0607b49efc67369acecf75ac988187caf5e120f",
+      "source_lf_sha256": "499f97454dc1f31e144d3b10ebbb48daa1cac0eb4de4eca899b3f98029d75221"
+    },
+    {
+      "dialogue": "lovers",
+      "tlg": "tlg016",
+      "edition": "perseus-grc2",
+      "title": "Lovers",
+      "title_greek": "Ἐρασταί",
+      "text_version": "sha256:67d67ec045c15f21bb78df2de6146bdadf67046c4e4eeb8bb611b36faa20d933",
+      "segments_sha256": "557796a724441c401ac23385871dd5ced72b835f93b189abe68aec16844b32bd",
+      "source_lf_sha256": "8c46002a30819cb4126310a94a08eab23f97d642fd256091da20a692ee0380e6"
+    },
+    {
+      "dialogue": "theages",
+      "tlg": "tlg017",
+      "edition": "perseus-grc2",
+      "title": "Theages",
+      "title_greek": "Θεάγης",
+      "text_version": "sha256:183a44e81e163f167850c9642c5f32fbdaba933541d981bb4ee1f09ef06c7fc8",
+      "segments_sha256": "1bfa221a894397703390be7223f9d7f4a3f0591e96f4254f4acfc014e042fc21",
+      "source_lf_sha256": "80b9042b100538b7e50050a138c411a4f56a96baff5911bffef336bb5ea50766"
+    },
+    {
+      "dialogue": "charmides",
+      "tlg": "tlg018",
+      "edition": "perseus-grc2",
+      "title": "Charmides",
+      "title_greek": "Χαρμίδης",
+      "text_version": "sha256:90be623f4b361b36659f27121a51ed2fb450ec96f05fa67b96f1e166b2c4cf37",
+      "segments_sha256": "4d0bb60332f1ee04f5725a968f8fcd8532f2d587f10da3dfa1630f966e14eda7",
+      "source_lf_sha256": "9504a2be48facd559a98d9978ee9feb0ebd3d723be9a1fc974051809e8aabda4"
+    },
+    {
+      "dialogue": "laches",
+      "tlg": "tlg019",
+      "edition": "perseus-grc2",
+      "title": "Laches",
+      "title_greek": "Λάχης",
+      "text_version": "sha256:0b3d00a7d7a2c605ecb3f97cc68c9aead1ff197e7f113dec47ed296e1ded6ae6",
+      "segments_sha256": "f73ca4d2b1cac41d3ae6fbba847b4dc503d872a749c9009ef3b53cf45692809b",
+      "source_lf_sha256": "89091b573e02033a53043a4668dde6263aedce284945175bddd9834eb6cbb5e1"
+    },
+    {
+      "dialogue": "lysis",
+      "tlg": "tlg020",
+      "edition": "perseus-grc2",
+      "title": "Lysis",
+      "title_greek": "Λύσις",
+      "text_version": "sha256:292b6cd94b2484830112b5e1d794e9ced65b22c8a53115177879c43d6396cd98",
+      "segments_sha256": "3cc73a2858616328ca126795b1dd6254806df266f835ba57af84542977167e96",
+      "source_lf_sha256": "7c7a7b9dc8c6281d5f2fb90f199288ee2e3075477f6e4c681705ff544cf83e7f"
+    },
+    {
+      "dialogue": "euthydemus",
+      "tlg": "tlg021",
+      "edition": "perseus-grc2",
+      "title": "Euthydemus",
+      "title_greek": "Εὐθύδημος",
+      "text_version": "sha256:d492dad5f24ea5ab9871a5dbef850669f1d274350454d5c69ebbbdd59eefe403",
+      "segments_sha256": "dd2c823d460ca4170a25918676deac13350154a561224cab027d406d43df0bc0",
+      "source_lf_sha256": "1355ded66b3181932141f19fc5f018cc210bfad2c4a719d5529df37c51d8e071"
+    },
+    {
+      "dialogue": "protagoras",
+      "tlg": "tlg022",
+      "edition": "perseus-grc2",
+      "title": "Protagoras",
+      "title_greek": "Πρωταγόρας",
+      "text_version": "sha256:297366d116505a3a26e9b0f156b2de07c93ca21e55f5a3e6a4341a0cf8e06bcc",
+      "segments_sha256": "d84442fcffa9ac6753d89975914757c935f35b619982ac49fd9389209898215c",
+      "source_lf_sha256": "1a78b4b0055f083db3c63bdb5c0fddbd77ab377b049eeaa4c74e5dbaa618aed9"
+    },
+    {
+      "dialogue": "gorgias",
+      "tlg": "tlg023",
+      "edition": "perseus-grc2",
+      "title": "Gorgias",
+      "title_greek": "Γοργίας",
+      "text_version": "sha256:3c73d4fc285e7b00c21c9e9e9e2b5b83192ad835ba49e7d2565f15d83dd6ba80",
+      "segments_sha256": "ddf227f085128fd40bd0e103ce578112debcfbd91f20fe66433c50d04eeca5c0",
+      "source_lf_sha256": "b025415cd8ab17a49c8ff4762cba05e58bb221e3477393e4d1ea120e665e0b33"
+    },
+    {
+      "dialogue": "meno",
+      "tlg": "tlg024",
+      "edition": "perseus-grc2",
+      "title": "Meno",
+      "title_greek": "Μένων",
+      "text_version": "sha256:f6fd218af8813984864f04881d0a9bf8bbba469fb64b959e51e36fdf7c8e6e35",
+      "segments_sha256": "ce169eb570454acb070195b234974c111f21ba1db54443193ef781b65ae8dce6",
+      "source_lf_sha256": "03c5cc32c05c81d291df98c6fde488e74cb49dea13e76cc1ec91b0a9144260eb"
+    },
+    {
+      "dialogue": "greater-hippias",
+      "tlg": "tlg025",
+      "edition": "perseus-grc2",
+      "title": "Greater Hippias",
+      "title_greek": "Ἱππίας μείζων",
+      "text_version": "sha256:6dc765dc8fe9417b149721e18a581cc62d9cc932d2fa452dfb7d3d64b9fca392",
+      "segments_sha256": "7c47e6c9077342c5e999d9911053078c6f42f23d497eb32cb923aaaf63602d0e",
+      "source_lf_sha256": "abe8edd3ddf2716f4cf6fdb9a942feb3a385024e3eb0e38a54105618bb37f811"
+    },
+    {
+      "dialogue": "lesser-hippias",
+      "tlg": "tlg026",
+      "edition": "perseus-grc2",
+      "title": "Lesser Hippias",
+      "title_greek": "Ἱππίας ἐλάττων",
+      "text_version": "sha256:0e1ae95c32f72a31569deb1e1b10a6cf80e14dfc1ff04709330b5c9ee179a8cc",
+      "segments_sha256": "22b65a429215614f8d1a2fb3369100a6309376efd38106598ebae4a10d2e3f88",
+      "source_lf_sha256": "db44a8d3a7e8b187388f8ee49d468a562e09f7911a76b09c6a239f85ec46fc90"
+    },
+    {
+      "dialogue": "ion",
+      "tlg": "tlg027",
+      "edition": "perseus-grc2",
+      "title": "Ion",
+      "title_greek": "Ἴων",
+      "text_version": "sha256:8d80c8adedf1b81971192e53023c54a77e6d28d70315d478199c058569fb2480",
+      "segments_sha256": "17895cccc4a3c006dd48ad9b1b7ee90c33b8cc06cc8eeb5405a91384091560a4",
+      "source_lf_sha256": "87f43d0dfa10ee965de883fe5e9af6bdce4e1b8447279a47c388e544cd6e0248"
+    },
+    {
+      "dialogue": "menexenus",
+      "tlg": "tlg028",
+      "edition": "perseus-grc2",
+      "title": "Menexenus",
+      "title_greek": "Μενέξενος",
+      "text_version": "sha256:dac4943bd8c0d43b5aa1456abe8533fbb9543154606e291c956d74dce23010c2",
+      "segments_sha256": "e20f11a0a2b883f6b0329d10476e5b5c7b8890e249533692b9a4e34192f11b65",
+      "source_lf_sha256": "ad78d37a6f38da6d28aafece98672edbb527f83c386cd3398610eed69be0966c"
+    },
+    {
+      "dialogue": "cleitophon",
+      "tlg": "tlg029",
+      "edition": "perseus-grc2",
+      "title": "Cleitophon",
+      "title_greek": "Κλειτοφῶν",
+      "text_version": "sha256:e8fc701107d5b733fd1cc7d523504de56ea26c9f43503246d96927805a831259",
+      "segments_sha256": "7fa73b02a603d2ee81ef42d86f67086a518a8e55fe5ac7de15389c28f58eab28",
+      "source_lf_sha256": "44c57cab59f0f696c49b7e3e18d9d95e2f8b6bdbe27c380eba8459a78ed23aaf"
+    },
+    {
+      "dialogue": "republic",
+      "tlg": "tlg030",
+      "edition": "perseus-grc2",
+      "title": "Republic",
+      "title_greek": "Πολιτεία",
+      "text_version": "sha256:0d5d71f80d42eee6ec5c5328d1d1926789ddb327f53c8787131b1a20aa4af5ef",
+      "segments_sha256": "721988075a3ba3febb7be5cca15529b1bb613524d24e28293716f7b916c5b976",
+      "source_lf_sha256": "89ef95f07a96a6bb4da36ae6a05fd401c380a923b1a3149bb74079d5142f21c0"
+    },
+    {
+      "dialogue": "timaeus",
+      "tlg": "tlg031",
+      "edition": "perseus-grc2",
+      "title": "Timaeus",
+      "title_greek": "Τίμαιος",
+      "text_version": "sha256:82c1f0604da8cc309c925e59b39fafc0fcd46289a7ab4a16be9a600537ec1e6b",
+      "segments_sha256": "009d4df912efe280cd68c39c1aa8d953f7000fe80bbd5fa40eff2e67ec8ebd28",
+      "source_lf_sha256": "9280b741ab6e430b710d3cea58979e0b2b117b1762074798ece640e099858289"
+    },
+    {
+      "dialogue": "critias",
+      "tlg": "tlg032",
+      "edition": "perseus-grc2",
+      "title": "Critias",
+      "title_greek": "Κριτίας",
+      "text_version": "sha256:9aabc4d72c0bb29e8494a2282f9f7ae031b66233d304652d00cd9560fd566ce6",
+      "segments_sha256": "d705e251bbdede9ac74a41290992e9f76c47c4ca62921cd1e0df33fbc4dc0ad1",
+      "source_lf_sha256": "381a66b13e409af620225f86f57c04b919cdd5856c6d931243522dc30911291e"
+    },
+    {
+      "dialogue": "minos",
+      "tlg": "tlg033",
+      "edition": "perseus-grc2",
+      "title": "Minos",
+      "title_greek": "Μίνως",
+      "text_version": "sha256:8678c37d22b1641b5286fcf0c442270819175e25033e303bcd1bb0d27f94d3ed",
+      "segments_sha256": "519956bef349e9638dc15f75572063cbb404ecf9c09a72c01fe5dde9a562db7b",
+      "source_lf_sha256": "8ce4297d99e12b9d41bba890dacbb9cf250fabcb1b195cb05c7568b0f733c96b"
+    },
+    {
+      "dialogue": "laws",
+      "tlg": "tlg034",
+      "edition": "perseus-grc2",
+      "title": "Laws",
+      "title_greek": "Νόμοι",
+      "text_version": "sha256:b080909b4739fdced14b52e9426e2b1ab0f2c661535d6a53b37c7aa834ea2ec3",
+      "segments_sha256": "e4e71e53044f76949ccc93244e00f057c6c2ecdea21e4a78fef19ae953be37f5",
+      "source_lf_sha256": "5684a3c60efafb4f2410d6c98902e0371a22ec32eb60ebe1644987eb7961a20e"
+    },
+    {
+      "dialogue": "epinomis",
+      "tlg": "tlg035",
+      "edition": "perseus-grc2",
+      "title": "Epinomis",
+      "title_greek": "Ἐπινομίς",
+      "text_version": "sha256:6476a4e3b83c244a553981bf9e90c1bef86dec830bb395f05ea4209d19604be2",
+      "segments_sha256": "5ce805d60121c4724ddd4d556993830d9479d7f07ead9384a6ad6874a560c1d3",
+      "source_lf_sha256": "c8f559b3ce2121f79ca2d324217d7cfa5ba3f2fcbeff5125ba83dad1c2ea22f3"
+    }
+  ]
+}
