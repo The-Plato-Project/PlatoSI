@@ -58,8 +58,10 @@ A local dictionary entry may be missing even when a morphology resource returns 
 The dialogue lexicon finds directly mapped forms of each candidate lemma that occur in the current canonical dialogue. It returns counts, passage contexts and exact locations. For the Republic, this service covers the whole dialogue, including its different numbered books.
 
 Maintainers use a pinned ikelos wheel to analyze every distinct canonical form
-and publish a versioned PlatoSI database. Normal lookup reads that shipped
-database without importing ikelos. If a completed build for the dialogue and
+and publish a versioned PlatoSI evidence database. Canonical passages are
+stored once, token locations point to shared forms, and morphology analyses are
+reused across dialogues. Normal lookup reads that shipped database without
+importing ikelos. If a completed build for the dialogue and
 text version is absent, PlatoSI reports occurrence coverage as unavailable
 instead of substituting partial evidence. Generic reverse-inventory plugins
 remain supported independently.

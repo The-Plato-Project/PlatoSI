@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import sqlite3
 import sys
 
 
@@ -16,6 +17,8 @@ from platosi.dialogue_morphology import (
     SCHEMA_VERSION,
     DialogueMorphologyIndex,
 )
+from platosi.dialogue_lexicon import SCHEMA_VERSION as LEXICON_SCHEMA_VERSION
+from platosi.evidence_database import archive_database
 from platosi.registry import Registry
 
 
@@ -38,7 +41,7 @@ def main():
     parser.add_argument(
         "--inventory",
         type=Path,
-        default=ROOT / "docs" / "plato-morphology-v1-inventory.json",
+        default=ROOT / "docs" / "plato-evidence-v1-inventory.json",
     )
     args = parser.parse_args()
 
@@ -90,12 +93,48 @@ def main():
     if after != before:
         index.compact()
     data = artifact.read_bytes()
+    archive = archive_database(ROOT)
+    archive_data = archive.read_bytes()
+    with sqlite3.connect(artifact) as db:
+        records = {
+            "dialogue_builds": db.execute(
+                "SELECT COUNT(*) FROM index_builds WHERE state = 'ready'"
+            ).fetchone()[0],
+            "canonical_sections": db.execute(
+                "SELECT COUNT(*) FROM canonical_sections"
+            ).fetchone()[0],
+            "canonical_forms": db.execute(
+                "SELECT COUNT(*) FROM canonical_forms"
+            ).fetchone()[0],
+            "token_occurrences": db.execute(
+                "SELECT COUNT(*) FROM tokens"
+            ).fetchone()[0],
+            "morphology_builds": db.execute(
+                "SELECT COUNT(*) FROM morphology_builds WHERE state = 'ready'"
+            ).fetchone()[0],
+            "morphology_forms": db.execute(
+                "SELECT COUNT(*) FROM morphology_forms"
+            ).fetchone()[0],
+            "morphology_memberships": db.execute(
+                "SELECT COUNT(*) FROM morphology_build_forms"
+            ).fetchone()[0],
+            "morphology_analyses": db.execute(
+                "SELECT COUNT(*) FROM morphology_analyses"
+            ).fetchone()[0],
+        }
     inventory = {
-        "artifact": artifact.relative_to(ROOT).as_posix(),
-        "sha256": hashlib.sha256(data).hexdigest(),
-        "size": len(data),
-        "schema_version": SCHEMA_VERSION,
+        "artifact": archive.relative_to(ROOT).as_posix(),
+        "artifact_sha256": hashlib.sha256(archive_data).hexdigest(),
+        "artifact_size": len(archive_data),
+        "database": artifact.relative_to(ROOT).as_posix(),
+        "database_sha256": hashlib.sha256(data).hexdigest(),
+        "database_size": len(data),
+        "schema_versions": {
+            "canonical_index": LEXICON_SCHEMA_VERSION,
+            "morphology": SCHEMA_VERSION,
+        },
         "policy_version": POLICY_VERSION,
+        "records": records,
         "builds": [
             {
                 "dialogue": dialogue,

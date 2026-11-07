@@ -8,11 +8,11 @@ import sqlite3
 import unicodedata
 
 from platosi.canonical_text import CanonicalCorpus
+from platosi.evidence_database import database_path
 from platosi.unicode_search import key
 
 
-DATABASE = Path("data/dialogue-lexicon-v1.sqlite")
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 POLICY_VERSION = "dialogue-tokens-v1"
 CANONICAL_FINGERPRINT = "canonical-only"
 
@@ -53,7 +53,7 @@ class DialogueLexiconContext:
 class DialogueLexiconIndex:
     def __init__(self, root):
         self.root = Path(root)
-        self.path = self.root / DATABASE
+        self.path = database_path(self.root)
 
     @contextmanager
     def _database(self):
@@ -110,29 +110,83 @@ class DialogueLexiconIndex:
             build_id = cursor.lastrowid
         else:
             build_id = row["id"]
-            db.execute("DELETE FROM tokens WHERE build_id = ?", (build_id,))
+            db.execute(
+                "DELETE FROM canonical_sections WHERE build_id = ?",
+                (build_id,),
+            )
             db.execute(
                 "UPDATE index_builds SET state = 'building', completed_at = NULL WHERE id = ?",
                 (build_id,),
             )
-        for section in work["sections"]:
+        token_rows = []
+        section_ids = {}
+        for ordinal, section in enumerate(work["sections"]):
             passage = "\n".join(segment["text"] for segment in section["segments"])
+            cursor = db.execute(
+                "INSERT INTO canonical_sections "
+                "(build_id, ordinal, stephanus, division, passage) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (
+                    build_id,
+                    ordinal,
+                    section["stephanus"],
+                    json.dumps(
+                        section.get("division"),
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ),
+                    passage,
+                ),
+            )
+            section_ids[section["stephanus"]] = cursor.lastrowid
             for start, end, surface in tokens(passage):
-                db.execute(
-                    "INSERT INTO tokens "
-                    "(build_id, surface, lookup_key, accentless_key, stephanus, "
-                    "start_offset, end_offset, passage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                token_rows.append(
                     (
-                        build_id,
-                        surface,
-                        key(surface),
-                        key(surface, "accent-insensitive"),
                         section["stephanus"],
+                        surface,
                         utf16_offset(passage, start),
                         utf16_offset(passage, end),
-                        passage,
-                    ),
+                    )
                 )
+        surfaces = list(dict.fromkeys(row[1] for row in token_rows))
+        db.executemany(
+            "INSERT OR IGNORE INTO canonical_forms "
+            "(surface, lookup_key, accentless_key) VALUES (?, ?, ?)",
+            [
+                (surface, key(surface), key(surface, "accent-insensitive"))
+                for surface in surfaces
+            ],
+        )
+        form_ids = {}
+        for start in range(0, len(surfaces), 400):
+            group = surfaces[start:start + 400]
+            placeholders = ",".join("?" for _ in group)
+            form_ids.update(
+                {
+                    row["surface"]: row["id"]
+                    for row in db.execute(
+                        "SELECT id, surface FROM canonical_forms "
+                        f"WHERE surface IN ({placeholders})",
+                        group,
+                    )
+                }
+            )
+        db.executemany(
+            "INSERT INTO tokens "
+            "(build_id, section_id, form_id, start_offset, end_offset) "
+            "VALUES (?, ?, ?, ?, ?)",
+            [
+                (
+                    build_id,
+                    section_ids[stephanus],
+                    form_ids[surface],
+                    start_offset,
+                    end_offset,
+                )
+                for stephanus, surface, start_offset, end_offset in token_rows
+            ],
+        )
         db.execute(
             "UPDATE index_builds SET state = 'ready', completed_at = CURRENT_TIMESTAMP WHERE id = ?",
             (build_id,),
@@ -144,8 +198,10 @@ class DialogueLexiconIndex:
         with closing(sqlite3.connect(self.path)) as db:
             db.row_factory = sqlite3.Row
             rows = db.execute(
-                "SELECT surface, COUNT(*) AS count FROM tokens WHERE build_id = ? "
-                "GROUP BY surface ORDER BY surface",
+                "SELECT canonical_forms.surface, COUNT(*) AS count FROM tokens "
+                "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                "WHERE tokens.build_id = ? "
+                "GROUP BY canonical_forms.surface ORDER BY canonical_forms.surface",
                 (build_id,),
             )
             return [{"form": row["surface"], "count": row["count"]} for row in rows]
@@ -159,9 +215,13 @@ class DialogueLexiconIndex:
         with closing(sqlite3.connect(self.path)) as db:
             db.row_factory = sqlite3.Row
             rows = db.execute(
-                "SELECT surface, stephanus, start_offset, end_offset, passage FROM tokens "
-                f"WHERE build_id = ? AND lookup_key IN ({placeholders}) "
-                "ORDER BY id",
+                "SELECT canonical_forms.surface, canonical_sections.stephanus, "
+                "tokens.start_offset, tokens.end_offset, canonical_sections.passage "
+                "FROM tokens "
+                "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                "JOIN canonical_sections ON canonical_sections.id = tokens.section_id "
+                f"WHERE tokens.build_id = ? AND canonical_forms.lookup_key IN ({placeholders}) "
+                "ORDER BY tokens.id",
                 [build_id, *normalized],
             )
             return [
@@ -308,9 +368,15 @@ class DialogueLexiconIndex:
                 group = lookup_keys[start:start + 400]
                 placeholders = ",".join("?" for _ in group)
                 token_rows.extend(db.execute(
-                    "SELECT id, surface, lookup_key, stephanus, start_offset, "
-                    "end_offset, passage FROM tokens "
-                    f"WHERE build_id = ? AND lookup_key IN ({placeholders})",
+                    "SELECT tokens.id, canonical_forms.surface, "
+                    "canonical_forms.lookup_key, canonical_sections.stephanus, "
+                    "tokens.start_offset, tokens.end_offset, "
+                    "canonical_sections.passage FROM tokens "
+                    "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                    "JOIN canonical_sections "
+                    "ON canonical_sections.id = tokens.section_id "
+                    f"WHERE tokens.build_id = ? "
+                    f"AND canonical_forms.lookup_key IN ({placeholders})",
                     [context.build_id, *group],
                 ))
             token_rows.sort(key=lambda row: row["id"])
@@ -455,21 +521,40 @@ class DialogueLexiconIndex:
                 completed_at TEXT,
                 UNIQUE (dialogue, text_version, policy_version, provider_fingerprint)
             );
+            CREATE TABLE IF NOT EXISTS canonical_sections (
+                id INTEGER PRIMARY KEY,
+                build_id INTEGER NOT NULL
+                    REFERENCES index_builds(id) ON DELETE CASCADE,
+                ordinal INTEGER NOT NULL,
+                stephanus TEXT NOT NULL,
+                division TEXT NOT NULL,
+                passage TEXT NOT NULL,
+                UNIQUE (build_id, ordinal),
+                UNIQUE (build_id, stephanus)
+            );
+            CREATE TABLE IF NOT EXISTS canonical_forms (
+                id INTEGER PRIMARY KEY,
+                surface TEXT NOT NULL UNIQUE,
+                lookup_key TEXT NOT NULL,
+                accentless_key TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS canonical_forms_lookup
+                ON canonical_forms(lookup_key);
+            CREATE INDEX IF NOT EXISTS canonical_forms_accentless
+                ON canonical_forms(accentless_key);
             CREATE TABLE IF NOT EXISTS tokens (
                 id INTEGER PRIMARY KEY,
                 build_id INTEGER NOT NULL REFERENCES index_builds(id) ON DELETE CASCADE,
-                surface TEXT NOT NULL,
-                lookup_key TEXT NOT NULL,
-                accentless_key TEXT NOT NULL,
-                stephanus TEXT NOT NULL,
+                section_id INTEGER NOT NULL
+                    REFERENCES canonical_sections(id) ON DELETE CASCADE,
+                form_id INTEGER NOT NULL REFERENCES canonical_forms(id),
                 start_offset INTEGER NOT NULL,
-                end_offset INTEGER NOT NULL,
-                passage TEXT NOT NULL
+                end_offset INTEGER NOT NULL
             );
             CREATE INDEX IF NOT EXISTS tokens_build_lookup
-                ON tokens(build_id, lookup_key);
-            CREATE INDEX IF NOT EXISTS tokens_build_accentless
-                ON tokens(build_id, accentless_key);
+                ON tokens(build_id, form_id);
+            CREATE INDEX IF NOT EXISTS tokens_section
+                ON tokens(section_id, start_offset);
             CREATE TABLE IF NOT EXISTS lemma_builds (
                 id INTEGER PRIMARY KEY,
                 token_build_id INTEGER NOT NULL REFERENCES index_builds(id) ON DELETE CASCADE,
@@ -541,7 +626,5 @@ class DialogueLexiconIndex:
         row = db.execute("SELECT schema_version FROM index_metadata").fetchone()
         if row is None:
             db.execute("INSERT INTO index_metadata VALUES (?)", (SCHEMA_VERSION,))
-        elif row["schema_version"] in (1, 2, 3):
-            db.execute("UPDATE index_metadata SET schema_version = ?", (SCHEMA_VERSION,))
         elif row["schema_version"] != SCHEMA_VERSION:
             raise ValueError("Dialogue lexicon index schema is incompatible; rebuild the generated index")

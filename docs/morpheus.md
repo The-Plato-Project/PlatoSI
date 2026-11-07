@@ -19,12 +19,19 @@ HTTP request.
 Morphological ambiguity is evidence. PlatoSI does not ask a model to select a
 reading, collapse homographs, or infer a referent.
 
-## Shipped database
+## Shipped evidence database
 
-The compact database is `data/plato-morphology-v1.sqlite`. It contains:
+The normalized database is `data/plato-evidence-v1.sqlite`. Git and release
+packages carry it as the deterministic
+`data/plato-evidence-v1.sqlite.xz` artifact. PlatoSI materializes the SQLite
+file locally on first use and leaves the compressed artifact unchanged.
+The database contains:
 
 - dialogue and canonical text-version identity;
-- every distinct observed form and its analyzed or unresolved state;
+- canonical passages stored once per dialogue section;
+- compact token locations that reference shared canonical form rows;
+- shared provider/form analyses reused by every dialogue containing that form;
+- dialogue membership indexes for canonical forms and morphology analyses;
 - every candidate lemma, source headword, homograph, grammatical feature, and
   normalized raw ikelos record;
 - exact provider version, source, license, wheel hash, and build policy;
@@ -38,13 +45,15 @@ The current artifact contains the Republic:
 - no failed or pending forms.
 
 Its full provenance and checksum are recorded in
-`docs/plato-morphology-v1-inventory.json`. A build is usable only when every
+`docs/plato-evidence-v1-inventory.json`. A build is usable only when every
 distinct form is analyzed or explicitly unresolved. Partial and failed builds
 are never used for ordinary dialogue lookup.
 
 Normal `linguistics.dialogue-lexicon` requests read this database only. They do
-not import ikelos and do not modify the artifact. PlatoSI joins the stored
-form-to-lemma evidence to canonical tokens at request time.
+not import ikelos and do not modify the compressed artifact. PlatoSI joins the stored
+form-to-lemma evidence to canonical tokens at request time. Adding another
+dialogue reuses analyses already stored for the same provider identity and
+analyzes only forms that are new to the shared catalog.
 
 ## Maintainer build
 
@@ -63,9 +72,10 @@ python .\scripts\build-plato-morphology.py --dialogue republic --dialogue phaedo
 python .\scripts\build-plato-morphology.py --all
 ```
 
-Use `--rebuild` only when intentionally replacing an existing build with the
-same source identity. Builds are resumable after a failed form. The lower-level
-command remains available:
+Use `--rebuild` to replace a dialogue membership build with the same source
+identity. Shared completed analyses remain reusable because their provider
+fingerprint has not changed. Builds are resumable after a failed form. The
+lower-level command remains available:
 
 ```powershell
 python .\scripts\platosi.py index-dialogue-morphology republic

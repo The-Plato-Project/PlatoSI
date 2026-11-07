@@ -38,7 +38,7 @@ class LocalDistributionTests(unittest.TestCase):
                 self.assertFalse(any(name.startswith(("models/", "tests/")) for name in names))
                 self.assertEqual(
                     [name for name in names if name.startswith("data/")],
-                    ["data/plato-morphology-v1.sqlite"],
+                    ["data/plato-evidence-v1.sqlite.xz"],
                 )
                 self.assertFalse(any("__pycache__" in name for name in names))
                 self.assertIn("config/name-research-sources.json", names)
@@ -48,7 +48,7 @@ class LocalDistributionTests(unittest.TestCase):
                 self.assertIn("src/platosi/occurrence_check.py", names)
                 self.assertIn("src/platosi/dialogue_morphology.py", names)
                 self.assertIn("docs/morpheus.md", names)
-                self.assertIn("docs/plato-morphology-v1-inventory.json", names)
+                self.assertIn("docs/plato-evidence-v1-inventory.json", names)
                 self.assertFalse(json.loads(package.read("plugins/morpheus/plugin.json"))["enabled_by_default"])
                 manifest = json.loads(package.read("release-manifest.json"))
                 self.assertEqual(manifest["version"], __version__)

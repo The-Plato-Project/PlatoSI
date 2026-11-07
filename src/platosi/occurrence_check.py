@@ -94,8 +94,12 @@ class OccurrenceCheck:
         with index.request_context(location["dialogue"], location["text_version"]) as context:
             placeholders = ",".join("?" for _ in forms)
             rows = context.db.execute(
-                "SELECT lookup_key, COUNT(*) FROM tokens WHERE build_id = ? "
-                f"AND lookup_key IN ({placeholders}) GROUP BY lookup_key", [context.build_id, *forms]
+                "SELECT canonical_forms.lookup_key, COUNT(*) FROM tokens "
+                "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                "WHERE tokens.build_id = ? "
+                f"AND canonical_forms.lookup_key IN ({placeholders}) "
+                "GROUP BY canonical_forms.lookup_key",
+                [context.build_id, *forms],
             ).fetchall()
             counts = dict(rows)
             if set(counts) != set(forms):
@@ -103,7 +107,10 @@ class OccurrenceCheck:
             if sum(counts.values()) > MAX_TOKENS:
                 raise OccurrenceCheckRequestError(f"Bounded checks support at most {MAX_TOKENS} canonical occurrences")
             total_forms = context.db.execute(
-                "SELECT COUNT(DISTINCT lookup_key) FROM tokens WHERE build_id = ?", (context.build_id,)
+                "SELECT COUNT(DISTINCT canonical_forms.lookup_key) FROM tokens "
+                "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                "WHERE tokens.build_id = ?",
+                (context.build_id,),
             ).fetchone()[0]
             provider = registration.load()
             if not provider.available():

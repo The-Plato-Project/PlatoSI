@@ -1,9 +1,25 @@
 {
-  "artifact": "data/plato-morphology-v1.sqlite",
-  "sha256": "9530e04a7bd95503516dc94d7f50b5691a2553e07bc6c56f1063dd5c6dacd3ff",
-  "size": 61673472,
-  "schema_version": 1,
+  "artifact": "data/plato-evidence-v1.sqlite.xz",
+  "artifact_sha256": "6ce10fe666f5317470b45b731b91668f1c1a3299566c6e80922859e5d728288c",
+  "artifact_size": 4776784,
+  "database": "data/plato-evidence-v1.sqlite",
+  "database_sha256": "1ef184b35ef34e7df44191094f13414a5fc22f37a7caf91f5c6dc8d9cbc50c8d",
+  "database_size": 72949760,
+  "schema_versions": {
+    "canonical_index": 5,
+    "morphology": 2
+  },
   "policy_version": "plato-morphology-v1",
+  "records": {
+    "dialogue_builds": 1,
+    "canonical_sections": 1355,
+    "canonical_forms": 15078,
+    "token_occurrences": 88261,
+    "morphology_builds": 1,
+    "morphology_forms": 15078,
+    "morphology_memberships": 15078,
+    "morphology_analyses": 27677
+  },
   "builds": [
     {
       "dialogue": "republic",
@@ -52,8 +68,8 @@
       "whole_dialogue_complete": true,
       "context_reviewed": false,
       "storage": "shipped_morphology_database",
-      "created_at": "2026-11-06 18:37:51",
-      "completed_at": "2026-11-06 18:41:05"
+      "created_at": "2026-11-07 17:54:38",
+      "completed_at": "2026-11-07 17:57:11"
     }
   ]
 }

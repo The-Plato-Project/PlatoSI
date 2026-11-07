@@ -109,13 +109,13 @@ database will contain:
 ### `tokens`
 
 - stable token identifier
-- dialogue and text version
-- exact surface form
-- NFC lookup key
-- accent-insensitive secondary key
-- Stephanus reference
+- dialogue build reference
+- canonical section reference
+- shared canonical form reference
 - UTF-16 start and end offsets
-- passage text
+
+`canonical_sections` stores each Stephanus passage and division once.
+`canonical_forms` stores each exact surface form and its normalized keys once.
 
 ### `provider_lemma_forms`
 
@@ -131,10 +131,11 @@ Provider lemma inventories are stored independently of canonical dialogue
 builds. Dialogue counts and locations are derived at request time by
 intersecting those records with `tokens`.
 
-### `morphology_builds`, `morphology_forms`, and `morphology_analyses`
+### `morphology_builds`, `morphology_build_forms`, `morphology_forms`, and `morphology_analyses`
 
 - one resumable build per canonical dialogue version and Morpheus identity;
-- one permanent checked, unresolved, failed, or pending state per observed form;
+- one shared checked, unresolved, failed, or pending state per provider/form;
+- compact membership rows connecting each dialogue build to its forms;
 - every candidate lemma, source headword, homograph, grammatical reading, and
   raw Morpheus evidence;
 - a ready state only after every distinct canonical form has a valid response.

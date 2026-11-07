@@ -1,8 +1,10 @@
 """Permanent PlatoSI morphology builds from the in-process ikelos provider."""
 
+from contextlib import closing
 import json
 from pathlib import Path
 import shutil
+import sqlite3
 import sys
 import tempfile
 import unittest
@@ -78,6 +80,40 @@ class DialogueMorphologyTests(unittest.TestCase):
         )
         self.index = DialogueMorphologyIndex(self.root)
 
+    def add_dialogue(self, dialogue, text):
+        segments = [{
+            "stephanus": "1a",
+            "division": {"type": "part", "label": "1"},
+            "text": text,
+            "annotations": [],
+        }]
+        sections = sections_from_segments(segments)
+        version = text_version(dialogue, sections)
+        inventory_path = (
+            self.root / "docs" / "canonical-corpus-v1-inventory.json"
+        )
+        inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+        entry = {
+            "dialogue": dialogue,
+            "tlg": "tlg031",
+            "edition": "perseus-grc2",
+            "title": "Second Fixture",
+            "title_greek": None,
+            "text_version": version,
+            "segments_sha256": segment_digest(segments),
+        }
+        inventory["works"].append(entry)
+        inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
+        work_path = self.root / DATA / "works" / f"{dialogue}.json"
+        work_path.write_text(
+            json.dumps(
+                make_work(inventory, entry, segments),
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        return version
+
     def test_build_persists_all_readings_in_compact_database(self):
         with patch.object(
             self.provider,
@@ -138,6 +174,37 @@ class DialogueMorphologyTests(unittest.TestCase):
         self.assertEqual(resumed["state"], "ready")
         self.assertEqual(resumed["checked_forms"], 2)
         analyze.assert_called_once_with("ξξξξξ")
+
+    def test_second_dialogue_reuses_shared_form_analyses(self):
+        first = self.index.build(self.registry, "fixture", self.version)
+        second_version = self.add_dialogue(
+            "fixture-two",
+            "κατέβην ξξξξξ",
+        )
+        with patch.object(
+            self.provider,
+            "analyze_complete",
+            wraps=self.provider.analyze_complete,
+        ) as analyze:
+            second = self.index.build(
+                self.registry,
+                "fixture-two",
+                second_version,
+            )
+        analyze.assert_not_called()
+        self.assertNotEqual(first["build_id"], second["build_id"])
+        self.assertEqual(second["total_forms"], 2)
+        with closing(sqlite3.connect(self.index.path)) as db:
+            self.assertEqual(
+                db.execute("SELECT COUNT(*) FROM morphology_forms").fetchone()[0],
+                2,
+            )
+            self.assertEqual(
+                db.execute(
+                    "SELECT COUNT(*) FROM morphology_build_forms"
+                ).fetchone()[0],
+                4,
+            )
 
     def test_dialogue_lookup_reads_database_without_calling_ikelos(self):
         snapshot = self.index.build(self.registry, "fixture", self.version)

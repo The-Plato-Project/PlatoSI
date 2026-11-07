@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from platosi import __version__
 from platosi.canonical_text import CONTRACT
+from platosi.evidence_database import ARCHIVE
 from platosi.reader_api import VERSION
 
 
@@ -27,7 +28,7 @@ DOCS = (
     "local-dependency.md", "text-location-contract.md", "retrieval.md", "name-research.md",
     "morphology-research.md",
     "canonical-corpus-v1-inventory.json", "corpus-inventory.json", "lsj-inventory.json",
-    "morphology-inventory.json", "morpheus.md", "plato-morphology-v1-inventory.json",
+    "morphology-inventory.json", "morpheus.md", "plato-evidence-v1-inventory.json",
 )
 
 
@@ -39,7 +40,7 @@ def release_files(root):
     paths += sorted((root / "plugins").glob("*/plugin.json"))
     paths += sorted((root / "plugins").glob("*/provider.py"))
     paths += sorted((root / "config").glob("*.json"))
-    paths += [root / "data" / "plato-morphology-v1.sqlite"]
+    paths += [root / ARCHIVE]
     paths += sorted(path for path in (root / "playground").iterdir()
                     if path.is_file() and path.suffix in (".html", ".js", ".css"))
     if not (root / "src" / "platosi" / "__init__.py").is_file():

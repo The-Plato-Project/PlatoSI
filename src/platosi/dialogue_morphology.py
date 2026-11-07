@@ -7,11 +7,11 @@ from pathlib import Path
 import sqlite3
 
 from platosi.dialogue_lexicon import DialogueLexiconIndex
+from platosi.evidence_database import DATABASE, database_path
 from platosi.unicode_search import key
 
 
-DATABASE = Path("data/plato-morphology-v1.sqlite")
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 POLICY_VERSION = "plato-morphology-v1"
 PROVIDER_ERRORS = (OSError, RuntimeError, ValueError, ImportError, sqlite3.Error)
 
@@ -45,7 +45,7 @@ def provider_identity(registration, provider):
 class DialogueMorphologyIndex:
     def __init__(self, root):
         self.root = Path(root)
-        self.path = self.root / DATABASE
+        self.path = database_path(self.root)
         self.dialogues = DialogueLexiconIndex(root)
 
     def build(
@@ -92,9 +92,13 @@ class DialogueMorphologyIndex:
                 if existing["state"] == "ready" and not rebuild:
                     return existing
                 pending = db.execute(
-                    "SELECT id, form, lookup_key FROM morphology_forms "
-                    "WHERE morphology_build_id = ? AND status IN ('pending', 'failed') "
-                    "ORDER BY id",
+                    "SELECT morphology_forms.id, morphology_forms.form, "
+                    "morphology_forms.lookup_key FROM morphology_build_forms "
+                    "JOIN morphology_forms "
+                    "ON morphology_forms.id = morphology_build_forms.morphology_form_id "
+                    "WHERE morphology_build_forms.morphology_build_id = ? "
+                    "AND morphology_forms.status IN ('pending', 'failed') "
+                    "ORDER BY morphology_build_forms.ordinal",
                     (build_id,),
                 ).fetchall()
                 for position, row in enumerate(pending, 1):
@@ -170,6 +174,12 @@ class DialogueMorphologyIndex:
         db.execute("PRAGMA foreign_keys = ON")
         if create:
             self._ensure_schema(db)
+        elif db.execute(
+            "SELECT 1 FROM sqlite_master "
+            "WHERE type = 'table' AND name = 'morphology_builds'"
+        ).fetchone() is None:
+            db.close()
+            return None
         return db
 
     @staticmethod
@@ -204,18 +214,30 @@ class DialogueMorphologyIndex:
                 );
             CREATE TABLE IF NOT EXISTS morphology_forms (
                 id INTEGER PRIMARY KEY,
-                morphology_build_id INTEGER NOT NULL
-                    REFERENCES morphology_builds(id) ON DELETE CASCADE,
+                provider_id TEXT NOT NULL,
+                provider_version TEXT NOT NULL,
+                provider_fingerprint TEXT NOT NULL,
                 form TEXT NOT NULL,
                 lookup_key TEXT NOT NULL,
                 status TEXT NOT NULL
                     CHECK (status IN ('pending', 'analyzed', 'unresolved', 'failed')),
                 error TEXT,
                 analyzed_at TEXT,
-                UNIQUE (morphology_build_id, lookup_key)
+                UNIQUE (provider_fingerprint, lookup_key)
             );
-            CREATE INDEX IF NOT EXISTS morphology_forms_build_lookup
-                ON morphology_forms(morphology_build_id, lookup_key);
+            CREATE INDEX IF NOT EXISTS morphology_forms_lookup
+                ON morphology_forms(provider_fingerprint, lookup_key);
+            CREATE TABLE IF NOT EXISTS morphology_build_forms (
+                morphology_build_id INTEGER NOT NULL
+                    REFERENCES morphology_builds(id) ON DELETE CASCADE,
+                morphology_form_id INTEGER NOT NULL
+                    REFERENCES morphology_forms(id),
+                ordinal INTEGER NOT NULL,
+                PRIMARY KEY (morphology_build_id, morphology_form_id),
+                UNIQUE (morphology_build_id, ordinal)
+            );
+            CREATE INDEX IF NOT EXISTS morphology_build_forms_form
+                ON morphology_build_forms(morphology_form_id, morphology_build_id);
             CREATE TABLE IF NOT EXISTS morphology_analyses (
                 id INTEGER PRIMARY KEY,
                 morphology_form_id INTEGER NOT NULL
@@ -318,19 +340,58 @@ class DialogueMorphologyIndex:
                 )
                 build_id = cursor.lastrowid
                 forms = context.db.execute(
-                    "SELECT tokens.surface, tokens.lookup_key FROM tokens "
-                    "JOIN (SELECT lookup_key, MIN(id) AS first_id FROM tokens "
-                    "WHERE build_id = ? GROUP BY lookup_key) distinct_forms "
-                    "ON tokens.id = distinct_forms.first_id ORDER BY tokens.id",
+                    "SELECT canonical_forms.surface, canonical_forms.lookup_key "
+                    "FROM tokens "
+                    "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                    "JOIN ("
+                    "SELECT canonical_forms.lookup_key, MIN(tokens.id) AS first_id "
+                    "FROM tokens "
+                    "JOIN canonical_forms ON canonical_forms.id = tokens.form_id "
+                    "WHERE tokens.build_id = ? "
+                    "GROUP BY canonical_forms.lookup_key"
+                    ") distinct_forms ON tokens.id = distinct_forms.first_id "
+                    "ORDER BY tokens.id",
                     (context.build_id,),
                 ).fetchall()
                 db.executemany(
-                    "INSERT INTO morphology_forms "
-                    "(morphology_build_id, form, lookup_key, status) "
-                    "VALUES (?, ?, ?, 'pending')",
+                    "INSERT OR IGNORE INTO morphology_forms "
+                    "(provider_id, provider_version, provider_fingerprint, "
+                    "form, lookup_key, status) "
+                    "VALUES (?, ?, ?, ?, ?, 'pending')",
                     [
-                        (build_id, form["surface"], form["lookup_key"])
+                        (
+                            provider_id,
+                            provider_version,
+                            fingerprint,
+                            form["surface"],
+                            form["lookup_key"],
+                        )
                         for form in forms
+                    ],
+                )
+                form_ids = {}
+                lookup_keys = [form["lookup_key"] for form in forms]
+                for start in range(0, len(lookup_keys), 400):
+                    group = lookup_keys[start:start + 400]
+                    placeholders = ",".join("?" for _ in group)
+                    form_ids.update(
+                        {
+                            form["lookup_key"]: form["id"]
+                            for form in db.execute(
+                                "SELECT id, lookup_key FROM morphology_forms "
+                                "WHERE provider_fingerprint = ? "
+                                f"AND lookup_key IN ({placeholders})",
+                                [fingerprint, *group],
+                            )
+                        }
+                    )
+                db.executemany(
+                    "INSERT INTO morphology_build_forms "
+                    "(morphology_build_id, morphology_form_id, ordinal) "
+                    "VALUES (?, ?, ?)",
+                    [
+                        (build_id, form_ids[form["lookup_key"]], ordinal)
+                        for ordinal, form in enumerate(forms)
                     ],
                 )
                 db.execute(
@@ -405,8 +466,12 @@ class DialogueMorphologyIndex:
             raise ValueError("Morphology build does not belong to this dialogue text")
         counts = dict(
             db.execute(
-                "SELECT status, COUNT(*) FROM morphology_forms "
-                "WHERE morphology_build_id = ? GROUP BY status",
+                "SELECT morphology_forms.status, COUNT(*) "
+                "FROM morphology_build_forms "
+                "JOIN morphology_forms "
+                "ON morphology_forms.id = morphology_build_forms.morphology_form_id "
+                "WHERE morphology_build_forms.morphology_build_id = ? "
+                "GROUP BY morphology_forms.status",
                 (build_id,),
             ).fetchall()
         )
@@ -448,9 +513,12 @@ class DialogueMorphologyIndex:
             rows = db.execute(
                 "SELECT morphology_analyses.record_identity, "
                 "morphology_analyses.record FROM morphology_analyses "
+                "JOIN morphology_build_forms "
+                "ON morphology_build_forms.morphology_form_id = "
+                "morphology_analyses.morphology_form_id "
                 "JOIN morphology_forms "
-                "ON morphology_forms.id = morphology_analyses.morphology_form_id "
-                "WHERE morphology_forms.morphology_build_id = ? "
+                "ON morphology_forms.id = morphology_build_forms.morphology_form_id "
+                "WHERE morphology_build_forms.morphology_build_id = ? "
                 "AND morphology_forms.lookup_key = ? ORDER BY morphology_analyses.id",
                 (build_id, form_key),
             ).fetchall()
@@ -467,10 +535,12 @@ class DialogueMorphologyIndex:
             rows = db.execute(
                 "SELECT morphology_analyses.record_identity, "
                 "morphology_analyses.record FROM morphology_analyses "
-                "JOIN morphology_forms "
-                "ON morphology_forms.id = morphology_analyses.morphology_form_id "
-                "WHERE morphology_forms.morphology_build_id = ? "
-                "AND morphology_analyses.lemma_key = ? ORDER BY morphology_forms.id, "
+                "JOIN morphology_build_forms "
+                "ON morphology_build_forms.morphology_form_id = "
+                "morphology_analyses.morphology_form_id "
+                "WHERE morphology_build_forms.morphology_build_id = ? "
+                "AND morphology_analyses.lemma_key = ? "
+                "ORDER BY morphology_build_forms.ordinal, "
                 "morphology_analyses.id",
                 (build_id, lemma_key),
             ).fetchall()
@@ -557,10 +627,14 @@ class DialogueMorphologyIndex:
             if action == "exclude":
                 row = db.execute(
                     "SELECT morphology_analyses.lemma_key FROM morphology_analyses "
-                    "JOIN morphology_forms "
-                    "ON morphology_forms.id = morphology_analyses.morphology_form_id "
+                    "JOIN morphology_build_forms "
+                    "ON morphology_build_forms.morphology_form_id = "
+                    "morphology_analyses.morphology_form_id "
                     "JOIN morphology_builds "
-                    "ON morphology_builds.id = morphology_forms.morphology_build_id "
+                    "ON morphology_builds.id = "
+                    "morphology_build_forms.morphology_build_id "
+                    "JOIN morphology_forms "
+                    "ON morphology_forms.id = morphology_build_forms.morphology_form_id "
                     "WHERE morphology_builds.dialogue = ? "
                     "AND morphology_builds.text_version = ? "
                     "AND morphology_forms.lookup_key = ? "

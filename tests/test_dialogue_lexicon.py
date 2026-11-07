@@ -1,4 +1,6 @@
+from contextlib import closing
 import json
+import sqlite3
 import sys
 import tempfile
 import unittest
@@ -74,6 +76,29 @@ class DialogueLexiconIndexTests(unittest.TestCase):
         self.assertEqual(results[0]["location"]["start"], {"stephanus": "327b", "offset": 9})
         self.assertEqual(results[0]["location"]["end"], {"stephanus": "327b", "offset": 16})
         self.assertEqual(results[0]["form"], "ἔπεμπον")
+
+    def test_stores_each_canonical_passage_once(self):
+        self.index.ensure_dialogue(self.dialogue, self.version)
+        with closing(sqlite3.connect(self.index.path)) as db:
+            sections = db.execute(
+                "SELECT COUNT(*), SUM(LENGTH(passage)) FROM canonical_sections"
+            ).fetchone()
+            token_count = db.execute("SELECT COUNT(*) FROM tokens").fetchone()[0]
+            token_columns = {
+                row[1] for row in db.execute("PRAGMA table_info(tokens)")
+            }
+        fixture = json.loads(
+            (ROOT / "tests" / "fixtures" / "text-location-v1.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        expected_length = sum(
+            len("\n".join(section["segments"]))
+            for section in fixture["sections"]
+        )
+        self.assertEqual(sections, (len(fixture["sections"]), expected_length))
+        self.assertEqual(token_count, 7)
+        self.assertNotIn("passage", token_columns)
 
     def test_persists_provider_forms_and_intersects_dialogue_tokens(self):
         records = [{
