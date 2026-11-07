@@ -8,7 +8,7 @@ import sqlite3
 import unicodedata
 
 from platosi.canonical_text import CanonicalCorpus
-from platosi.evidence_database import database_path
+from platosi.greek_language_repository import database_path
 from platosi.unicode_search import key
 
 

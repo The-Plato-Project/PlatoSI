@@ -153,10 +153,10 @@ python .\scripts\build-plato-morphology.py --dialogue republic
 ```
 
 The resumable build analyzes every distinct canonical form and stores all
-readings in `data/plato-evidence-v1.sqlite`. Canonical passages, compact token
+readings in `data/plato-greek-language-repository-v1.sqlite`. Canonical passages, compact token
 locations, shared forms, and morphology analyses occupy the same normalized
 database. The repository and release package carry its deterministic XZ
-artifact at `data/plato-evidence-v1.sqlite.xz`; PlatoSI materializes the local
+artifact at `data/plato-greek-language-repository-v1.sqlite.xz`; PlatoSI materializes the local
 SQLite file on first use. Normal dialogue lookup reads
 that ready artifact without importing ikelos. Standalone analysis and explicit
 bounded checks call ikelos in-process. See [Morpheus](docs/morpheus.md).
@@ -313,7 +313,8 @@ context-sensitive identity claim.
 
 `linguistics.dialogue-lexicon` uses the same word evidence and intersects source
 headword mappings with canonical tokens. For Morpheus, it reads only a ready
-dialogue/text-version build from `data/plato-evidence-v1.sqlite`, then filters
+dialogue/text-version build from
+`data/plato-greek-language-repository-v1.sqlite`, then filters
 by the selected headword/homograph. It never calls ikelos during normal lookup.
 Generic inventory and relation providers retain their independent cache path.
 Returned forms include counts, canonical locations, divisions, passages and
@@ -447,8 +448,8 @@ HTTP is not a general mirror of `ReaderApi.execute`: canonical/linguistics opera
 | `data/indexes/perseus-plato.sqlite` | `index_metadata`; `editions` with URN, source, text, normalized keys, structural/markup JSON |
 | `data/indexes/lsj-logeion.sqlite` | `index_metadata`; `entries` keyed by file/ordinal; `aliases` with classification/fragment |
 | `data/canonical-text-v1/` | Pinned source XML/metadata and verified `works/<dialogue>.json` |
-| `data/plato-evidence-v1.sqlite.xz` | Shipped compressed normalized evidence artifact |
-| `data/plato-evidence-v1.sqlite` | Materialized local database: canonical sections, compact token locations, shared canonical forms, dialogue memberships, shared complete ikelos analyses, provider provenance, reusable provider inventories, relation caches, and reviewed correction overlays |
+| `data/plato-greek-language-repository-v1.sqlite.xz` | Shipped compressed Greek language repository |
+| `data/plato-greek-language-repository-v1.sqlite` | Materialized local repository: canonical sections, compact token locations, shared canonical forms, dialogue memberships, shared complete ikelos analyses, provider provenance, reusable provider inventories, relation caches, and reviewed correction overlays |
 | `data/word-exploration-cache.sqlite` | `examinations(key,result)`; evidence/model-identity/settings-derived cache |
 | `data/person-research-cache-v1.sqlite` | URL-keyed `web_cache` and policy/input-keyed `model_cache`, timestamps |
 | Browser localStorage | `platosi-note:<JSON [provider,edition,scope,start]>` and `:lemma`; no canonical version key |

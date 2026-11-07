@@ -7,7 +7,7 @@ from pathlib import Path
 import sqlite3
 
 from platosi.dialogue_lexicon import DialogueLexiconIndex
-from platosi.evidence_database import DATABASE, database_path
+from platosi.greek_language_repository import DATABASE, database_path
 from platosi.unicode_search import key
 
 

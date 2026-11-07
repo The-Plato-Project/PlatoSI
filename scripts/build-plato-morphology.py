@@ -18,7 +18,7 @@ from platosi.dialogue_morphology import (
     DialogueMorphologyIndex,
 )
 from platosi.dialogue_lexicon import SCHEMA_VERSION as LEXICON_SCHEMA_VERSION
-from platosi.evidence_database import archive_database
+from platosi.greek_language_repository import archive_database
 from platosi.registry import Registry
 
 
@@ -41,7 +41,7 @@ def main():
     parser.add_argument(
         "--inventory",
         type=Path,
-        default=ROOT / "docs" / "plato-evidence-v1-inventory.json",
+        default=ROOT / "docs" / "plato-greek-language-repository-v1-inventory.json",
     )
     args = parser.parse_args()
 

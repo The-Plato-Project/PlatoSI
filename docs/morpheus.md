@@ -19,13 +19,14 @@ HTTP request.
 Morphological ambiguity is evidence. PlatoSI does not ask a model to select a
 reading, collapse homographs, or infer a referent.
 
-## Shipped evidence database
+## Shipped Greek language repository
 
-The normalized database is `data/plato-evidence-v1.sqlite`. Git and release
+The normalized database is
+`data/plato-greek-language-repository-v1.sqlite`. Git and release
 packages carry it as the deterministic
-`data/plato-evidence-v1.sqlite.xz` artifact. PlatoSI materializes the SQLite
-file locally on first use and leaves the compressed artifact unchanged.
-The database contains:
+`data/plato-greek-language-repository-v1.sqlite.xz` artifact. PlatoSI
+materializes the SQLite file locally on first use and leaves the compressed
+artifact unchanged. The repository contains:
 
 - dialogue and canonical text-version identity;
 - canonical passages stored once per dialogue section;
@@ -45,7 +46,8 @@ The current artifact contains the Republic:
 - no failed or pending forms.
 
 Its full provenance and checksum are recorded in
-`docs/plato-evidence-v1-inventory.json`. A build is usable only when every
+`docs/plato-greek-language-repository-v1-inventory.json`. A build is usable
+only when every
 distinct form is analyzed or explicitly unresolved. Partial and failed builds
 are never used for ordinary dialogue lookup.
 

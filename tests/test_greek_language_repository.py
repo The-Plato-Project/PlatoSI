@@ -10,10 +10,10 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from platosi.evidence_database import ARCHIVE, DATABASE, database_path
+from platosi.greek_language_repository import ARCHIVE, DATABASE, database_path
 
 
-class EvidenceDatabaseTests(unittest.TestCase):
+class GreekLanguageRepositoryTests(unittest.TestCase):
     def test_materializes_verified_database_from_shipped_archive(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -22,7 +22,11 @@ class EvidenceDatabaseTests(unittest.TestCase):
             shutil.copyfile(ROOT / ARCHIVE, archive)
             database = database_path(root)
             inventory = json.loads(
-                (ROOT / "docs" / "plato-evidence-v1-inventory.json").read_text(
+                (
+                    ROOT
+                    / "docs"
+                    / "plato-greek-language-repository-v1-inventory.json"
+                ).read_text(
                     encoding="utf-8"
                 )
             )

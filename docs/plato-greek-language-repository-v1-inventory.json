@@ -1,8 +1,8 @@
 {
-  "artifact": "data/plato-evidence-v1.sqlite.xz",
+  "artifact": "data/plato-greek-language-repository-v1.sqlite.xz",
   "artifact_sha256": "6ce10fe666f5317470b45b731b91668f1c1a3299566c6e80922859e5d728288c",
   "artifact_size": 4776784,
-  "database": "data/plato-evidence-v1.sqlite",
+  "database": "data/plato-greek-language-repository-v1.sqlite",
   "database_sha256": "1ef184b35ef34e7df44191094f13414a5fc22f37a7caf91f5c6dc8d9cbc50c8d",
   "database_size": 72949760,
   "schema_versions": {

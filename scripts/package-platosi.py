@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from platosi import __version__
 from platosi.canonical_text import CONTRACT
-from platosi.evidence_database import ARCHIVE
+from platosi.greek_language_repository import ARCHIVE
 from platosi.reader_api import VERSION
 
 
@@ -28,7 +28,8 @@ DOCS = (
     "local-dependency.md", "text-location-contract.md", "retrieval.md", "name-research.md",
     "morphology-research.md",
     "canonical-corpus-v1-inventory.json", "corpus-inventory.json", "lsj-inventory.json",
-    "morphology-inventory.json", "morpheus.md", "plato-evidence-v1-inventory.json",
+    "morphology-inventory.json", "morpheus.md",
+    "plato-greek-language-repository-v1-inventory.json",
 )
 
 

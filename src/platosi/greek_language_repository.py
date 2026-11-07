@@ -1,4 +1,4 @@
-"""Shared storage identity for canonical and linguistic evidence."""
+"""Shared storage identity for Plato's Greek language repository."""
 
 import lzma
 import os
@@ -7,8 +7,8 @@ import shutil
 import tempfile
 
 
-DATABASE = Path("data/plato-evidence-v1.sqlite")
-ARCHIVE = Path("data/plato-evidence-v1.sqlite.xz")
+DATABASE = Path("data/plato-greek-language-repository-v1.sqlite")
+ARCHIVE = Path("data/plato-greek-language-repository-v1.sqlite.xz")
 
 
 def database_path(root):
@@ -45,7 +45,9 @@ def archive_database(root):
     root = Path(root)
     database = root / DATABASE
     if not database.is_file():
-        raise FileNotFoundError(f"Evidence database is missing: {database}")
+        raise FileNotFoundError(
+            f"Greek language repository database is missing: {database}"
+        )
     archive = root / ARCHIVE
     archive.parent.mkdir(parents=True, exist_ok=True)
     temporary = None

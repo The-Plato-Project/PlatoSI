@@ -9,8 +9,8 @@ Updated 6 November 2026.
   in-process and preserves every returned reading.
 - `requirements-morphology-build.txt` pins `ikelos==0.1.0.dev1` by wheel hash.
 - `DialogueLexiconIndex` and `DialogueMorphologyIndex` share the normalized
-  `data/plato-evidence-v1.sqlite` database, shipped as
-  `data/plato-evidence-v1.sqlite.xz`.
+  `data/plato-greek-language-repository-v1.sqlite` database, shipped as
+  `data/plato-greek-language-repository-v1.sqlite.xz`.
 - Canonical passages and provider/form analyses are stored once; dialogue
   builds use compact membership indexes.
 - Normal dialogue lookup reads only a ready artifact and never calls ikelos.

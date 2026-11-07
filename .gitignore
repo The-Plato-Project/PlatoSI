@@ -7,8 +7,8 @@
 /data/reader-profiles.json
 /data/word-exploration-cache.sqlite*
 /data/dialogue-lexicon-v1.sqlite*
-/data/plato-evidence-v1.sqlite
-/data/plato-evidence-v1.sqlite-*
+/data/plato-greek-language-repository-v1.sqlite
+/data/plato-greek-language-repository-v1.sqlite-*
 /data/person-research-cache-v1.sqlite*
 /data/canonical-text-v1/
 /indexes/
