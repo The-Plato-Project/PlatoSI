@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "synthesis": {
+    "max_tokens": 3200
+  },
+  "sources": [
+    {
+      "id": "humanistica-plato",
+      "name": "Platonis Humanistica Digitalia",
+      "adapter": "humanistica-plato",
+      "endpoint": "https://humanisticadigitalia.eu/GreekTexts/Plato/",
+      "language": "grc",
+      "enabled": true,
+      "priority": 10,
+      "limit": 2,
+      "minimum_statements": 2
+    },
+    {
+      "id": "athenian-onomasticon",
+      "name": "Athenian Onomasticon",
+      "adapter": "athenian-onomasticon",
+      "endpoint": "https://athnames.org/r4.php",
+      "language": "grc",
+      "enabled": true,
+      "priority": 20,
+      "limit": 30,
+      "minimum_statements": 0
+    }
+  ]
+}

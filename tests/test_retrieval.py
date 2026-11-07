@@ -42,12 +42,43 @@ class UnicodeTests(unittest.TestCase):
             self.assertEqual(found("κατεβην"), 0)
 
 
+
+# A synthetic capability fixture; no linguistic resource or parser is loaded.
+MORPHOLOGY_FIXTURE = """
+from pathlib import Path
+from platosi.unicode_search import key
+
+class Provider:
+    def __init__(self, manifest, root):
+        self.manifest = manifest
+        self.index = Path(root) / 'data' / 'indexes' / 'fixture-morphology.txt'
+    def build(self):
+        self.index.parent.mkdir(parents=True, exist_ok=True)
+        self.index.write_text('synthetic fixture', encoding='utf-8')
+    def available(self): return self.index.is_file()
+    def analyze(self, form, mode, limit):
+        if key(form, mode) != key('κατέβην', mode): return []
+        return [{'provider': self.manifest['id'], 'provider_version': self.manifest['version'],
+                 'source': self.manifest['source'], 'license': self.manifest['license'],
+                 'evidence_type': 'candidate_analysis', 'classification': 'synthetic_fixture',
+                 'form': form, 'lemma': 'καταβαίνω', 'tag': tag}
+                for tag in ('fixture-reading-a', 'fixture-reading-b')][:limit]
+    def match_forms(self, lemma, forms):
+        return [record for form in forms for record in self.analyze(form, 'exact', 20)
+                if key(record['lemma']) == key(lemma)]
+    def lemma_forms(self, lemma, limit):
+        return self.match_forms(lemma, ['κατέβην'])[:limit]
+
+def create_provider(manifest, root): return Provider(manifest, root)
+"""
+
+
 class PluginFixtureTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         shutil.copytree(ROOT / "plugins", self.root / "plugins",
-                        ignore=shutil.ignore_patterns("__pycache__", "ollama", "dilemma"))
+                        ignore=shutil.ignore_patterns("__pycache__", "ollama", "morpheus"))
         for manifest_path in (self.root / "plugins").glob("*/plugin.json"):
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             del manifest["config"]["inventory"]
@@ -76,10 +107,15 @@ class PluginFixtureTests(unittest.TestCase):
             '<orth extent="suff">πόρρ-ωθεν</orth><orth extent="suff">-ος</orth>afar'
             '</div2></div1></text></tei.2>',
             encoding="utf-8")
-        glem = self.root / "data" / "greek-morphology" / "glem" / "glem"
-        glem.mkdir(parents=True)
-        (glem / "list_proiel_perseus_merged_word_lemma_POS_nofreq").write_text(
-            "κατέβην καταβαίνω V-1saia---\nκατέβην καταβαίνω V-3paia---\n", encoding="utf-8")
+        morphology = self.root / "plugins" / "fixture-morphology"
+        morphology.mkdir()
+        (morphology / "plugin.json").write_text(json.dumps({
+            "id": "fixture-morphology", "type": "morphology", "version": "test",
+            "module": "provider.py", "capabilities": ["analyze", "match_forms", "lemma_forms"],
+            "enabled_by_default": False, "source": {"revision": "synthetic fixture"},
+            "license": {"status": "test fixture"}, "config": {},
+        }), encoding="utf-8")
+        (morphology / "provider.py").write_text(MORPHOLOGY_FIXTURE, encoding="utf-8")
         self.registry = Registry(self.root)
         for r in self.registry.providers.values():
             r.load().build()
@@ -128,19 +164,18 @@ class PluginFixtureTests(unittest.TestCase):
         self.assertEqual(variant[0]["match_kind"], "explicit_orthographic_variant")
         self.assertIn("πόρρ-ωθεν", variant[0]["match_fragment"])
         self.assertEqual(dictionary.lookup("ος", "exact", 10), [])
-        morph = self.registry.providers["glem"].load()
+        morph = self.registry.providers["fixture-morphology"].load()
         analyses = morph.analyze("κατέβην", "exact", 10)
         self.assertEqual(len(analyses), 2)
         self.assertNotEqual(analyses[0]["tag"], analyses[1]["tag"])
         self.assertTrue(all(r["evidence_type"] == "candidate_analysis" for r in analyses))
-        self.assertIn("UNRESOLVED", analyses[0]["license"]["status"])
 
     def test_disable_remove_and_multiple_providers(self):
-        self.assertFalse(self.registry.providers["glem"].enabled)
+        self.assertFalse(self.registry.providers["fixture-morphology"].enabled)
         self.assertEqual(list(self.registry.active("analyze")), [])
-        self.registry.set_enabled("glem", True)
+        self.registry.set_enabled("fixture-morphology", True)
         self.assertEqual(len(list(self.registry.active("analyze"))), 1)
-        self.registry.set_enabled("glem", False)
+        self.registry.set_enabled("fixture-morphology", False)
         dictionary = list(self.registry.active("lookup"))
         self.assertEqual(len(dictionary), 1)
         self.assertEqual(len(dictionary[0][1].lookup("καταβαίνω", "exact", 10)), 2)
@@ -149,7 +184,7 @@ class PluginFixtureTests(unittest.TestCase):
         active = list(self.registry.active("search"))
         self.assertEqual(len(active), 1)
         self.assertTrue(active[0][1].search("κατέβην", "exact", 1))
-        (self.root / "plugins" / "glem" / "plugin.json").unlink()
+        (self.root / "plugins" / "fixture-morphology" / "plugin.json").unlink()
         second = self.root / "plugins" / "second-corpus"
         shutil.copytree(self.root / "plugins" / "perseus-plato", second, ignore=shutil.ignore_patterns("__pycache__"))
         manifest_path = second / "plugin.json"
@@ -186,7 +221,7 @@ class PluginFixtureTests(unittest.TestCase):
 
     def test_independent_minimal_provider_and_removal(self):
         indexes = [self.registry.providers[name].load().index
-                   for name in ("perseus-plato", "lsj-logeion", "glem")]
+                   for name in ("perseus-plato", "lsj-logeion", "fixture-morphology")]
         before = {path: path.read_bytes() for path in indexes}
         plugin = self.root / "plugins" / "independent-test"
         plugin.mkdir()
@@ -226,21 +261,21 @@ class PluginFixtureTests(unittest.TestCase):
         self.assertEqual(result["available_providers"], [])
         self.assertEqual(result["results"], [])
         self.assertIn("No enabled and available provider", result["message"])
-        self.assertFalse(next(p for p in result["providers"] if p["id"] == "glem")["enabled"])
-        self.registry.set_enabled("glem", True)
+        self.assertFalse(next(p for p in result["providers"] if p["id"] == "fixture-morphology")["enabled"])
+        self.registry.set_enabled("fixture-morphology", True)
         result = analyze()
-        self.assertEqual(result["available_providers"], ["glem"])
+        self.assertEqual(result["available_providers"], ["fixture-morphology"])
         self.assertNotIn("message", result)
-        self.registry.providers["glem"].load().index.unlink()
+        self.registry.providers["fixture-morphology"].load().index.unlink()
         result = analyze()
         self.assertEqual(result["results"], [])
         self.assertIn("No enabled and available provider", result["message"])
-        self.assertFalse(next(p for p in result["providers"] if p["id"] == "glem")["available"])
-        (self.root / "plugins" / "glem" / "plugin.json").unlink()
+        self.assertFalse(next(p for p in result["providers"] if p["id"] == "fixture-morphology")["available"])
+        (self.root / "plugins" / "fixture-morphology" / "plugin.json").unlink()
         result = analyze()
         self.assertEqual(result["available_providers"], [])
         self.assertIn("No enabled and available provider", result["message"])
-        self.assertFalse(any(p["id"] == "glem" for p in result["providers"]))
+        self.assertFalse(any(p["id"] == "fixture-morphology" for p in result["providers"]))
 
 
 class RealDataTests(unittest.TestCase):
@@ -249,7 +284,6 @@ class RealDataTests(unittest.TestCase):
         cls.registry = Registry(ROOT)
         cls.corpus = cls.registry.providers["perseus-plato"].load()
         cls.dictionary = cls.registry.providers["lsj-logeion"].load()
-        cls.glem = cls.registry.providers["glem"].load()
         if not cls.corpus.available() or not cls.dictionary.available():
             raise unittest.SkipTest("Real corpus and dictionary indexes not built")
 
@@ -271,7 +305,7 @@ class RealDataTests(unittest.TestCase):
         body = ET.parse(republic["source_path"]).getroot().find(".//{http://www.tei-c.org/ns/1.0}body")
         self.assertIn(republic["text"], "".join(body.itertext()))
 
-    def test_real_dictionary_and_morphology(self):
+    def test_real_dictionary(self):
         entries = self.dictionary.lookup("καταβαίνω", "exact", 20)
         self.assertTrue(entries)
         entry = entries[0]
@@ -283,18 +317,7 @@ class RealDataTests(unittest.TestCase):
         self.assertEqual(len(duplicate), 2)
         self.assertNotEqual((duplicate[0]["source_path"], duplicate[0]["entry_ordinal"]),
                             (duplicate[1]["source_path"], duplicate[1]["entry_ordinal"]))
-        if not self.glem.available():
-            self.skipTest("Optional GLEM index not built")
-        lines = self.glem.source.read_text(encoding="utf-8").splitlines()
-        samples = {"κατέβην": "καταβαίνω", "βουλόμενος": "βούλομαι",
-                   "ἔδοξεν": "δοκέω", "καταλιπὼν": "καταλείπω"}
-        for form, lemma in samples.items():
-            with self.subTest(form=form):
-                results = self.glem.analyze(form, "exact", 100)
-                self.assertTrue(any(r["lemma"] == lemma for r in results))
-                for result in results:
-                    self.assertEqual(lines[result["source_line"] - 1].split(),
-                                     [result["form"], result["lemma"], result["tag"]])
+
 
 
 if __name__ == "__main__":

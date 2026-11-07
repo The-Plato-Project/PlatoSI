@@ -245,7 +245,6 @@ function renderWord(result) {
   }
   if (!references) node("p", "No etymological reference was found in the selected dictionary entries.", panel);
   else node("p", "These are dictionary references, not necessarily identified roots.", panel);
-  node("p", "Dilemma supplies possible word forms, not historical roots.", panel);
   node("h3", "Relationships", panel);
   node("p", "AI exploration of connections across a book or the whole work is not available yet.", panel);
   $("ai-section").hidden = !result.analyses.length;

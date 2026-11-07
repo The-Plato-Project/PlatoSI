@@ -19,14 +19,15 @@ from platosi.reader_api import VERSION
 
 SCRIPTS = (
     "build-canonical-corpus.py", "reader_api.py", "check-local-dependency.py", "platosi.py", "playground.py",
+    "verify-occurrences.py",
     "plato-common.ps1", "download-plato.ps1", "download-lsj.ps1", "download-morphology.ps1",
     "validate-plato.ps1", "validate-lsj.ps1", "validate-morphology.ps1",
 )
 DOCS = (
-    "local-dependency.md", "text-location-contract.md", "retrieval.md",
-    "glem-licensing-review.md", "morphology-research.md", "dilemma-phase1-evaluation.md",
+    "local-dependency.md", "text-location-contract.md", "retrieval.md", "name-research.md",
+    "morphology-research.md",
     "canonical-corpus-v1-inventory.json", "corpus-inventory.json", "lsj-inventory.json",
-    "morphology-inventory.json",
+    "morphology-inventory.json", "morpheus.md", "plato-morphology-v1-inventory.json",
 )
 
 
@@ -37,6 +38,8 @@ def release_files(root):
     paths += sorted((root / "src" / "platosi").glob("*.py"))
     paths += sorted((root / "plugins").glob("*/plugin.json"))
     paths += sorted((root / "plugins").glob("*/provider.py"))
+    paths += sorted((root / "config").glob("*.json"))
+    paths += [root / "data" / "plato-morphology-v1.sqlite"]
     paths += sorted(path for path in (root / "playground").iterdir()
                     if path.is_file() and path.suffix in (".html", ".js", ".css"))
     if not (root / "src" / "platosi" / "__init__.py").is_file():

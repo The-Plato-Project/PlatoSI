@@ -2,9 +2,10 @@
 
 PlatoSI can run as a local child process without Chora or an AI model. The
 `0.1.0.dev1` portable archive is a development build, not a published stable
-release. It contains PlatoSI code, provider adapters, and inventories; it
-does not contain Python, downloaded corpora, indexes, model files, private
-configuration, reader data, or third-party morphology artifacts.
+release. It contains PlatoSI code, provider adapters, inventories, and the
+versioned Plato morphology database. It does not contain Python, downloaded
+canonical or dictionary corpora, model files, private configuration, or reader
+data.
 
 ## Requirements and installation
 
@@ -41,9 +42,11 @@ modified source files instead of replacing them. `--dialogue republic`
 builds just that work, but the complete catalogue and dependency check require
 all works. See `docs/text-location-contract.md` for text and location versions.
 
-Provider adapters are included, but Dilemma, GLEM, LSJ data, Ollama, models,
-and their indexes are not. They are optional and have separate setup and
-licensing requirements; see `docs/retrieval.md` and the provider notices.
+The Republic morphology artifact is included, so ordinary Republic occurrence
+retrieval is local and needs neither ikelos nor a service. LSJ data, Ollama,
+models, and canonical source XML are not included. Maintainers need the pinned
+ikelos wheel only when rebuilding the artifact or performing direct analysis.
+See `docs/morpheus.md`, `docs/retrieval.md`, and the provider notices.
 The Perseus repository license is generally CC BY-SA 4.0, but review each
 edition's TEI header and applicable terms. This distribution does not assert
 that third-party artifacts are cleared for every use or redistribution.

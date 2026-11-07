@@ -1,6 +1,7 @@
 """Persistent canonical dialogue tokens for lemma-form and relationship lookups."""
 
-from contextlib import closing
+from contextlib import closing, contextmanager, nullcontext
+from dataclasses import dataclass
 import json
 from pathlib import Path
 import sqlite3
@@ -11,7 +12,7 @@ from platosi.unicode_search import key
 
 
 DATABASE = Path("data/dialogue-lexicon-v1.sqlite")
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 POLICY_VERSION = "dialogue-tokens-v1"
 CANONICAL_FINGERPRINT = "canonical-only"
 
@@ -40,12 +41,31 @@ def tokens(text):
         yield start, len(text), text[start:]
 
 
+@dataclass(frozen=True)
+class DialogueLexiconContext:
+    dialogue: str
+    text_version: str
+    work: dict
+    build_id: int
+    db: sqlite3.Connection
+
+
 class DialogueLexiconIndex:
     def __init__(self, root):
         self.root = Path(root)
         self.path = self.root / DATABASE
 
-    def ensure_dialogue(self, dialogue, text_version=None):
+    @contextmanager
+    def _database(self):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with closing(sqlite3.connect(self.path)) as db:
+            db.row_factory = sqlite3.Row
+            db.execute("PRAGMA foreign_keys = ON")
+            self.initialize(db)
+            yield db
+
+    @contextmanager
+    def request_context(self, dialogue, text_version=None):
         work = CanonicalCorpus(self.root).work(dialogue, text_version)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with closing(sqlite3.connect(self.path)) as db:
@@ -53,56 +73,71 @@ class DialogueLexiconIndex:
             db.execute("PRAGMA foreign_keys = ON")
             self.initialize(db)
             with db:
-                row = db.execute(
-                    "SELECT id FROM index_builds WHERE dialogue = ? AND text_version = ? "
-                    "AND policy_version = ? AND provider_fingerprint = ? AND state = 'ready'",
-                    (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
-                ).fetchone()
-                if row is not None:
-                    return row["id"]
-                row = db.execute(
-                    "SELECT id FROM index_builds WHERE dialogue = ? AND text_version = ? "
-                    "AND policy_version = ? AND provider_fingerprint = ?",
-                    (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
-                ).fetchone()
-                if row is None:
-                    cursor = db.execute(
-                        "INSERT INTO index_builds "
-                        "(dialogue, text_version, policy_version, provider_fingerprint, state) "
-                        "VALUES (?, ?, ?, ?, 'building')",
-                        (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
-                    )
-                    build_id = cursor.lastrowid
-                else:
-                    build_id = row["id"]
-                    db.execute("DELETE FROM tokens WHERE build_id = ?", (build_id,))
-                    db.execute(
-                        "UPDATE index_builds SET state = 'building', completed_at = NULL WHERE id = ?",
-                        (build_id,),
-                    )
-                for section in work["sections"]:
-                    passage = "\n".join(segment["text"] for segment in section["segments"])
-                    for start, end, surface in tokens(passage):
-                        db.execute(
-                            "INSERT INTO tokens "
-                            "(build_id, surface, lookup_key, accentless_key, stephanus, "
-                            "start_offset, end_offset, passage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                            (
-                                build_id,
-                                surface,
-                                key(surface),
-                                key(surface, "accent-insensitive"),
-                                section["stephanus"],
-                                utf16_offset(passage, start),
-                                utf16_offset(passage, end),
-                                passage,
-                            ),
-                        )
+                build_id = self._ensure_dialogue(db, dialogue, work)
+            yield DialogueLexiconContext(
+                dialogue=dialogue,
+                text_version=work["text_version"],
+                work=work,
+                build_id=build_id,
+                db=db,
+            )
+
+    def ensure_dialogue(self, dialogue, text_version=None):
+        with self.request_context(dialogue, text_version) as context:
+            return context.build_id
+
+    @staticmethod
+    def _ensure_dialogue(db, dialogue, work):
+        row = db.execute(
+            "SELECT id FROM index_builds WHERE dialogue = ? AND text_version = ? "
+            "AND policy_version = ? AND provider_fingerprint = ? AND state = 'ready'",
+            (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
+        ).fetchone()
+        if row is not None:
+            return row["id"]
+        row = db.execute(
+            "SELECT id FROM index_builds WHERE dialogue = ? AND text_version = ? "
+            "AND policy_version = ? AND provider_fingerprint = ?",
+            (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
+        ).fetchone()
+        if row is None:
+            cursor = db.execute(
+                "INSERT INTO index_builds "
+                "(dialogue, text_version, policy_version, provider_fingerprint, state) "
+                "VALUES (?, ?, ?, ?, 'building')",
+                (dialogue, work["text_version"], POLICY_VERSION, CANONICAL_FINGERPRINT),
+            )
+            build_id = cursor.lastrowid
+        else:
+            build_id = row["id"]
+            db.execute("DELETE FROM tokens WHERE build_id = ?", (build_id,))
+            db.execute(
+                "UPDATE index_builds SET state = 'building', completed_at = NULL WHERE id = ?",
+                (build_id,),
+            )
+        for section in work["sections"]:
+            passage = "\n".join(segment["text"] for segment in section["segments"])
+            for start, end, surface in tokens(passage):
                 db.execute(
-                    "UPDATE index_builds SET state = 'ready', completed_at = CURRENT_TIMESTAMP WHERE id = ?",
-                    (build_id,),
+                    "INSERT INTO tokens "
+                    "(build_id, surface, lookup_key, accentless_key, stephanus, "
+                    "start_offset, end_offset, passage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        build_id,
+                        surface,
+                        key(surface),
+                        key(surface, "accent-insensitive"),
+                        section["stephanus"],
+                        utf16_offset(passage, start),
+                        utf16_offset(passage, end),
+                        passage,
+                    ),
                 )
-                return build_id
+        db.execute(
+            "UPDATE index_builds SET state = 'ready', completed_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (build_id,),
+        )
+        return build_id
 
     def form_counts(self, dialogue, text_version=None):
         build_id = self.ensure_dialogue(dialogue, text_version)
@@ -143,48 +178,53 @@ class DialogueLexiconIndex:
                 for row in rows
             ]
 
-    def cached_lemma_forms(self, dialogue, text_version, lemma, provider_fingerprint):
-        build_id = self.ensure_dialogue(dialogue, text_version)
-        with closing(sqlite3.connect(self.path)) as db:
-            db.row_factory = sqlite3.Row
+    def cached_lemma_forms(
+        self, dialogue, text_version, lemma, provider_fingerprint, context=None
+    ):
+        del dialogue, text_version
+        manager = nullcontext(context.db) if context is not None else self._database()
+        with manager as db:
             row = db.execute(
-                "SELECT id FROM lemma_builds WHERE token_build_id = ? AND lemma_key = ? "
+                "SELECT id FROM provider_lemma_builds WHERE lemma_key = ? "
                 "AND policy_version = ? AND provider_fingerprint = ? AND state = 'ready'",
-                (build_id, key(lemma), POLICY_VERSION, provider_fingerprint),
+                (key(lemma), POLICY_VERSION, provider_fingerprint),
             ).fetchone()
             if row is None:
                 return None
             records = db.execute(
-                "SELECT record FROM lemma_forms WHERE lemma_build_id = ? ORDER BY id",
+                "SELECT record FROM provider_lemma_forms WHERE lemma_build_id = ? ORDER BY id",
                 (row["id"],),
             )
             return [json.loads(record["record"]) for record in records]
 
-    def store_lemma_forms(self, dialogue, text_version, lemma, provider_fingerprint, records):
-        build_id = self.ensure_dialogue(dialogue, text_version)
-        with closing(sqlite3.connect(self.path)) as db:
-            db.row_factory = sqlite3.Row
-            db.execute("PRAGMA foreign_keys = ON")
-            self.initialize(db)
+    def store_lemma_forms(
+        self, dialogue, text_version, lemma, provider_fingerprint, records, context=None
+    ):
+        manager = nullcontext(context.db) if context is not None else self._database()
+        with manager as db:
             with db:
                 row = db.execute(
-                    "SELECT id FROM lemma_builds WHERE token_build_id = ? AND lemma_key = ? "
+                    "SELECT id FROM provider_lemma_builds WHERE lemma_key = ? "
                     "AND policy_version = ? AND provider_fingerprint = ?",
-                    (build_id, key(lemma), POLICY_VERSION, provider_fingerprint),
+                    (key(lemma), POLICY_VERSION, provider_fingerprint),
                 ).fetchone()
                 if row is None:
                     cursor = db.execute(
-                        "INSERT INTO lemma_builds "
-                        "(token_build_id, lemma_key, policy_version, provider_fingerprint, state) "
-                        "VALUES (?, ?, ?, ?, 'building')",
-                        (build_id, key(lemma), POLICY_VERSION, provider_fingerprint),
+                        "INSERT INTO provider_lemma_builds "
+                        "(lemma_key, policy_version, provider_fingerprint, state) "
+                        "VALUES (?, ?, ?, 'building')",
+                        (key(lemma), POLICY_VERSION, provider_fingerprint),
                     )
                     lemma_build_id = cursor.lastrowid
                 else:
                     lemma_build_id = row["id"]
-                    db.execute("DELETE FROM lemma_forms WHERE lemma_build_id = ?", (lemma_build_id,))
                     db.execute(
-                        "UPDATE lemma_builds SET state = 'building', completed_at = NULL WHERE id = ?",
+                        "DELETE FROM provider_lemma_forms WHERE lemma_build_id = ?",
+                        (lemma_build_id,),
+                    )
+                    db.execute(
+                        "UPDATE provider_lemma_builds "
+                        "SET state = 'building', completed_at = NULL WHERE id = ?",
                         (lemma_build_id,),
                     )
                 seen = set()
@@ -198,7 +238,7 @@ class DialogueLexiconIndex:
                         continue
                     seen.add(identity)
                     db.execute(
-                        "INSERT INTO lemma_forms "
+                        "INSERT INTO provider_lemma_forms "
                         "(lemma_build_id, form, lookup_key, provider, evidence_class, record) "
                         "VALUES (?, ?, ?, ?, ?, ?)",
                         (
@@ -211,42 +251,69 @@ class DialogueLexiconIndex:
                         ),
                     )
                 db.execute(
-                    "UPDATE lemma_builds SET state = 'ready', completed_at = CURRENT_TIMESTAMP "
+                    "UPDATE provider_lemma_builds "
+                    "SET state = 'ready', completed_at = CURRENT_TIMESTAMP "
                     "WHERE id = ?",
                     (lemma_build_id,),
                 )
-        return self.cached_lemma_forms(dialogue, text_version, lemma, provider_fingerprint)
+        return self.cached_lemma_forms(
+            dialogue, text_version, lemma, provider_fingerprint, context=context
+        )
 
-    def observed_lemma_forms(self, dialogue, text_version, lemma, provider_fingerprint):
-        build_id = self.ensure_dialogue(dialogue, text_version)
-        work = CanonicalCorpus(self.root).work(dialogue, text_version)
+    def observed_lemma_forms(
+        self, dialogue, text_version, lemma, provider_fingerprint, context=None
+    ):
+        if context is None:
+            with self.request_context(dialogue, text_version) as request_context:
+                return self.observed_lemma_forms(
+                    dialogue,
+                    text_version,
+                    lemma,
+                    provider_fingerprint,
+                    context=request_context,
+                )
+        records = self.cached_lemma_forms(
+            dialogue,
+            text_version,
+            lemma,
+            provider_fingerprint,
+            context=context,
+        )
+        return self.observed_records(
+            dialogue, text_version, records or [], context=context
+        )
+
+    def observed_records(self, dialogue, text_version, records, context=None):
+        if context is None:
+            with self.request_context(dialogue, text_version) as request_context:
+                return self.observed_records(
+                    dialogue, text_version, records, context=request_context
+                )
         divisions = {
             section["stephanus"]: section.get("division")
-            for section in work["sections"]
+            for section in context.work["sections"]
         }
-        with closing(sqlite3.connect(self.path)) as db:
-            db.row_factory = sqlite3.Row
-            lemma_build = db.execute(
-                "SELECT id FROM lemma_builds WHERE token_build_id = ? AND lemma_key = ? "
-                "AND policy_version = ? AND provider_fingerprint = ? AND state = 'ready'",
-                (build_id, key(lemma), POLICY_VERSION, provider_fingerprint),
-            ).fetchone()
-            if lemma_build is None:
-                return []
-            evidence_rows = db.execute(
-                "SELECT lookup_key, record FROM lemma_forms WHERE lemma_build_id = ? ORDER BY id",
-                (lemma_build["id"],),
-            )
-            evidence = {}
-            for row in evidence_rows:
-                evidence.setdefault(row["lookup_key"], []).append(json.loads(row["record"]))
-            token_rows = db.execute(
-                "SELECT DISTINCT tokens.id, tokens.surface, tokens.lookup_key, tokens.stephanus, "
-                "tokens.start_offset, tokens.end_offset, tokens.passage "
-                "FROM tokens JOIN lemma_forms ON lemma_forms.lookup_key = tokens.lookup_key "
-                "WHERE tokens.build_id = ? AND lemma_forms.lemma_build_id = ? ORDER BY tokens.id",
-                (build_id, lemma_build["id"]),
-            )
+        evidence = {}
+        for record in records:
+            form = record.get("form")
+            if not isinstance(form, str) or not form:
+                raise ValueError("Lemma form record is missing its form")
+            evidence.setdefault(key(form), []).append(record)
+        if not evidence:
+            return []
+        with nullcontext(context.db) as db:
+            token_rows = []
+            lookup_keys = sorted(evidence)
+            for start in range(0, len(lookup_keys), 400):
+                group = lookup_keys[start:start + 400]
+                placeholders = ",".join("?" for _ in group)
+                token_rows.extend(db.execute(
+                    "SELECT id, surface, lookup_key, stephanus, start_offset, "
+                    "end_offset, passage FROM tokens "
+                    f"WHERE build_id = ? AND lookup_key IN ({placeholders})",
+                    [context.build_id, *group],
+                ))
+            token_rows.sort(key=lambda row: row["id"])
             grouped = {}
             for row in token_rows:
                 item = grouped.setdefault(row["surface"], {
@@ -259,7 +326,7 @@ class DialogueLexiconIndex:
                 item["occurrences"].append({
                     "location": {
                         "dialogue": dialogue,
-                        "text_version": text_version,
+                        "text_version": context.text_version,
                         "start": {"stephanus": row["stephanus"], "offset": row["start_offset"]},
                         "end": {"stephanus": row["stephanus"], "offset": row["end_offset"]},
                     },
@@ -268,10 +335,20 @@ class DialogueLexiconIndex:
                 })
             return sorted(grouped.values(), key=lambda item: (-item["count"], key(item["form"])))
 
-    def cached_lemma_relations(self, dialogue, text_version, lemma, provider_fingerprint):
-        build_id = self.ensure_dialogue(dialogue, text_version)
-        with closing(sqlite3.connect(self.path)) as db:
-            db.row_factory = sqlite3.Row
+    def cached_lemma_relations(
+        self, dialogue, text_version, lemma, provider_fingerprint, context=None
+    ):
+        if context is None:
+            with self.request_context(dialogue, text_version) as request_context:
+                return self.cached_lemma_relations(
+                    dialogue,
+                    text_version,
+                    lemma,
+                    provider_fingerprint,
+                    context=request_context,
+                )
+        build_id = context.build_id
+        with nullcontext(context.db) as db:
             row = db.execute(
                 "SELECT id FROM relation_builds WHERE token_build_id = ? AND lemma_key = ? "
                 "AND policy_version = ? AND provider_fingerprint = ? AND state = 'ready'",
@@ -285,12 +362,21 @@ class DialogueLexiconIndex:
             )
             return [json.loads(record["record"]) for record in records]
 
-    def store_lemma_relations(self, dialogue, text_version, lemma, provider_fingerprint, records):
-        build_id = self.ensure_dialogue(dialogue, text_version)
-        with closing(sqlite3.connect(self.path)) as db:
-            db.row_factory = sqlite3.Row
-            db.execute("PRAGMA foreign_keys = ON")
-            self.initialize(db)
+    def store_lemma_relations(
+        self, dialogue, text_version, lemma, provider_fingerprint, records, context=None
+    ):
+        if context is None:
+            with self.request_context(dialogue, text_version) as request_context:
+                return self.store_lemma_relations(
+                    dialogue,
+                    text_version,
+                    lemma,
+                    provider_fingerprint,
+                    records,
+                    context=request_context,
+                )
+        build_id = context.build_id
+        with nullcontext(context.db) as db:
             with db:
                 row = db.execute(
                     "SELECT id FROM relation_builds WHERE token_build_id = ? AND lemma_key = ? "
@@ -347,7 +433,9 @@ class DialogueLexiconIndex:
                     "WHERE id = ?",
                     (relation_build_id,),
                 )
-        return self.cached_lemma_relations(dialogue, text_version, lemma, provider_fingerprint)
+        return self.cached_lemma_relations(
+            dialogue, text_version, lemma, provider_fingerprint, context=context
+        )
 
     @staticmethod
     def initialize(db):
@@ -404,6 +492,28 @@ class DialogueLexiconIndex:
             );
             CREATE INDEX IF NOT EXISTS lemma_forms_build_lookup
                 ON lemma_forms(lemma_build_id, lookup_key);
+            CREATE TABLE IF NOT EXISTS provider_lemma_builds (
+                id INTEGER PRIMARY KEY,
+                lemma_key TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                provider_fingerprint TEXT NOT NULL,
+                state TEXT NOT NULL CHECK (state IN ('building', 'ready', 'failed')),
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                completed_at TEXT,
+                UNIQUE (lemma_key, policy_version, provider_fingerprint)
+            );
+            CREATE TABLE IF NOT EXISTS provider_lemma_forms (
+                id INTEGER PRIMARY KEY,
+                lemma_build_id INTEGER NOT NULL
+                    REFERENCES provider_lemma_builds(id) ON DELETE CASCADE,
+                form TEXT NOT NULL,
+                lookup_key TEXT NOT NULL,
+                provider TEXT NOT NULL,
+                evidence_class TEXT NOT NULL,
+                record TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS provider_lemma_forms_build_lookup
+                ON provider_lemma_forms(lemma_build_id, lookup_key);
             CREATE TABLE IF NOT EXISTS relation_builds (
                 id INTEGER PRIMARY KEY,
                 token_build_id INTEGER NOT NULL REFERENCES index_builds(id) ON DELETE CASCADE,
@@ -431,7 +541,7 @@ class DialogueLexiconIndex:
         row = db.execute("SELECT schema_version FROM index_metadata").fetchone()
         if row is None:
             db.execute("INSERT INTO index_metadata VALUES (?)", (SCHEMA_VERSION,))
-        elif row["schema_version"] == 1:
+        elif row["schema_version"] in (1, 2, 3):
             db.execute("UPDATE index_metadata SET schema_version = ?", (SCHEMA_VERSION,))
         elif row["schema_version"] != SCHEMA_VERSION:
             raise ValueError("Dialogue lexicon index schema is incompatible; rebuild the generated index")

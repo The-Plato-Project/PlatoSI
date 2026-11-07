@@ -161,15 +161,16 @@ class InquiryTests(unittest.TestCase):
                             "--include", "text", "--include", "dict-a")
         self.assertEqual([e["record"]["provider"] for e in override["evidence"]], ["text", "dict-a"])
 
-    def test_missing_disabled_resources_and_no_glem(self):
-        Profiles(self.root).save("reader", ["text", "dict-a", "glem"], False)
+    def test_missing_disabled_resources_and_missing_morphology(self):
+        Profiles(self.root).save("reader", ["text", "dict-a", "missing-morphology"], False)
         Registry(self.root).set_enabled("dict-a", False)
         result = self.ask("--profile", "reader", "--headword", "καταβαίνω", "--form", "κατέβην")
         self.assertIsNotNone(result["answer"])
         self.assertEqual([e["record"]["provider"] for e in result["evidence"]], ["text"])
-        self.assertTrue(any("glem: not installed" in w for w in result["warnings"]))
-        self.assertTrue(any("dict-a: disabled" in w for w in result["warnings"]))
-        self.assertEqual(Profiles(self.root).get("reader")["resources"], ["text", "dict-a", "glem"])
+        self.assertTrue(any("missing-morphology: not installed" in w for w in result["warnings"]))
+        self.assertFalse(any("disabled" in w for w in result["warnings"]))
+        self.assertIn("disabled", [s["reason"] for s in result["selections"]["lookup"]])
+        self.assertEqual(Profiles(self.root).get("reader")["resources"], ["text", "dict-a", "missing-morphology"])
 
     def test_missing_passage_never_calls_model_or_fabricates_results(self):
         result = self.cli("inquire", "What is this?", "--edition", "edition-1", "--citation", "missing",

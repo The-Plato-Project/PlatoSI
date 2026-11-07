@@ -1,0 +1,3 @@
+--only-binary=:all:
+ikelos==0.1.0.dev1 \
+    --hash=sha256:908f58a9136538f9f65a13fdb858d8f86e9e542914195493d09cade60df31ae9

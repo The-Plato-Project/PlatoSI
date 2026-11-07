@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from platosi.canonical_build import extract_segments
 from platosi.canonical_text import CanonicalCorpus, DATA, LocationError, make_work, segment_digest
+from platosi.dialogue_morphology import DialogueMorphologyIndex
 from platosi.reader_api import InvalidRequest, ReaderApi
 
 
@@ -123,11 +124,11 @@ class CanonicalTextTests(unittest.TestCase):
         self.assertEqual(result["text"], "κατέβην")
 
     def test_linguistic_evidence_uses_canonical_location_and_organizes_provider_data(self):
-        plugin = self.root / "plugins" / "dilemma"
+        plugin = self.root / "plugins" / "fixture-morphology"
         plugin.mkdir(parents=True)
         manifest = {
-            "id": "dilemma", "type": "morphology", "version": "1", "module": "provider.py",
-            "capabilities": ["analyze", "lookup", "lemma_forms", "lemma_relations", "evaluate"],
+            "id": "fixture-morphology", "type": "morphology", "version": "1", "module": "provider.py",
+            "capabilities": ["analyze", "lookup", "lemma_forms", "lemma_relations"],
             "enabled_by_default": True,
             "source": {"attribution": "fixture", "revision": "fixture"},
             "license": {"status": "test"}, "config": {},
@@ -136,46 +137,62 @@ class CanonicalTextTests(unittest.TestCase):
         (plugin / "provider.py").write_text(
             """
 class Provider:
-    def __init__(self, manifest): self.manifest = manifest
+    def __init__(self, manifest):
+        self.manifest = manifest
+        self.lemma_forms_calls = 0
+        self.metadata_calls = 0
     def available(self): return True
-    def artifact_metadata(self): return {'file_count': 1, 'total_bytes': 2}
+    def artifact_metadata(self):
+        self.metadata_calls += 1
+        return {'file_count': self.metadata_calls, 'total_bytes': 2}
+    def artifact_metadata_for(self, capability):
+        return {'capability': capability, 'revision': 'fixture'}
     def analyze(self, form, mode, limit):
+        lemma = 'πέμπω' if form == 'ἔπεμπον' else 'καταβαίνω' if form == 'κατέβην' else None
+        if lemma is None: return []
         return [
-            {'provider': 'dilemma', 'provider_version': '1',
+            {'provider': 'fixture-morphology', 'provider_version': '1',
              'source': self.manifest['source'], 'license': self.manifest['license'],
-             'form': form, 'lemma': 'καταβαίνω', 'method': 'lookup',
+             'form': form, 'lemma': lemma, 'method': 'lookup',
              'classification': 'lookup_candidate',
              'settings': {'resolve_articles': False, 'guess': False},
-             'analysis': {'lang': 'grc', 'proper': False, 'score': 1,
+             'analysis': {'lang': 'grc', 'headword': lemma, 'homograph': None,
+                          'proper': False, 'score': 1,
                           'via': 'exact', 'tag': '', 'citation': 'unchanged'}},
-            {'provider': 'dilemma', 'provider_version': '1',
+            {'provider': 'fixture-morphology', 'provider_version': '1',
              'source': self.manifest['source'], 'license': self.manifest['license'],
-             'form': form, 'lemma': 'καταβαίνω', 'method': 'lookup',
+             'form': form, 'lemma': lemma, 'method': 'lookup',
              'classification': 'lookup_candidate',
              'settings': {'resolve_articles': True, 'guess': False},
-             'analysis': {'lang': 'grc', 'proper': False, 'score': 1,
+             'analysis': {'lang': 'grc', 'headword': lemma, 'homograph': None,
+                          'proper': False, 'score': 1,
                           'via': 'exact', 'tag': '', 'citation': 'unchanged'}},
         ]
+    def analyze_complete(self, form): return self.analyze(form, 'exact', 100)
+    def index_identity(self):
+        return {'provider': 'fixture-morphology', 'version': '1', 'policy': 'fixture'}
     def lookup(self, query, mode, limit):
-        if query != 'καταβαίνω': return []
-        return [{'provider': 'dilemma', 'provider_version': '1',
+        if query not in ('καταβαίνω', 'πέμπω'): return []
+        definition = 'go down' if query == 'καταβαίνω' else 'send'
+        return [{'provider': 'fixture-morphology', 'provider_version': '1',
                  'source': self.manifest['source'], 'license': self.manifest['license'],
-                 'headword': query, 'entry_id': 'entry',
-                 'entry_xml': '<div2><head>καταβαίνω</head><sense>go down</sense></div2>'}]
+                 'headword': query, 'matched_term': query, 'entry_id': 'entry',
+                 'entry_xml': '<div2><head>' + query + '</head><sense>' + definition + '</sense></div2>'}]
     def lemma_forms(self, lemma, limit):
+        self.lemma_forms_calls += 1
         if lemma == 'πέμπω':
             return [
-                {'provider': 'dilemma', 'provider_version': '1',
+                {'provider': 'fixture-morphology', 'provider_version': '1',
                  'source': self.manifest['source'], 'license': self.manifest['license'],
                  'form': 'ἔπεμπον', 'lemma': lemma, 'method': 'lookup',
                  'classification': 'direct_lookup'},
             ]
         return [
-            {'provider': 'dilemma', 'provider_version': '1',
+            {'provider': 'fixture-morphology', 'provider_version': '1',
              'source': self.manifest['source'], 'license': self.manifest['license'],
              'form': 'κατέβην', 'lemma': lemma, 'method': 'lookup',
              'classification': 'direct_lookup'},
-            {'provider': 'dilemma', 'provider_version': '1',
+            {'provider': 'fixture-morphology', 'provider_version': '1',
              'source': self.manifest['source'], 'license': self.manifest['license'],
              'form': 'καταβαίνει', 'lemma': lemma, 'method': 'lookup',
              'classification': 'direct_lookup'},
@@ -183,51 +200,58 @@ class Provider:
     def lemma_relations(self, lemma, limit):
         if lemma != 'καταβαίνω': return []
         return [
-            {'provider': 'dilemma', 'provider_version': '1',
+            {'provider': 'fixture-morphology', 'provider_version': '1',
              'source': self.manifest['source'], 'license': self.manifest['license'],
              'source_lemma': lemma, 'target_lemma': 'πέμπω',
              'relation_type': 'etymological_relation', 'direction': 'directed',
              'classification': 'explicit_dictionary_markup',
              'source_fragment': '<etym lang="grc">πέμπω</etym>'},
         ]
-    def evaluate(self, feature, options):
-        if feature == 'normalization': result = {'original': options['text'], 'without_accents': 'κατεβην'}
-        elif feature == 'spelling': result = ['κατέβην']
-        elif feature == 'attestation':
-            result = {'lemma': {'total': 5, 'dominant_pos': 'verb'},
-                      'form': {'form': options['form'], 'attested': True, 'citations': []}}
-        elif feature == 'paradigm':
-            result = {'active_aorist_indicative_1sg':
-                      {'form': 'κατέβην', 'source': 'fixture', 'attestation': None}}
-        else: raise ValueError('unsupported')
-        return {'feature': feature, 'result': result}
 def create_provider(manifest, root): return Provider(manifest)
 """, encoding="utf-8")
         api = ReaderApi(self.root)
+        self.addCleanup(api.close)
         result = api.execute("linguistics.evidence",
                              {"location": self.location(self.fixture["valid"][0])})
         self.assertEqual(result["contract"], "platosi.linguistic-evidence.v1")
         self.assertEqual(result["target"]["text"], "κατέβην")
         self.assertEqual(result["possibilities"][0]["lemma"], "καταβαίνω")
         self.assertEqual(len(result["possibilities"][0]["candidates"]), 1)
+        self.assertEqual(
+            result["possibilities"][0]["candidates"][0]["supporting_settings"],
+            [
+                {"resolve_articles": False, "guess": False},
+                {"resolve_articles": True, "guess": False},
+            ],
+        )
         self.assertEqual(result["dictionary"]["entries"][0]["plain_text"], "καταβαίνω go down")
-        self.assertTrue(result["dilemma"]["form_attestation"]["attested"])
-        forms = result["dilemma"]["lemmas"][0]["paradigm"]["forms"]
-        self.assertEqual(forms[0]["slot"], "active_aorist_indicative_1sg")
-        self.assertEqual(forms[0]["form"], "κατέβην")
+        provider = api._current_registry.providers["fixture-morphology"].load()
+        DialogueMorphologyIndex(self.root).build(
+            api._current_registry, self.fixture["dialogue"], self.fixture["text_version"],
+            provider_id="fixture-morphology",
+        )
         dialogue = api.execute("linguistics.dialogue-lexicon",
                                {"location": self.location(self.fixture["valid"][0])})
         self.assertEqual(dialogue["contract"], "platosi.dialogue-lexicon.v1")
         self.assertEqual(dialogue["lemmas"][0]["lemma"], "καταβαίνω")
         self.assertEqual(dialogue["dictionary"]["entries"][0]["plain_text"], "καταβαίνω go down")
-        self.assertEqual(dialogue["dilemma"]["status"], "not_requested")
+        self.assertEqual(dialogue["morphology"]["status"], "not_requested")
         self.assertEqual(dialogue["lemmas"][0]["forms"][0]["form"], "κατέβην")
         self.assertEqual(dialogue["lemmas"][0]["forms"][0]["count"], 1)
+        lemma_forms_calls = provider.lemma_forms_calls
+        cached_dialogue = api.execute(
+            "linguistics.dialogue-lexicon",
+            {"location": self.location(self.fixture["valid"][0])},
+        )
+        self.assertTrue(cached_dialogue["lemmas"][0]["cache"]["forms_hit"])
+        self.assertEqual(provider.lemma_forms_calls, lemma_forms_calls)
         self.assertEqual(dialogue["lemmas"][0]["forms"][0]["occurrences"][0]["location"],
                          self.location(self.fixture["valid"][0]))
         related = dialogue["lemmas"][0]["related_lemmas"]
         self.assertEqual(len(related), 1)
         self.assertEqual(related[0]["lemma"], "πέμπω")
+        self.assertEqual(related[0]["dictionary"]["status"], "ok")
+        self.assertEqual(related[0]["dictionary"]["entries"][0]["plain_text"], "πέμπω send")
         self.assertTrue(related[0]["present_in_dialogue"])
         self.assertEqual(related[0]["count"], 1)
         self.assertEqual(related[0]["forms"][0]["form"], "ἔπεμπον")

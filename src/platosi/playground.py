@@ -49,12 +49,7 @@ class Playground:
         self.reader = WordReader(root)
         self.lookup = ReaderApi(root)
         self.examination = Examination(root)
-        self.dilemma_registry = None
 
-    def _dilemma_registry(self):
-        if self.dilemma_registry is None:
-            self.dilemma_registry = Registry(self.root)
-        return self.dilemma_registry
 
     def bootstrap(self):
         registry = Registry(self.root)
@@ -65,7 +60,6 @@ class Playground:
             if manifest["type"] != "language-model" or "chat" not in manifest["capabilities"]:
                 continue
             if not registration.enabled:
-                errors.append(f"{manifest['id']}: disabled")
                 continue
             try:
                 provider = registration.load()
@@ -147,78 +141,8 @@ class Playground:
         threading.Thread(target=self.run_examination, args=(job, payload), daemon=True).start()
         return job_id
 
-    def dilemma_bootstrap(self):
-        registry = self._dilemma_registry()
-        registration = registry.providers.get("dilemma")
-        if registration is None:
-            return {"installed": False, "enabled": False, "available": False,
-                    "features": [], "artifacts": None,
-                    "error": "The Dilemma provider is not installed."}
-        try:
-            provider = registration.load()
-            available = provider.available()
-            return {
-                "installed": True,
-                "enabled": registration.enabled,
-                "available": available,
-                "provider": {
-                    "id": registration.manifest["id"],
-                    "version": registration.manifest["version"],
-                    "package_version": registration.manifest["config"].get("package_version"),
-                    "source": registration.manifest["source"],
-                    "license": registration.manifest["license"],
-                },
-                "features": provider.evaluation_catalog(),
-                "artifacts": provider.artifact_metadata() if available else None,
-                "error": None if available else "Dilemma or its configured external artifacts are unavailable.",
-            }
-        except (OSError, RuntimeError, ValueError, ImportError) as error:
-            return {"installed": True, "enabled": registration.enabled, "available": False,
-                    "features": [], "artifacts": None,
-                    "error": f"{type(error).__name__}: {error}"}
 
-    def start_dilemma(self, payload):
-        if not isinstance(payload, dict) or set(payload) != {"feature", "options"}:
-            raise ValueError("Dilemma requests require feature and options")
-        feature = payload["feature"]
-        options = payload["options"]
-        if not isinstance(feature, str) or not feature or not isinstance(options, dict):
-            raise ValueError("feature must be nonempty text and options must be an object")
-        bootstrap = self.dilemma_bootstrap()
-        known = {item["id"] for item in bootstrap["features"]}
-        if feature not in known:
-            raise ValueError(f"Unknown Dilemma evaluation feature: {feature}")
-        if not bootstrap["enabled"]:
-            raise ValueError("The Dilemma provider is disabled")
-        if not bootstrap["available"]:
-            raise ValueError(bootstrap["error"] or "The Dilemma provider is unavailable")
-        cancellation = Cancellation()
-        job_id = secrets.token_urlsafe(24)
-        job = {"status": "running", "cancellation": cancellation, "created": time.monotonic()}
-        with self.lock:
-            cutoff = time.monotonic() - 1800
-            self.jobs = {k: v for k, v in self.jobs.items()
-                         if v["status"] == "running" or v["created"] > cutoff}
-            self.jobs[job_id] = job
-        threading.Thread(target=self.run_dilemma, args=(job, payload), daemon=True).start()
-        return job_id
 
-    def run_dilemma(self, job, payload):
-        cancellation = job["cancellation"]
-        try:
-            cancellation.check()
-            result = self.lookup.evaluate_dilemma(self._dilemma_registry(), payload)
-            cancellation.check()
-            with self.lock:
-                if job["status"] == "running":
-                    job.update(status="complete", result=result)
-        except Cancelled:
-            with self.lock:
-                job["status"] = "cancelled"
-        except Exception as error:
-            with self.lock:
-                if job["status"] == "running":
-                    job.update(status="error", error=f"{type(error).__name__}: {error}")
 
     def run_examination(self, job, payload):
         cancellation = job["cancellation"]
@@ -411,10 +335,8 @@ class Handler(BaseHTTPRequestHandler):
         static = {"/": ("lookup.html", "text/html; charset=utf-8"),
                   "/conversation": ("index.html", "text/html; charset=utf-8"),
                   "/reader": ("reader.html", "text/html; charset=utf-8"),
-                  "/dilemma": ("dilemma.html", "text/html; charset=utf-8"),
                   "/lookup.js": ("lookup.js", "text/javascript; charset=utf-8"),
                   "/reader.js": ("reader.js", "text/javascript; charset=utf-8"),
-                  "/dilemma.js": ("dilemma.js", "text/javascript; charset=utf-8"),
                   "/app.js": ("app.js", "text/javascript; charset=utf-8"),
                   "/style.css": ("style.css", "text/css; charset=utf-8")}
         if path in static:
@@ -435,8 +357,6 @@ class Handler(BaseHTTPRequestHandler):
                 })
             except (OSError, ValueError, RuntimeError) as error:
                 self.send_json(500, {"error": str(error)})
-        elif path == "/api/dilemma":
-            self.send_json(200, self.server.playground.dilemma_bootstrap())
         elif path == "/api/lookups":
             try:
                 self.send_json(200, self.server.playground.lookup.execute("capabilities", {}))
@@ -469,7 +389,7 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError:
                 self.send_json(404, {"error": "Unknown generation"})
             return
-        if path not in ("/api/jobs", "/api/dilemma/jobs", "/api/lookup", "/api/reader/scope", "/api/reader/explore",
+        if path not in ("/api/jobs", "/api/lookup", "/api/reader/scope", "/api/reader/explore",
                         "/api/reader/occurrences", "/api/reader/examine"):
             self.send_json(404, {"error": "Not found"})
             return
@@ -483,8 +403,6 @@ class Handler(BaseHTTPRequestHandler):
             app = self.server.playground
             if path == "/api/jobs":
                 self.send_json(202, {"id": app.start(payload)})
-            elif path == "/api/dilemma/jobs":
-                self.send_json(202, {"id": app.start_dilemma(payload)})
             elif path == "/api/reader/examine":
                 self.send_json(202, {"id": app.start_examination(payload)})
             elif not isinstance(payload, dict):

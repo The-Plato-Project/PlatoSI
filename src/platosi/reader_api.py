@@ -3,16 +3,20 @@
 import hashlib
 import json
 import sqlite3
+import threading
 import unicodedata
 import xml.etree.ElementTree as ET
+from contextlib import contextmanager
 from pathlib import Path
 
 from platosi import __version__
 from platosi.cancellation import Cancellation
 from platosi.canonical_text import CONTRACT, CanonicalCorpus, INVENTORY, LocationError
 from platosi.dialogue_lexicon import DialogueLexiconIndex
+from platosi.dialogue_morphology import DialogueMorphologyIndex
 from platosi.inquiry import inquire, model_provider
 from platosi.person_research import PersonResearch
+from platosi.occurrence_check import OccurrenceCheck, OccurrenceCheckRequestError
 from platosi.profiles import select
 from platosi.registry import Registry
 from platosi.unicode_search import key
@@ -52,15 +56,90 @@ def required_text(payload, name, maximum=10000):
 class ReaderApi:
     def __init__(self, root):
         self.root = Path(root)
+        self._registry_lock = threading.Lock()
+        self._current_registry = None
+        self._registry_fingerprint = None
+        self._registry_users = {}
+        self._retired_registries = set()
+        self._closed = False
+
+    def _configuration_fingerprint(self):
+        paths = sorted((self.root / "plugins").glob("*/plugin.json"))
+        config = self.root / "data" / "plugin-config.json"
+        if config.exists():
+            paths.append(config)
+        return tuple((str(path), path.stat().st_mtime_ns, path.stat().st_size) for path in paths)
+
+    @contextmanager
+    def _registry_lease(self):
+        fingerprint = self._configuration_fingerprint()
+        close_before_use = None
+        with self._registry_lock:
+            if self._closed:
+                raise RuntimeError("Reader API is closed")
+            if self._current_registry is None or fingerprint != self._registry_fingerprint:
+                previous = self._current_registry
+                self._current_registry = Registry(self.root)
+                self._registry_fingerprint = fingerprint
+                if previous is not None:
+                    self._retired_registries.add(previous)
+                    if self._registry_users.get(previous, 0) == 0:
+                        self._retired_registries.remove(previous)
+                        close_before_use = previous
+            registry = self._current_registry
+            self._registry_users[registry] = self._registry_users.get(registry, 0) + 1
+        try:
+            if close_before_use is not None:
+                close_before_use.close()
+            yield registry
+        finally:
+            close_after_use = None
+            with self._registry_lock:
+                users = self._registry_users[registry] - 1
+                if users:
+                    self._registry_users[registry] = users
+                else:
+                    self._registry_users.pop(registry)
+                    if registry in self._retired_registries:
+                        self._retired_registries.remove(registry)
+                        close_after_use = registry
+            if close_after_use is not None:
+                close_after_use.close()
+
+    def close(self):
+        with self._registry_lock:
+            if self._closed:
+                return
+            self._closed = True
+            if self._current_registry is not None:
+                self._retired_registries.add(self._current_registry)
+                self._current_registry = None
+            registries = [
+                registry for registry in self._retired_registries
+                if self._registry_users.get(registry, 0) == 0
+            ]
+            self._retired_registries.difference_update(registries)
+        for registry in registries:
+            registry.close()
 
     def resources(self, registry, capability):
         selection, active = select(registry, capability, tolerate_errors=True)
         problems = [item for item in selection
                     if item["id"] in registry.providers
                     and capability in registry.providers[item["id"]].manifest["capabilities"]
-                    and (item["reason"] in ("disabled", "source or current index unavailable")
+                    and (item["reason"] == "source or current index unavailable"
                          or (item["reason"] and item["reason"].startswith("provider error:")))]
         return active, problems
+
+    @staticmethod
+    def provider_artifacts(provider, capability=None):
+        metadata = getattr(provider, "artifact_metadata", None)
+        if not callable(metadata):
+            return None, None
+        artifacts = metadata()
+        scoped = getattr(provider, "artifact_metadata_for", None)
+        cache_artifacts = scoped(capability) if capability and callable(scoped) else artifacts
+        return artifacts, cache_artifacts
 
     def capabilities(self, registry):
         definitions = [
@@ -70,8 +149,8 @@ class ReaderApi:
              ("analyze", "lookup", "lemma_forms", "lemma_relations")),
             ("linguistics.person-research", "Grounded proper-name research",
              ("analyze", "lookup", "chat")),
+            ("linguistics.verify-occurrences", "Bounded source-specific occurrence checks", ("analyze",)),
             ("lemma.matchForms", "Forms of a lemma", ("match_forms",)),
-            ("dilemma.evaluate", "Dilemma evaluation laboratory", ("evaluate",)),
             ("text.search", "Find Greek text", ("search",)),
             ("text.passage", "Open a passage", ("passage",)),
             ("inquiry.ask", "Ask about a passage", ("search", "passage", "chat")),
@@ -87,7 +166,7 @@ class ReaderApi:
             elif operation == "linguistics.evidence":
                 available = any(part["available"] for part in parts)
             elif operation == "linguistics.dialogue-lexicon":
-                available = parts[0]["available"] and parts[2]["available"]
+                available = parts[0]["available"] and (parts[2]["available"] or parts[4]["available"])
             elif operation == "inquiry.ask":
                 available = parts[2]["available"] and (parts[0]["available"] or parts[1]["available"])
             else:
@@ -97,7 +176,7 @@ class ReaderApi:
         corpus = CanonicalCorpus(self.root) if inventory_exists else None
         canonical_selection_available = bool(corpus and corpus.any_available())
         for operation in ("linguistics.evidence", "linguistics.dialogue-lexicon",
-                          "linguistics.person-research"):
+                          "linguistics.person-research", "linguistics.verify-occurrences"):
             linguistic = next(item for item in result if item["operation"] == operation)
             linguistic["parts"].append({
                 "capability": "canonical-text",
@@ -154,21 +233,28 @@ class ReaderApi:
 
     def linguistic_evidence(self, registry, payload):
         evidence = self.canonical_word_evidence(registry, payload, "linguistics.evidence")
-        dilemma, dilemma_warnings = self.dilemma_evidence(
-            registry, evidence["target"]["text"], evidence["possibilities"]
-        )
-        warnings = [*evidence["warnings"], *dilemma_warnings]
         return {
             "contract": "platosi.linguistic-evidence.v1",
             "target": evidence["target"],
             "possibilities": evidence["possibilities"],
             "dictionary": evidence["dictionary"],
-            "dilemma": dilemma,
-            "warnings": list(dict.fromkeys(warnings)),
+            "morphology": {"status": "not_requested"},
+            "warnings": list(dict.fromkeys(evidence["warnings"])),
             "principle": "Evidence is presented without selecting or interpreting a contextual meaning.",
         }
 
     def canonical_word_evidence(self, registry, payload, operation):
+        target = self.canonical_word_target(payload, operation)
+        analyses = self.collect(
+            registry,
+            "analyze",
+            lambda provider: provider.analyze(target["text"], "exact", LIMIT),
+        )
+        return self.word_evidence_from_records(
+            registry, target, analyses["records"], analyses["warnings"]
+        )
+
+    def canonical_word_target(self, payload, operation):
         if set(payload) != {"location"}:
             raise InvalidRequest(f"{operation} requires only a location")
         try:
@@ -179,17 +265,29 @@ class ReaderApi:
         if (not form or len(form) > 200 or form != target["text"]
                 or any(not self.greek_word_character(char) for char in form)):
             raise InvalidRequest("location must select exactly one Greek word without punctuation")
+        return target
 
-        basic = self.analyze(registry, {"form": form})
-        possibilities = self.organize_possibilities(basic["analyses"]["records"])
+    def word_evidence_from_records(self, registry, target, records, analysis_warnings=()):
+        possibilities = self.organize_possibilities(records)
+        queries = list(dict.fromkeys(
+            [target["text"]]
+            + [
+                item["lemma"]
+                for item in records
+                if isinstance(item.get("lemma"), str) and item["lemma"]
+            ]
+        ))
+        entries = self.collect(
+            registry, "lookup", lambda provider: self.lookup_entries(provider, queries)
+        )
         dictionary = {
-            "status": basic["entries"]["status"],
+            "status": entries["status"],
             "entries": [self.organize_dictionary_entry(record)
-                        for record in basic["entries"]["records"]],
-            "warnings": basic["entries"]["warnings"],
-            "possibly_truncated": basic["entries"]["possibly_truncated"],
+                        for record in entries["records"]],
+            "warnings": entries["warnings"],
+            "possibly_truncated": entries["possibly_truncated"],
         }
-        warnings = [*basic["analyses"]["warnings"], *dictionary["warnings"]]
+        warnings = [*analysis_warnings, *dictionary["warnings"]]
         return {
             "target": target,
             "possibilities": possibilities,
@@ -213,6 +311,7 @@ class ReaderApi:
             analysis = record.get("analysis") if isinstance(record.get("analysis"), dict) else {}
             source = record.get("source") if isinstance(record.get("source"), dict) else {}
             license_record = record.get("license") if isinstance(record.get("license"), dict) else {}
+            settings = record.get("settings") if isinstance(record.get("settings"), dict) else {}
             candidate = {
                 "provider": record.get("provider"),
                 "provider_version": record.get("provider_version"),
@@ -224,16 +323,26 @@ class ReaderApi:
                 "via": analysis.get("via"),
                 "tag": analysis.get("tag"),
                 "citation": analysis.get("citation"),
-                "settings": record.get("settings") if isinstance(record.get("settings"), dict) else {},
+                "headword": analysis.get("headword"),
+                "homograph": analysis.get("homograph"),
+                "features": analysis.get("features"),
+                "settings": settings,
+                "supporting_settings": [settings],
                 "source": source,
                 "license": license_record,
             }
-            identity = json.dumps({key: value for key, value in candidate.items() if key != "settings"},
+            identity = json.dumps({
+                key: value for key, value in candidate.items()
+                if key not in ("settings", "supporting_settings")
+            },
                                   ensure_ascii=False, sort_keys=True)
-            lemma_seen = seen.setdefault(lemma, set())
+            lemma_seen = seen.setdefault(lemma, {})
             if identity in lemma_seen:
+                existing = lemma_seen[identity]
+                if settings not in existing["supporting_settings"]:
+                    existing["supporting_settings"].append(settings)
                 continue
-            lemma_seen.add(identity)
+            lemma_seen[identity] = candidate
             grouped.setdefault(lemma, []).append(candidate)
         return [{"lemma": lemma, "candidates": candidates} for lemma, candidates in grouped.items()]
 
@@ -261,92 +370,45 @@ class ReaderApi:
             "license": record.get("license") if isinstance(record.get("license"), dict) else {},
         }
 
-    def dilemma_evidence(self, registry, form, possibilities):
-        registration = registry.providers.get("dilemma")
-        if registration is None:
-            return {"status": "unavailable", "provider": None}, ["dilemma: not installed"]
-        provider_metadata = {
-            "id": registration.manifest["id"],
-            "version": registration.manifest["version"],
-            "source": registration.manifest["source"],
-            "license": registration.manifest["license"],
-        }
-        if not registration.enabled:
-            return {"status": "unavailable", "provider": provider_metadata}, ["dilemma: disabled"]
-        try:
-            provider = registration.load()
-            if not provider.available():
-                return {"status": "unavailable", "provider": provider_metadata}, ["dilemma: unavailable"]
-            normalization = provider.evaluate("normalization", {"text": form})["result"]
-            spelling = provider.evaluate("spelling", {"form": form, "max_distance": 2})["result"]
-            lemma_details = []
-            form_attestation = None
-            artifacts = provider.artifact_metadata()
-            for possibility in possibilities:
-                lemma = possibility["lemma"]
-                attestation = provider.evaluate("attestation", {
-                    "lemma": lemma, "form": form, "max_citations": 100
-                })["result"]
-                if form_attestation is None:
-                    form_attestation = attestation.get("form")
-                lemma_attestation = attestation.get("lemma")
-                dominant = lemma_attestation.get("dominant_pos") if isinstance(lemma_attestation, dict) else None
-                paradigm = None
-                paradigm_pos = {"verb": "verb", "noun": "noun", "adjective": "adj", "adj": "adj"}.get(dominant)
-                if paradigm_pos is not None:
-                    generated = provider.evaluate("paradigm", {
-                        "lemma": lemma, "pos": paradigm_pos, "with_attestation": False
-                    })["result"]
-                    paradigm = {
-                        "part_of_speech": paradigm_pos,
-                        "forms": [{"slot": slot, **value} for slot, value in generated.items()],
-                    }
-                lemma_details.append({
-                    "lemma": lemma,
-                    "attestation": lemma_attestation,
-                    "paradigm": paradigm,
-                })
-            return {
-                "status": "ok",
-                "provider": provider_metadata,
-                "artifacts": artifacts,
-                "normalization": normalization,
-                "spelling_suggestions": spelling,
-                "form_attestation": form_attestation,
-                "lemmas": lemma_details,
-            }, []
-        except PROVIDER_ERRORS as error:
-            message = f"dilemma: {type(error).__name__}: {error}"
-            return {"status": "partial", "provider": provider_metadata, "error": message}, [message]
 
     def dialogue_lexicon(self, registry, payload):
-        evidence = self.canonical_word_evidence(
-            registry, payload, "linguistics.dialogue-lexicon"
-        )
+        target = self.canonical_word_target(payload, "linguistics.dialogue-lexicon")
         form_providers, form_problems = self.resources(registry, "lemma_forms")
         relation_providers, relation_problems = self.resources(registry, "lemma_relations")
-        warnings = [*evidence["warnings"], *[
-            f"{item['id']}: {item['reason']}" for item in [*form_problems, *relation_problems]
-        ]]
+        dictionary_providers, dictionary_problems = self.resources(registry, "lookup")
 
-        def metadata(registration, provider):
+        def metadata(registration, provider, capability):
+            artifacts, cache_artifacts = self.provider_artifacts(provider, capability)
+            scoped_configuration = getattr(provider, "configuration_for", None)
+            cache_config = (
+                scoped_configuration(capability)
+                if callable(scoped_configuration)
+                else registration.manifest.get("config", {})
+            )
             return {
                 "id": registration.manifest["id"],
                 "version": registration.manifest["version"],
                 "source": registration.manifest["source"],
                 "config": registration.manifest.get("config", {}),
-                "artifacts": (provider.artifact_metadata()
-                              if callable(getattr(provider, "artifact_metadata", None)) else None),
+                "artifacts": artifacts,
+                "cache_config": cache_config,
+                "cache_artifacts": cache_artifacts,
             }
 
-        form_sources = [(registration, provider, metadata(registration, provider))
+        form_sources = [(registration, provider, metadata(registration, provider, "lemma_forms"))
                         for registration, provider in form_providers]
-        relation_sources = [(registration, provider, metadata(registration, provider))
+        relation_sources = [(registration, provider, metadata(registration, provider, "lemma_relations"))
                             for registration, provider in relation_providers]
 
         def fingerprint(sources):
             value = json.dumps(
-                [item[2] for item in sources],
+                [{
+                    "id": item[2]["id"],
+                    "version": item[2]["version"],
+                    "source": item[2]["source"],
+                    "cache_config": item[2]["cache_config"],
+                    "cache_artifacts": item[2]["cache_artifacts"],
+                } for item in sources],
                 ensure_ascii=False,
                 sort_keys=True,
                 separators=(",", ":"),
@@ -355,16 +417,151 @@ class ReaderApi:
 
         form_fingerprint = fingerprint(form_sources)
         relation_fingerprint = fingerprint(relation_sources)
-        location = evidence["target"]["location"]
+        location = target["location"]
         index = DialogueLexiconIndex(self.root)
-
-        def load_forms(lemma):
-            records = index.cached_lemma_forms(
-                location["dialogue"], location["text_version"], lemma, form_fingerprint
+        morphology_index = DialogueMorphologyIndex(self.root)
+        with index.request_context(location["dialogue"], location["text_version"]) as context:
+            morphology = morphology_index.latest(context)
+            if morphology is None:
+                morphology_records = []
+                morphology_warnings = [
+                    "No completed local dialogue morphology index is available; "
+                    "build it before requesting occurrence counts."
+                ]
+            else:
+                morphology_records = morphology_index.form_records(
+                    context, morphology["build_id"], target["text"]
+                )
+                morphology_warnings = []
+                if not morphology_records:
+                    morphology_warnings.append(
+                        f"{morphology['provider']}: the completed dialogue index has "
+                        f"no morphological analysis for {target['text']}."
+                    )
+            evidence = self.word_evidence_from_records(
+                registry, target, morphology_records, morphology_warnings
             )
-            cache_hit = records is not None
+            warnings = [*evidence["warnings"], *[
+                f"{item['id']}: {item['reason']}"
+                for item in [*form_problems, *relation_problems, *dictionary_problems]
+            ]]
+            result = self._dialogue_lexicon_result(
+                evidence,
+                warnings,
+                form_sources,
+                relation_sources,
+                form_fingerprint,
+                relation_fingerprint,
+                index,
+                context,
+                dictionary_providers,
+                morphology_index,
+                morphology,
+            )
+        analysis_ids = sorted({
+            candidate["provider"]
+            for possibility in evidence["possibilities"]
+            for candidate in possibility["candidates"]
+            if isinstance(candidate.get("provider"), str)
+        })
+        inventory_ids = {
+            registration.manifest["id"] for registration, _ in form_providers
+        }
+        if morphology is not None:
+            inventory_ids.add(morphology["provider"])
+        inventory_ids = sorted(inventory_ids)
+        analysis_only = [provider_id for provider_id in analysis_ids
+                         if provider_id not in inventory_ids]
+        provider_metadata = {item["id"]: item for item in result["providers"]}
+        for provider_id in analysis_ids:
+            if provider_id not in provider_metadata and provider_id in registry.providers:
+                registration = registry.providers[provider_id]
+                provider_metadata[provider_id] = metadata(registration, registration.load(), "analyze")
+        if morphology is not None and morphology["provider"] not in provider_metadata:
+            stored = morphology["provider_metadata"]
+            provider_metadata[morphology["provider"]] = {
+                "id": stored["id"],
+                "version": stored["version"],
+                "source": stored["source"],
+                "license": stored["license"],
+                "config": stored["identity"],
+                "artifacts": None,
+                "cache_config": None,
+                "cache_artifacts": None,
+            }
+        result["providers"] = [provider_metadata[provider_id] for provider_id in sorted(provider_metadata)]
+        result["coverage"] = {
+            "analysis_providers": analysis_ids,
+            "form_inventory_providers": inventory_ids,
+            "analysis_only_providers": analysis_only,
+            "morphology_index_providers": [] if morphology is None else [morphology["provider"]],
+            "morphology_indexes": [] if morphology is None else [morphology],
+            "cached_analysis_providers": [],
+            "cached_form_coverage": [],
+        }
+        result["warnings"].extend(
+            f"{provider_id}: supplies selected-word analyses, not a complete dialogue form inventory; "
+            f"occurrence counts are not verified by {provider_id}."
+            for provider_id in analysis_only
+        )
+        return result
+
+    def _dialogue_lexicon_result(
+        self,
+        evidence,
+        warnings,
+        form_sources,
+        relation_sources,
+        form_fingerprint,
+        relation_fingerprint,
+        index,
+        context,
+        dictionary_providers,
+        morphology_index,
+        morphology,
+    ):
+        location = evidence["target"]["location"]
+
+        definitions = {}
+
+        def load_definitions(lemma):
+            if lemma not in definitions:
+                entries, problems = [], []
+                truncated = False
+                succeeded = 0
+                for registration, provider in dictionary_providers:
+                    try:
+                        found = provider.lookup(lemma, "exact", 4)
+                        if not isinstance(found, list) or any(not isinstance(item, dict) for item in found):
+                            raise ValueError("Provider returned invalid related-lemma dictionary entries")
+                        truncated = truncated or len(found) > 3
+                        for record in found[:3]:
+                            entries.append(self.organize_dictionary_entry(record))
+                        succeeded += 1
+                    except PROVIDER_ERRORS as error:
+                        message = f"{registration.manifest['id']}: related definition failed for {lemma}: {type(error).__name__}: {error}"
+                        problems.append(message)
+                        warnings.append(message)
+                status = ("partial" if problems and succeeded else "unavailable" if not succeeded
+                          else "ok" if entries else "empty")
+                definitions[lemma] = {"status": status, "entries": entries,
+                                      "possibly_truncated": truncated, "warnings": problems}
+            return definitions[lemma]
+
+        def load_forms(lemma, candidates=None):
+            records = index.cached_lemma_forms(
+                location["dialogue"],
+                location["text_version"],
+                lemma,
+                form_fingerprint,
+                context=context,
+            )
+            if not form_sources:
+                records = []
+            cache_hit = records is not None and bool(form_sources)
             if records is None:
                 records = []
+                complete = True
                 for registration, provider, _metadata in form_sources:
                     try:
                         found = provider.lemma_forms(lemma, MAX_LEMMA_FORMS)
@@ -377,29 +574,50 @@ class ReaderApi:
                                 raise ValueError("Provider returned a form for a different lemma")
                         records.extend(found)
                     except PROVIDER_ERRORS as error:
+                        complete = False
                         warnings.append(
                             f"{registration.manifest['id']}: lemma forms failed: "
                             f"{type(error).__name__}: {error}"
                         )
-                records = index.store_lemma_forms(
-                    location["dialogue"],
-                    location["text_version"],
+                if complete:
+                    records = index.store_lemma_forms(
+                        location["dialogue"],
+                        location["text_version"],
+                        lemma,
+                        form_fingerprint,
+                        records,
+                        context=context,
+                    )
+            if morphology is not None:
+                identities = {
+                    (candidate.get("headword"), candidate.get("homograph"))
+                    for candidate in candidates or []
+                    if candidate.get("provider") == morphology["provider"]
+                    and candidate.get("headword")
+                }
+                records.extend(morphology_index.lemma_records(
+                    context,
+                    morphology["build_id"],
                     lemma,
-                    form_fingerprint,
-                    records,
-                )
-            observed = index.observed_lemma_forms(
-                location["dialogue"], location["text_version"], lemma, form_fingerprint
+                    identities or None,
+                ))
+            observed = index.observed_records(
+                location["dialogue"], location["text_version"], records, context=context,
             )
             return observed, cache_hit
 
         def load_relations(lemma):
             records = index.cached_lemma_relations(
-                location["dialogue"], location["text_version"], lemma, relation_fingerprint
+                location["dialogue"],
+                location["text_version"],
+                lemma,
+                relation_fingerprint,
+                context=context,
             )
             cache_hit = records is not None
             if records is None:
                 records = []
+                complete = True
                 for registration, provider, _metadata in relation_sources:
                     try:
                         found = provider.lemma_relations(lemma, MAX_LEMMA_RELATIONS)
@@ -413,23 +631,26 @@ class ReaderApi:
                                 raise ValueError("Provider returned an invalid lemma relation")
                         records.extend(found)
                     except PROVIDER_ERRORS as error:
+                        complete = False
                         warnings.append(
                             f"{registration.manifest['id']}: lemma relations failed: "
                             f"{type(error).__name__}: {error}"
                         )
-                records = index.store_lemma_relations(
-                    location["dialogue"],
-                    location["text_version"],
-                    lemma,
-                    relation_fingerprint,
-                    records,
-                )
+                if complete:
+                    records = index.store_lemma_relations(
+                        location["dialogue"],
+                        location["text_version"],
+                        lemma,
+                        relation_fingerprint,
+                        records,
+                        context=context,
+                    )
             return records, cache_hit
 
         lemmas = []
         for possibility in evidence["possibilities"]:
             lemma = possibility["lemma"]
-            forms, form_cache_hit = load_forms(lemma)
+            forms, form_cache_hit = load_forms(lemma, possibility["candidates"])
             relation_records, relation_cache_hit = load_relations(lemma)
             grouped_relations = {}
             for record in relation_records:
@@ -454,6 +675,7 @@ class ReaderApi:
                     "present_in_dialogue": count > 0,
                     "count": count,
                     "forms": related_forms,
+                    "dictionary": load_definitions(group["lemma"]),
                 })
             related_lemmas.sort(
                 key=lambda item: (
@@ -483,11 +705,13 @@ class ReaderApi:
             "target": evidence["target"],
             "lemmas": lemmas,
             "dictionary": evidence["dictionary"],
-            "dilemma": {"status": "not_requested"},
+            "morphology": {"status": "not_requested"},
             "providers": [provider_metadata[item] for item in sorted(provider_metadata)],
             "warnings": list(dict.fromkeys(warnings)),
             "limitations": (
-                "Forms use direct provider mappings. Related lemmas include explicit configured "
+                "Forms use source headword mappings; cached analyses cover only currently cached forms, "
+                "with homographs kept separate. Compatible morphology is not contextual verification. "
+                "Related lemmas include explicit configured "
                 "source relations only; spelling similarity and model inference are excluded."
             ),
         }
@@ -525,33 +749,6 @@ class ReaderApi:
         result["limitations"] = "Direct mappings are candidates and may be incomplete or contextually incorrect."
         return result
 
-    def evaluate_dilemma(self, registry, payload):
-        feature = required_text(payload, "feature", 100)
-        options = payload.get("options")
-        if not isinstance(options, dict):
-            raise InvalidRequest("options must be an object")
-        registration = registry.providers.get("dilemma")
-        if registration is None:
-            return {"status": "unavailable", "feature": feature, "output": None,
-                    "error": "The Dilemma provider is not installed.", "provider": None}
-        provider = {"id": registration.manifest["id"],
-                    "version": registration.manifest["version"],
-                    "source": registration.manifest["source"],
-                    "license": registration.manifest["license"]}
-        if not registration.enabled:
-            return {"status": "unavailable", "feature": feature, "output": None,
-                    "error": "The Dilemma provider is disabled.", "provider": provider}
-        try:
-            instance = registration.load()
-            if not instance.available():
-                return {"status": "unavailable", "feature": feature, "output": None,
-                        "error": "Dilemma or its lookup data is unavailable.", "provider": provider}
-            output = instance.evaluate(feature, options)
-            return {"status": "ok", "feature": feature, "output": output,
-                    "error": None, "provider": provider}
-        except Exception as error:
-            return {"status": "failed", "feature": feature, "output": None,
-                    "error": f"{type(error).__name__}: {error}", "provider": provider}
 
     def person_research(self, registry, payload, cancellation):
         if set(payload) != {"location", "lemma"}:
@@ -574,7 +771,7 @@ class ReaderApi:
         ]
         if not proper_candidates:
             return {
-                "contract": "platosi.person-research.v1",
+                "contract": "platosi.person-research.v3",
                 "status": "not_candidate",
                 "lemma": lemma,
                 "target": target,
@@ -583,54 +780,55 @@ class ReaderApi:
                     "basis": "No morphology provider returned a capitalized-headword candidate.",
                     "evidence": possibility["candidates"],
                 },
-                "roots": [],
-                "summary": None,
+                "overview": "",
                 "sources": [],
+                "candidates": [],
                 "model": None,
                 "cache": {},
                 "warnings": analyses["warnings"],
             }
-        registration, provider = model_provider(registry, None, "chat")
-        configured_model = registration.manifest.get("config", {}).get("model")
-        model_record = None
-        if callable(getattr(provider, "list_models", None)):
-            model_record = next(
-                (item for item in provider.list_models()
-                 if item.get("name") == configured_model),
-                None,
-            )
-        model_identity = {
-            "provider": registration.manifest["id"],
-            "provider_version": registration.manifest["version"],
-            "model": configured_model,
-            "digest": model_record.get("digest") if isinstance(model_record, dict) else None,
-        }
+        research = PersonResearch(self.root)
+        provider = None
+        model_identity = {}
+        model_problem = None
+        try:
+            registration, provider = model_provider(registry, None, "chat")
+            configured_model = registration.manifest.get("config", {}).get("model")
+            model_record = None
+            if callable(getattr(provider, "list_models", None)):
+                model_record = next(
+                    (item for item in provider.list_models()
+                     if item.get("name") == configured_model), None,
+                )
+            model_identity = {
+                "provider": registration.manifest["id"],
+                "provider_version": registration.manifest["version"],
+                "model": configured_model,
+                "digest": model_record.get("digest") if isinstance(model_record, dict) else None,
+            }
+        except (ValueError, RuntimeError, OSError, TimeoutError) as error:
+            model_problem = f"{type(error).__name__}: {error}"
 
         def model_call(prompt, schema):
             cancellation.check()
+            if model_problem or provider is None:
+                raise RuntimeError(model_problem or "No research model is available")
             return provider.chat(
                 [{"role": "user", "content": prompt}],
-                {"response_format": "json", "response_schema": schema, "max_tokens": 700},
+                {"response_format": "json", "response_schema": schema,
+                 "max_tokens": research.configuration.max_tokens},
                 cancellation,
             )
-
-        dictionary_providers, dictionary_problems = self.resources(registry, "lookup")
-
-        def dictionary_lookup(term):
-            records = []
-            for _dictionary_registration, dictionary_provider in dictionary_providers:
-                cancellation.check()
-                matches = dictionary_provider.lookup(term, "exact", 3)
-                if not matches:
-                    matches = dictionary_provider.lookup(term, "accent-insensitive", 3)
-                records.extend(matches)
-            return records
 
         context = "\n".join(
             f"[{item['stephanus']}] {item['text']}" for item in target["context"]
         )[:4000]
-        result = PersonResearch(self.root).research(
-            lemma, context, model_call, model_identity, dictionary_lookup
+        result = research.research(
+            lemma,
+            context,
+            model_call,
+            model_identity,
+            target["location"]["dialogue"],
         )
         result["target"] = target
         result["classification"] = {
@@ -643,7 +841,6 @@ class ReaderApi:
         }
         result["warnings"] = list(dict.fromkeys([
             *analyses["warnings"],
-            *[f"{item['id']}: {item['reason']}" for item in dictionary_problems],
             *result["warnings"],
         ]))
         return result
@@ -687,7 +884,12 @@ class ReaderApi:
             raise InvalidRequest("payload must be an object")
         cancellation = cancellation or Cancellation()
         cancellation.check()
-        registry = None if operation.startswith("canonical.") or operation == "system.info" else Registry(self.root)
+        if operation.startswith("canonical.") or operation == "system.info":
+            return self._execute(operation, payload, cancellation, None)
+        with self._registry_lease() as registry:
+            return self._execute(operation, payload, cancellation, registry)
+
+    def _execute(self, operation, payload, cancellation, registry):
         if operation == "system.info":
             if payload:
                 raise InvalidRequest("system.info requires an empty payload")
@@ -701,12 +903,15 @@ class ReaderApi:
             result = self.linguistic_evidence(registry, payload)
         elif operation == "linguistics.dialogue-lexicon":
             result = self.dialogue_lexicon(registry, payload)
+        elif operation == "linguistics.verify-occurrences":
+            try:
+                result = OccurrenceCheck(self.root).run(registry, payload, cancellation)
+            except OccurrenceCheckRequestError as error:
+                raise InvalidRequest(str(error)) from error
         elif operation == "linguistics.person-research":
             result = self.person_research(registry, payload, cancellation)
         elif operation == "lemma.matchForms":
             result = self.match_forms(registry, payload)
-        elif operation == "dilemma.evaluate":
-            result = self.evaluate_dilemma(registry, payload)
         elif operation == "text.search":
             query = required_text(payload, "text", 4000)
             result = self.collect(registry, "search", lambda provider: provider.search(query, "exact", LIMIT))

@@ -1,10 +1,7 @@
 import copy
-import dataclasses
 import json
-import sqlite3
 import sys
 import tempfile
-import threading
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -13,7 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from platosi.cancellation import Cancellation
 from platosi.profiles import Profiles
-from platosi.registry import Registry
 from platosi.word_models import Examination, parse_assessment
 from platosi.word_reader import WordReader, tokens
 import test_retrieval
@@ -41,7 +37,7 @@ class ReaderTests(unittest.TestCase):
         self.fixture.setUp()
         self.addCleanup(self.fixture.tearDown)
         self.root = self.fixture.root
-        self.fixture.registry.set_enabled("glem", True)
+        self.fixture.registry.set_enabled("fixture-morphology", True)
         folder = self.root / "plugins" / "alternate"
         folder.mkdir()
         (folder / "plugin.json").write_text(json.dumps({
@@ -62,7 +58,7 @@ class ReaderTests(unittest.TestCase):
             self.assertEqual(result["word"]["form"], "κατέβην")
             self.assertEqual(result["word"]["citation"]["section"], "327a")
             self.assertEqual({a["lemma"] for a in result["analyses"]}, {"καταβαίνω", "ἕτερος"})
-            self.assertEqual(sum(a["provider"] == "glem" for a in result["analyses"]), 2)
+            self.assertEqual(sum(a["provider"] == "fixture-morphology" for a in result["analyses"]), 2)
             self.assertEqual(len(result["entries"]), 2)
             self.assertTrue(all(a["source"] for a in result["analyses"]))
             found = self.reader.occurrences({**self.query, "lemma": "καταβαίνω"})
@@ -70,15 +66,15 @@ class ReaderTests(unittest.TestCase):
         occurrence = found["results"][0]
         self.assertEqual(self.scope["text"][occurrence["start"]:occurrence["end"]], occurrence["form"])
         self.assertEqual(occurrence["citation"]["section"], "327a")
-        self.assertEqual({a["provider"] for a in occurrence["analyses"]}, {"glem"})
+        self.assertEqual({a["provider"] for a in occurrence["analyses"]}, {"fixture-morphology"})
         self.assertIn("incomplete", found["limitations"])
         self.assertFalse(self.reader.occurrences({**self.query, "lemma": "ἀναβαίνω"})["results"])
 
     def test_profile_explicit_empty_resources_and_provider_failure(self):
-        Profiles(self.root).save("text", ["glem", "lsj-logeion"], True)
+        Profiles(self.root).save("text", ["fixture-morphology", "lsj-logeion"], True)
         result = self.reader.explore({**self.query, "profile": "text"})
         self.assertEqual(result["analyses"], [])
-        result = self.reader.explore({**self.query, "profile": "text", "include": ["glem"]})
+        result = self.reader.explore({**self.query, "profile": "text", "include": ["fixture-morphology"]})
         self.assertEqual(len(result["analyses"]), 2)
         self.assertEqual(self.reader.explore({**self.query, "include": []})["analyses"], [])
         (self.root / "plugins" / "alternate" / "provider.py").write_text(
@@ -166,43 +162,6 @@ class ModelTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_assessment('{"assessments":[]}', package)
 
-class DilemmaThreadTests(unittest.TestCase):
-    def test_analysis_reuses_sqlite_on_one_worker_thread(self):
-        registration = Registry(ROOT).providers["dilemma"]
-        provider = registration.load()
-        @dataclasses.dataclass
-        class Candidate:
-            lemma: str
-            source: str
-        class Engine:
-            def __init__(self, lemma, source):
-                self.connection = sqlite3.connect(":memory:")
-                self.lemma = lemma
-                self.source = source
-            def lemmatize_verbose(self, form, guess):
-                self.connection.execute("SELECT 1")
-                return [Candidate(self.lemma, self.source)]
-        def initialize():
-            if provider.engines is None:
-                provider.engines = [Engine("αὐτοῦ", "lookup"), Engine("αὐτός", "article")]
-            return provider.engines
-        provider._engines = initialize
-        results, errors = [], []
-        def analyze():
-            try:
-                results.append(provider.analyze("αὐτοῦ", "exact", 100))
-            except Exception as error:
-                errors.append(error)
-        first = threading.Thread(target=analyze)
-        second = threading.Thread(target=analyze)
-        first.start(); first.join(); second.start(); second.join()
-        provider.worker.shutdown()
-        self.assertEqual(errors, [])
-        self.assertEqual(len(results), 2)
-        self.assertEqual({row["lemma"] for row in results[0]}, {"αὐτοῦ", "αὐτός"})
-        self.assertEqual({row["settings"]["resolve_articles"] for row in results[0]}, {True, False})
-        self.assertEqual({row["classification"] for row in results[0]},
-                         {"lookup_candidate", "rule_generated_suggestion"})
 
 
 if __name__ == "__main__":

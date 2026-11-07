@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import sys
 
+from platosi.dialogue_morphology import DialogueMorphologyIndex, MorphologyBuildError
 from platosi.inquiry import inquire, model_provider
 from platosi.profiles import Profiles, select
 from platosi.registry import Registry
@@ -25,6 +26,14 @@ def main():
     for name in ("enable", "disable", "index"):
         p = commands.add_parser(name)
         p.add_argument("provider")
+    morphology_index = commands.add_parser(
+        "index-dialogue-morphology",
+        help="Build PlatoSI's permanent morphology index from a local analyzer",
+    )
+    morphology_index.add_argument("dialogue")
+    morphology_index.add_argument("--text-version")
+    morphology_index.add_argument("--provider", default="morpheus")
+    morphology_index.add_argument("--rebuild", action="store_true")
     for name in ("search", "lookup", "analyze"):
         p = commands.add_parser(name)
         p.add_argument("query")
@@ -114,6 +123,27 @@ def main():
         if not hasattr(provider, "build"):
             parser.error(f"Provider does not support indexing: {args.provider}")
         result = provider.build()
+    elif args.command == "index-dialogue-morphology":
+        def progress(position, total, form, analyzed):
+            if position == 1 or position % 100 == 0 or position == total:
+                status = "analyzed" if analyzed else "unresolved"
+                print(
+                    f"{position}/{total}: {form} ({status})",
+                    file=sys.stderr,
+                    flush=True,
+                )
+
+        try:
+            result = DialogueMorphologyIndex(args.root).build(
+                registry,
+                args.dialogue,
+                text_version=args.text_version,
+                provider_id=args.provider,
+                rebuild=args.rebuild,
+                progress=progress,
+            )
+        except (ValueError, MorphologyBuildError) as error:
+            parser.error(str(error))
     else:
         if hasattr(args, "limit") and args.limit < 1:
             parser.error("--limit must be positive")

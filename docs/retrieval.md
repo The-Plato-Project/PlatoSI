@@ -23,7 +23,7 @@ explicitly tentative interpretations.
 Each supplied adapter's result identifies its provider and version, upstream
 repository and revision, attribution, license status, and a source location. Corpus results
 represent source-edition evidence, LSJ entries are scholarly classifications,
-and GLEM results are *candidate* mappings, not verified contextual analyses.
+and morphology results are *candidate* readings, not verified contextual analyses.
 `editorial_text` marks search matches overlapping the explicitly indexed
 editorial TEI tags listed below. No automatic claim combines evidence from
 different providers; an interpretive hypothesis would require its own
@@ -75,10 +75,6 @@ or relative to the project root. For example:
 The default inventory is retained in this example. When using different
 source data or revisions, supply a matching inventory and source metadata in
 the provider manifest rather than attributing new data to the pinned revision.
-GLEM is disabled by default and isolated: its list and derived index are not
-packaged or copied into another provider. Its commercial use and
-redistribution are **not cleared**. See `glem-licensing-review.md`.
-
 ## Experimental word exploration
 
 The separate browser reader uses the optional `reading` corpus capability
@@ -91,22 +87,18 @@ from other providers. A profile's text-first setting and explicit overrides
 have the same meaning as elsewhere.
 
 The optional `match_forms` morphology capability accepts a candidate lemma
-and surface forms from the current source scope. GLEM and Dilemma return
-their own direct lookup mappings; the reader joins those mappings to actual
+and surface forms from the current source scope. A provider implementing this
+capability supplies direct mappings; the reader joins those mappings to actual
 text offsets and citations. This does not establish contextual correctness
 or exhaustive coverage, and does not infer compounds or roots. It does not
 reconstruct corpus passages with a model.
 
-Dilemma requires its separate Python package and local data, and is disabled
-by default. The adapter calls verbose lemmatization with `guess=False` under
-both article-resolution settings. It labels lookup candidates and
-rule-generated suggestions separately; this is not an exhaustive enumeration
-and neither class is authoritative. Occurrences use direct lookup rows only.
-The artifact revision in configuration is an unverified declaration, and
-the reported file-metadata fingerprint is not a content hash. Dilemma's
-process-wide data directory is fixed on import: restart after changing it.
-See `dilemma-phase1-evaluation.md` for the evaluation and unresolved artifact
-licenses.
+Morpheus supplies `analyze` through the pure-Python ikelos port, preserving
+original source headwords, homographs and grammatical features. Chora's
+canonical dialogue lookup uses PlatoSI's shipped, completed morphology
+database. Normal lookup does not import ikelos or make an HTTP request. The
+older test reader's `match_forms` operation is separate and is not supplied by
+Morpheus. See [Morpheus](morpheus.md).
 
 Optional AI examination sends a bounded, attributed package to each selected
 model independently; the validator never receives the primary model's answer.
@@ -209,7 +201,8 @@ are reported without changing saved preferences.
 Dictionary and morphology providers receive literal reader-supplied
 `--headword` and `--form` terms, or, if omitted, Greek words present in the
 question or `--text`. They do not receive model-generated terms or
-automatically inferred lemmas, and no GLEM result is fed into LSJ. Repeated
+automatically inferred lemmas. Morphology results are not fed into LSJ on this
+explicit inquiry path. Repeated
 options supply multiple terms. `--scholarly-query` supplies a JSON object to
 selected general scholarly providers; none is invoked without that query.
 The per-provider, per-operation `--limit` defaults to three, and reaching it
@@ -322,9 +315,8 @@ LSJ lookup matches the complete displayed `head` text, not an automatically
 inferred lemma or an inflected form. Entries are stored by source file and
 ordinal, so duplicate upstream IDs are not collapsed. The returned entry XML
 is a parsed/reserialized representation, not a byte-for-byte copy; the
-original file remains authoritative. GLEM's source list supplies a form,
-lemma and raw tag, but not per-row PROIEL-versus-Perseus attribution or
-context-sensitive disambiguation. Each result includes its source line.
+original file remains authoritative. Morphology readings retain independent
+source attribution and do not establish contextual disambiguation.
 
 `--limit` is per provider; providers reaching it are named in
 `possibly_truncated_providers`. Increase it to retrieve more matches. Search
@@ -337,12 +329,10 @@ The original XML and source lists were checked by the automated real-data
 tests. The Republic opening phrase `κατέβην χθὲς εἰς Πειραιᾶ` is found in
 `urn:cts:greekLit:tlg0059.tlg030.perseus-grc2`, Stephanus 327a.
 Exact searches also find `βουλόμενος`, `ἔδοξεν`, and `καταλιπὼν` in the
-corpus. The optional GLEM list associates these four forms respectively with
-`καταβαίνω`, `βούλομαι`, `δοκέω`, and `καταλείπω`; these are source
-candidates, not contextual determinations. LSJ has an exact headword entry
-for each of those four lemmas. Each resource is queried independently.
+corpus. Dictionary and morphology resources are queried independently;
+source candidates do not establish contextual readings. See
+[Morpheus](morpheus.md) for recorded morphology checks.
 
 Some source citations are absent or unsupported by this adapter; no citation
-is invented. The previously tested exact form `προσευξόμενός` has no GLEM
-match. A missing match is not evidence that no analysis exists. Duplicate
+is invented. A missing match is not evidence that no analysis exists. Duplicate
 LSJ IDs and multiple morphology candidates are returned separately.

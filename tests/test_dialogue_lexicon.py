@@ -100,6 +100,10 @@ class DialogueLexiconIndexTests(unittest.TestCase):
             self.dialogue, self.version, "καταβαίνω", "fixture-fingerprint"
         )
         self.assertEqual(stored, cached)
+        reused = self.index.cached_lemma_forms(
+            "another-dialogue", "another-version", "καταβαίνω", "fixture-fingerprint"
+        )
+        self.assertEqual(reused, records)
         forms = self.index.observed_lemma_forms(
             self.dialogue, self.version, "καταβαίνω", "fixture-fingerprint"
         )
@@ -109,6 +113,25 @@ class DialogueLexiconIndexTests(unittest.TestCase):
                          {"stephanus": "327a", "offset": 0})
         self.assertEqual(forms[0]["occurrences"][0]["division"],
                          {"type": "book", "label": "1"})
+
+    def test_intersects_uncached_records_without_creating_a_ready_inventory(self):
+        records = [{
+            "provider": "available-provider",
+            "provider_version": "1",
+            "form": "κατέβην",
+            "lemma": "καταβαίνω",
+            "classification": "direct_lookup",
+        }]
+        forms = self.index.observed_records(
+            self.dialogue, self.version, records
+        )
+        self.assertEqual([item["form"] for item in forms], ["κατέβην"])
+        self.assertIsNone(self.index.cached_lemma_forms(
+            self.dialogue,
+            self.version,
+            "καταβαίνω",
+            "incomplete-provider-retrieval",
+        ))
 
     def test_persists_typed_relations_separately_from_forms(self):
         records = [{

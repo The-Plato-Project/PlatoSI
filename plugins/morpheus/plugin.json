@@ -1,0 +1,24 @@
+{
+  "id": "morpheus",
+  "type": "morphology",
+  "version": "3.0",
+  "module": "provider.py",
+  "capabilities": ["analyze"],
+  "enabled_by_default": false,
+  "config": {
+    "strict_case": false,
+    "ikelos_version": "0.1.0.dev1"
+  },
+  "source": {
+    "repository": "https://github.com/jmyerston/ikelos",
+    "release": "0.1.0.dev1",
+    "wheel_sha256": "908f58a9136538f9f65a13fdb858d8f86e9e542914195493d09cade60df31ae9",
+    "original_repository": "https://github.com/perseids-tools/morpheus",
+    "attribution": "Ancient Greek analysis from the ikelos pure-Python port of Perseus Morpheus."
+  },
+  "license": {
+    "status": "MPL-2.0",
+    "terms": "ikelos code and bundled Greek stem library are licensed under MPL-2.0.",
+    "url": "https://github.com/jmyerston/ikelos/blob/main/LICENSE"
+  }
+}
