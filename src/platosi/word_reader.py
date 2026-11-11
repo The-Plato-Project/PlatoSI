@@ -123,7 +123,7 @@ class WordReader:
                 except (OSError, RuntimeError, ValueError, ImportError, sqlite3.Error) as error:
                     warnings.append(f"{registration.manifest['id']}: lookup failed for {query}: {error}")
         for entry in selection + dictionaries:
-            if entry["reason"] in ("not installed", "disabled", "source or current index unavailable") or (
+            if entry["reason"] in ("not installed", "source or current index unavailable") or (
                     entry["reason"] and entry["reason"].startswith("provider error:")):
                 message = f"{entry['id']}: {entry['reason']}"
                 if message not in warnings:
@@ -144,7 +144,7 @@ class WordReader:
                                          self._profile(payload.get("profile")), payload)
         by_form = {}
         warnings = [f"{entry['id']}: {entry['reason']}" for entry in selection
-                    if entry["reason"] in ("not installed", "disabled", "source or current index unavailable")
+                    if entry["reason"] in ("not installed", "source or current index unavailable")
                     or (entry["reason"] and entry["reason"].startswith("provider error:"))]
         for registration, provider in active:
             try:

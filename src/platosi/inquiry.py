@@ -175,7 +175,7 @@ def inquire(registry, question: str, *, profile: dict[str, Any] | None = None,
             warnings.append("No enabled and available scholarly provider was selected for the requested query.")
     for capability, entries in selections.items():
         for entry in entries:
-            if entry["reason"] in ("not installed", "disabled", "source or current index unavailable"):
+            if entry["reason"] in ("not installed", "source or current index unavailable"):
                 message = f"{entry['id']}: {entry['reason']} ({capability})."
                 if message not in warnings:
                     warnings.append(message)

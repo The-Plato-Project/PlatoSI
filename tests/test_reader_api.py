@@ -5,6 +5,7 @@ import sys
 import threading
 import unicodedata
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from unittest.mock import patch
 
@@ -13,6 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from platosi.cancellation import Cancelled
 from platosi.reader_api import ReaderApi
 from platosi.reader_protocol import serve
+from platosi.registry import Registry
 import test_retrieval
 
 
@@ -22,29 +24,57 @@ class ReaderApiTests(unittest.TestCase):
         self.fixture.setUp()
         self.addCleanup(self.fixture.tearDown)
         self.api = ReaderApi(self.fixture.root)
+        self.addCleanup(self.api.close)
         self.edition = "urn:cts:greekLit:tlg0059.tlg030.perseus-grc2"
+
+    def test_sequential_requests_reuse_registry_until_configuration_changes(self):
+        with patch("platosi.reader_api.Registry", wraps=Registry) as registry:
+            self.api.execute("capabilities", {})
+            self.api.execute("word.analyze", {"form": "κατέβην"})
+            self.assertEqual(registry.call_count, 1)
+            self.fixture.registry.set_enabled("fixture-morphology", True)
+            self.api.execute("word.analyze", {"form": "κατέβην"})
+            self.assertEqual(registry.call_count, 2)
+
+    def test_concurrent_requests_share_one_registry(self):
+        barrier = threading.Barrier(4)
+
+        def discover():
+            barrier.wait(timeout=5)
+            return self.api.execute("capabilities", {})
+
+        with patch("platosi.reader_api.Registry", wraps=Registry) as registry:
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                results = list(executor.map(lambda _: discover(), range(4)))
+            self.assertTrue(all(result["capabilities"] for result in results))
+            self.assertEqual(registry.call_count, 1)
 
     def test_discovery_and_unavailable_morphology_are_explicit(self):
         result = self.api.execute("capabilities", {})
         operations = {item["operation"]: item for item in result["capabilities"]}
         self.assertTrue(operations["word.analyze"]["available"])
         self.assertFalse(operations["lemma.matchForms"]["available"])
-        self.assertFalse(operations["dilemma.evaluate"]["available"])
         self.assertTrue(operations["text.search"]["available"])
         word = self.api.execute("word.analyze", {"form": "κατέβην"})
         self.assertEqual(word["analyses"]["status"], "unavailable")
         self.assertEqual(word["entries"]["status"], "ok")
-        self.assertTrue(any("glem: disabled" in warning for warning in word["analyses"]["warnings"]))
-        evaluation = self.api.execute("dilemma.evaluate", {"feature": "inventory", "options": {}})
-        self.assertEqual(evaluation["status"], "unavailable")
-        self.assertIn("not installed", evaluation["error"])
+        self.assertFalse(any("disabled" in warning for warning in word["analyses"]["warnings"]))
+
 
     def test_word_candidates_dictionary_and_exact_input_form_mappings(self):
-        self.fixture.registry.set_enabled("glem", True)
+        self.fixture.registry.set_enabled("fixture-morphology", True)
         word = self.api.execute("word.analyze", {"form": "κατέβην"})
         self.assertEqual({record["lemma"] for record in word["analyses"]["records"]}, {"καταβαίνω"})
         self.assertEqual(len(word["entries"]["records"]), 2)
         self.assertTrue(all(record["source"] and record["license"] for record in word["entries"]["records"]))
+        search = self.api.execute("word.search", {"query": "κατέβην"})
+        self.assertIn("καταβαίνω", {item["lemma"] for item in search["items"]})
+        lexical = self.api.execute("word.lookup", {"lemma": "καταβαίνω", "scope": None})
+        self.assertEqual(lexical["contract"], "platosi.lexical-evidence.v1")
+        self.assertIsNone(lexical["target"]["location"])
+        self.assertEqual(lexical["lemmas"][0]["lemma"], "καταβαίνω")
+        self.assertEqual(lexical["lemmas"][0]["forms"], [])
+        self.assertEqual(lexical["occurrences_status"], "unavailable")
         decomposed = unicodedata.normalize("NFD", "κατέβην")
         matches = self.api.execute("lemma.matchForms", {"lemma": "καταβαίνω",
                                                         "forms": ["κατέβην", decomposed, "χθὲς"]})

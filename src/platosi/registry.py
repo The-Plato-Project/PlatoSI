@@ -31,6 +31,15 @@ class RegisteredProvider:
                 self._instance = module.create_provider(self.manifest, self.root)
             return self._instance
 
+    def close(self):
+        with self._lock:
+            instance = self._instance
+            self._instance = None
+        if instance is not None:
+            close = getattr(instance, "close", None)
+            if callable(close):
+                close()
+
 
 class Registry:
     def __init__(self, root: Path, plugins: Path | None = None, config: Path | None = None):
@@ -81,3 +90,7 @@ class Registry:
                                                   if provider and not available else None),
                            "source": m["source"], "license": m["license"]})
         return result
+
+    def close(self):
+        for registration in self.providers.values():
+            registration.close()

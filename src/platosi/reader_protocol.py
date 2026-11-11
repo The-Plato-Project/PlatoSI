@@ -95,3 +95,4 @@ def serve(root, source, destination):
             for cancellation in pending.values():
                 cancellation.cancel()
         executor.shutdown(wait=True)
+        api.close()

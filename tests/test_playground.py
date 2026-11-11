@@ -54,24 +54,6 @@ class Provider:
 def create_provider(manifest, root): return Provider(manifest)
 """
 
-DILEMMA = """
-class Provider:
-    def __init__(self, manifest): self.manifest = manifest
-    def available(self): return True
-    def evaluation_catalog(self):
-        return [{'id': 'inventory', 'title': 'Inventory', 'description': 'Inspect installation',
-                 'presets': [{'name': 'Current installation', 'options': {}}]}]
-    def artifact_metadata(self):
-        return {'declared_revision': None, 'revision_verified': False,
-                'local_file_metadata_sha256': 'abc', 'file_count': 3, 'total_bytes': 42}
-    def evaluate(self, feature, options):
-        if feature != 'inventory': raise ValueError('unknown feature')
-        return {'feature': feature, 'seconds': 0.01,
-                'artifacts': self.artifact_metadata(), 'result': {'options': options}}
-def create_provider(manifest, root): return Provider(manifest)
-"""
-
-
 class MarkupTests(unittest.TestCase):
     def test_javascript_element_ids_exist_and_are_unique(self):
         class IDs(HTMLParser):
@@ -134,21 +116,6 @@ class MarkupTests(unittest.TestCase):
         for element_id in re.findall(r'\$\("([^"]+)"\)', script):
             self.assertIn(element_id, parser.ids)
 
-    def test_dilemma_lab_element_ids_exist_and_are_unique(self):
-        class IDs(HTMLParser):
-            def __init__(self):
-                super().__init__()
-                self.ids = []
-
-            def handle_starttag(self, tag, attrs):
-                self.ids.extend(value for name, value in attrs if name == "id")
-
-        parser = IDs()
-        parser.feed((ROOT / "playground" / "dilemma.html").read_text(encoding="utf-8"))
-        self.assertEqual(len(parser.ids), len(set(parser.ids)))
-        script = (ROOT / "playground" / "dilemma.js").read_text(encoding="utf-8")
-        for element_id in re.findall(r'\$\("([^"]+)"\)', script):
-            self.assertIn(element_id, parser.ids)
 
 
 class PlaygroundTests(unittest.TestCase):
@@ -236,7 +203,8 @@ class PlaygroundTests(unittest.TestCase):
         Registry(self.root).set_enabled("dict", False)
         result = self.wait(self.app.start(payload))["result"]
         self.assertEqual([e["record"]["provider"] for e in result["evidence"]], ["corpus"])
-        self.assertTrue(any("dict: disabled" in w for w in result["warnings"]))
+        self.assertFalse(any("disabled" in w for w in result["warnings"]))
+        self.assertIn("disabled", [s["reason"] for s in result["selections"]["lookup"]])
 
     def test_stop_cancels_generation(self):
         job_id = self.app.start(self.payload("WAIT"))
@@ -247,20 +215,6 @@ class PlaygroundTests(unittest.TestCase):
         self.assertEqual(self.app.stop(job_id), "cancelled")
         self.assertEqual(self.wait(job_id)["status"], "cancelled")
 
-    def test_dilemma_lab_discovers_artifacts_and_runs_features(self):
-        self.add("dilemma", "morphology", ["evaluate"], DILEMMA)
-        info = self.app.dilemma_bootstrap()
-        self.assertTrue(info["installed"])
-        self.assertTrue(info["enabled"])
-        self.assertTrue(info["available"])
-        self.assertEqual(info["features"][0]["id"], "inventory")
-        self.assertEqual(info["artifacts"]["total_bytes"], 42)
-        result = self.wait(self.app.start_dilemma({"feature": "inventory", "options": {"sample": True}}))
-        self.assertEqual(result["status"], "complete")
-        self.assertEqual(result["result"]["output"]["feature"], "inventory")
-        self.assertEqual(result["result"]["output"]["result"]["options"], {"sample": True})
-        with self.assertRaises(ValueError):
-            self.app.start_dilemma({"feature": "unknown", "options": {}})
 
     def test_invalid_inputs_are_explicit(self):
         payload = self.payload()
@@ -273,7 +227,6 @@ class PlaygroundTests(unittest.TestCase):
             self.app.start(payload)
 
     def test_http_local_host_origin_and_static_page(self):
-        self.add("dilemma", "morphology", ["evaluate"], DILEMMA)
         server = Server(("127.0.0.1", 0), self.app)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -287,14 +240,6 @@ class PlaygroundTests(unittest.TestCase):
             response = conn.getresponse()
             self.assertEqual(response.status, 200)
             self.assertIn(b"PlatoSI Playground", response.read())
-            conn.request("GET", "/dilemma")
-            response = conn.getresponse()
-            self.assertEqual(response.status, 200)
-            self.assertIn(b"Dilemma Laboratory", response.read())
-            conn.request("GET", "/api/dilemma")
-            response = conn.getresponse()
-            self.assertEqual(response.status, 200)
-            self.assertTrue(json.loads(response.read())["available"])
             conn.request("GET", "/api/lookups")
             response = conn.getresponse()
             self.assertEqual(response.status, 200)
@@ -323,13 +268,6 @@ class PlaygroundTests(unittest.TestCase):
             self.assertEqual(response.status, 202)
             job_id = json.loads(response.read())["id"]
             self.assertEqual(self.wait(job_id)["status"], "complete")
-            dilemma = json.dumps({"feature": "inventory", "options": {}}).encode("utf-8")
-            conn.request("POST", "/api/dilemma/jobs", body=dilemma,
-                         headers={"Content-Type": "application/json", "Origin": origin})
-            response = conn.getresponse()
-            self.assertEqual(response.status, 202)
-            dilemma_job_id = json.loads(response.read())["id"]
-            self.assertEqual(self.wait(dilemma_job_id)["status"], "complete")
             conn.close()
         finally:
             server.shutdown()
@@ -361,9 +299,6 @@ class PlaygroundTests(unittest.TestCase):
             self.assertEqual(request("GET", "/reader")[0].status, 401)
             self.assertEqual(request("GET", "/reader.js")[0].status, 401)
             self.assertEqual(request("GET", "/lookup.js")[0].status, 401)
-            self.assertEqual(request("GET", "/dilemma")[0].status, 401)
-            self.assertEqual(request("GET", "/dilemma.js")[0].status, 401)
-            self.assertEqual(request("GET", "/api/dilemma")[0].status, 401)
             self.assertEqual(request("GET", "/api/lookups")[0].status, 401)
             self.assertEqual(request("GET", "/api/reader/options")[0].status, 401)
             form = urlencode({"token": "test-token"})
@@ -385,9 +320,6 @@ class PlaygroundTests(unittest.TestCase):
             self.assertIn(b"Experimental, local conversation", data)
             self.assertEqual(request("GET", "/api/bootstrap", headers={"Cookie": cookie_header})[0].status, 200)
             self.assertEqual(request("GET", "/reader", headers={"Cookie": cookie_header})[0].status, 200)
-            self.assertEqual(request("GET", "/dilemma", headers={"Cookie": cookie_header})[0].status, 200)
-            self.assertEqual(request("GET", "/api/dilemma",
-                                     headers={"Cookie": cookie_header})[0].status, 200)
             self.assertEqual(request("GET", "/api/reader/options", headers={"Cookie": cookie_header})[0].status, 200)
             body = json.dumps(self.payload()).encode("utf-8")
             headers = {"Content-Type": "application/json", "Origin": origin, "Cookie": cookie_header}

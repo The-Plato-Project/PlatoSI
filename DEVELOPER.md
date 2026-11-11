@@ -6,7 +6,7 @@ This guide explains the implementation reviewed on **4 November 2026** and how t
 
 PlatoSI was built as Chora's text and linguistic service. Chora owns the reader-facing workspace, Dreams, Signals and reader observations; PlatoSI supplies canonical text, exact locations, linguistic evidence and optional research synthesis. The local process API is the integration path used by Chora. The CLI and threaded HTTP playground support independent inspection and testing; the playground reader is not the primary product interface.
 
-The implementation is a Python source-tree package. Core text retrieval and serving use the standard library. Dilemma is an optional third-party Python dependency; Ollama is an optional external local HTTP service. Personal-name research additionally uses online Wikimedia JSON services.
+The implementation is a Python source-tree package. Core text retrieval and serving use the standard library. Ollama is an optional external local HTTP service. Personal-name research additionally uses the Platonis Humanistica Digitalia person dictionary and Athenian Onomasticon search.
 
 The backend separates resource selection from provider implementations. A registry discovers plugin manifests, merges local overrides, and lazily loads providers. Retrieval services call advertised capabilities and retain source attribution. Canonical dialogue text is a separate service with its own inventory and versioned location contract; it does not depend on the provider registry for its basic operations.
 
@@ -40,14 +40,14 @@ The test playground's edition/scope reader and the canonical API used by Chora u
 
 The adjacent Chora repository's `PlatoSiGateway` calls `canonical.catalog`, `canonical.work`, `linguistics.dialogue-lexicon` and `linguistics.person-research`. Its word pane presents dialogue-wide occurrences, related lemmas and name research. Chora persists lemma observations by dialogue/text version/lemma through its own observation repository, separately from PlatoSI caches. These integration paths were source-reviewed while preparing the [Chora user guide](../Chora/README.md); Chora was not launched for that documentation change.
 
-Chora starts the process service itself. Running `scripts/playground.py` is not a prerequisite for Chora, and the standalone conversation and Dilemma laboratory should not be described as Chora screens.
+Chora starts the process service itself. Running `scripts/playground.py` is not a prerequisite for Chora, and the standalone conversation should not be described as Chora screens.
 
 ## Repository structure
 
 | Location | Responsibility and useful starting points |
 | --- | --- |
 | [src/platosi/](src/platosi/) | Application services and shared infrastructure |
-| [plugins/](plugins/) | Five manifest/provider pairs: Perseus, LSJ/Logeion, GLEM, Dilemma, Ollama |
+| [plugins/](plugins/) | Four manifest/provider pairs: Perseus, LSJ/Logeion, Morpheus, Ollama |
 | [playground/](playground/) | Test interfaces: five HTML files, four JavaScript files, shared CSS; no build step |
 | [scripts/](scripts/) | Launchers, source acquisition/validation, canonical building, dependency checking, packaging |
 | [tests/](tests/) | Twelve Python test modules, an independent JavaScript contract check, shared fixture |
@@ -90,7 +90,7 @@ The package version is `0.1.0.dev1` in [__init__.py](src/platosi/__init__.py). T
 | `python scripts/check-local-dependency.py` | Launches an isolated child service, checks identity/catalogue, resolves the Republic opening word, closes and checks the process. |
 | `python scripts/package-platosi.py --output PATH` | Builds a portable ZIP, manifest and SHA-256 sidecar without publishing it. |
 
-The process server shares a `ReaderApi` instance across four executor workers. `ReaderApi.execute` creates a fresh registry for most operations, but skips registry initialization for `canonical.*` and `system.info`. Canonical operations can therefore work despite unrelated plugin failures. Capability discovery does inspect resources and is a separate readiness request.
+The process server shares a `ReaderApi` instance across four executor workers. `ReaderApi` leases one persistent registry across requests and replaces it when plugin manifests or `plugin-config.json` change. Retired registries close their loaded providers after active requests finish, and service shutdown closes the current registry. `canonical.*` and `system.info` still skip registry initialization, so canonical operations can work despite unrelated plugin failures. Capability discovery does inspect resources and is a separate readiness request.
 
 ## Setup and configuration
 
@@ -124,39 +124,50 @@ This provisions Chora's text dependency and is independent of `index perseus-pla
 
 ### Provider overrides
 
-`data/plugin-config.json` maps provider IDs to optional `enabled` and `config` values. Config shallow-merges with the manifest; relative paths resolve from the project root and absolute paths are also supported. For example, this illustrates configuring a separately provisioned Dilemma installation:
+`data/plugin-config.json` maps provider IDs to optional `enabled` and `config` values. Config shallow-merges with the manifest; relative paths resolve from the project root and absolute paths are also supported. For example, enable the local morphology provider:
 
 ```json
 {
-  "dilemma": {
-    "enabled": true,
-    "config": {
-      "data": "D:\\Greek\\dilemma\\data",
-      "model": "D:\\Greek\\dilemma\\model",
-      "tagger": "D:\\Greek\\dilemma\\tagger",
-      "paradigm_data": "D:\\Greek\\dilemma\\data"
-    }
-  }
+  "morpheus": { "enabled": true }
 }
 ```
 
-These example directories must already contain the appropriate artifacts. CLI `enable ID` / `disable ID` updates activation in the same file. Changing paths/configuration of indexed providers changes their manifest signature and requires rebuilding their index. Changing the actual source revision requires accurate matching inventory and provenance, not just pointing a pinned manifest at unrelated data.
+CLI `enable ID` / `disable ID` updates activation in the same file. Changing
+the identity of a provider used for a morphology artifact requires a reviewed
+rebuild.
 
-### Optional morphology
+### Local morphology
 
-GLEM defaults to disabled. Acquisition downloads research files for both GLEM and the Euthyphro treebank, but only GLEM's merged mapping list has a runtime provider:
+Morpheus is a manifest-discovered `analyze` provider backed by the pure-Python
+ikelos package. ikelos is a maintainer build dependency only. Install the
+pinned wheel with:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\download-morphology.ps1
-python .\scripts\platosi.py enable glem
-python .\scripts\platosi.py index glem
+python -m pip install --require-hashes -r .\requirements-morphology-build.txt
 ```
 
-The manifest records unresolved data licensing. See [the recorded GLEM review](docs/glem-licensing-review.md); local enablement is not redistribution clearance.
+Build permanent dialogue evidence with:
 
-Dilemma expects `dilemma-nlp` **1.3.12** in the selected interpreter and configured artifact directories. Defaults are under `data/dilemma/`. Its base availability check requires `lookup.db` and the exact package version; other operations need additional files. The repository does not provide a Dilemma artifact downloader or a complete reproducible installation recipe. Restart after changing directories: configuration uses process-wide environment variables and an already imported Dilemma with another data directory is rejected.
+```powershell
+python .\scripts\build-plato-morphology.py --dialogue republic
+```
 
-At audit time the external local installation was available, but `lsj_headwords.json`, `cunliffe_headwords.json`, and `lemma_equivalences.json` were absent. Headword/repair/strict-citation readiness must be checked separately. That machine's absolute session paths are local overrides, not portable defaults.
+The resumable build analyzes every distinct canonical form and stores all
+readings in `data/plato-greek-language-repository-v1.sqlite`. Canonical passages, compact token
+locations, shared forms, and morphology analyses occupy the same normalized
+database. The repository and release package carry its deterministic XZ
+artifact at `data/plato-greek-language-repository-v1.sqlite.xz`; PlatoSI materializes the local
+SQLite file on first use. Normal dialogue lookup reads
+that ready artifact without importing ikelos. Standalone analysis and explicit
+bounded checks call ikelos in-process. See [Morpheus](docs/morpheus.md).
+
+`linguistics.verify-occurrences` is an explicit bounded operation using a
+provider's `analyze` capability and canonical token locations. Its default
+budget is zero analyses; callers can permit at most 20 local form analyses. It
+preserves source headword/homograph identity and reports partial coverage.
+Ordinary dialogue-lexicon counts use only a completed permanent database;
+this explicit operation does not alter it. Use
+`scripts/verify-occurrences.py` for a CLI check.
 
 ### Optional local models
 
@@ -204,7 +215,6 @@ Provider lifetime differs by entry point:
 | CLI | Registry normally lives for one invocation |
 | `ReaderApi.execute` | Fresh registry for each resource operation |
 | `WordReader._registry` | Reuses registry until manifest/config size or modification time changes |
-| `Playground._dilemma_registry` | Reuses registry without a manifest/config refresh check |
 
 `contracts.py` defines typing protocols, not runtime validation. Newer capabilities such as `match_forms`, `lemma_forms`, `lemma_relations`, and `evaluate` are implemented by convention without a complete matching set of protocols. `ScholarlyResourceProvider.retrieve`, CLI `retrieve`, and inquiry `--scholarly-query` are real extension plumbing, but no shipped provider advertises `retrieve`.
 
@@ -214,11 +224,10 @@ Provider lifetime differs by entry point:
 | --- | --- | --- |
 | [perseus-plato](plugins/perseus-plato/provider.py) | Corpus: `search`, `passage`, `reading` | Enabled; downloaded source directory and current index |
 | [lsj-logeion](plugins/lsj-logeion/provider.py) | Dictionary: `lookup`, `lemma_relations` | Enabled; LSJ XML and current index |
-| [glem](plugins/glem/provider.py) | Morphology: `analyze`, `match_forms`, `lemma_forms` | Disabled; merged mapping list and current index |
-| [dilemma](plugins/dilemma/provider.py) | Morphology: `analyze`, `match_forms`, `lemma_forms`, `evaluate` | Disabled; exact Python package and external artifacts |
+| [morpheus](plugins/morpheus/provider.py) | Morphology: `analyze` | Disabled by default; pinned ikelos package for maintainer builds and direct analysis |
 | [ollama](plugins/ollama/provider.py) | Language model: `models`, `generate`, `chat` | Enabled; local Ollama and installed model |
 
-Manifest defaults differ from local overrides. In the audited installation Dilemma was enabled and GLEM disabled. Provider status is not a guarantee that every advertised operation has all prerequisites.
+Manifest defaults differ from local overrides. Morpheus is locally enabled and ships disabled. Discovery does not test the remote service.
 
 ## Corpus representations and text locations
 
@@ -291,31 +300,36 @@ The fingerprint is SHA-256 over length-prefixed UTF-8 contract ID, dialogue ID, 
 
 The audited index contained 117,168 entries and 9,025 aliases. It represents the downloaded LSJ collection, not every dictionary on the Logeion website. `ReaderApi.organize_dictionary_entry` optionally derives plain text; the browser separately extracts readable excerpts from XML.
 
-### GLEM
+### Morpheus
 
-`GlemProvider` indexes one merged three-column list into form/lemma/raw-tag rows identified by source line. It supports exact/accent-insensitive analysis, direct requested-form matching, and reverse lemma-form inventories. It provides no context-sensitive disambiguation or per-row PROIEL-versus-Perseus provenance. The audited index had 377,255 rows.
-
-The other acquired GLEM files and AGDT Euthyphro contextual annotations support research/validation, not additional runtime providers. Keep that distinction when exposing new capabilities.
-
-### Dilemma
-
-`DilemmaProvider.analyze` accepts exact NFC input and serializes work on one executor thread. `_analyze` calls verbose lemmatization with `guess=False`, `skip_pos=True`, and both article-resolution settings. Records retain source method, settings and lookup-versus-rule classification. A no-neural-guess path can still produce rule-generated suggestions.
-
-`match_forms` and `lemma_forms` query direct lookup rows separately for Greek/all languages. They do not silently turn generated paradigms into canonical occurrences. Engines and taggers are cached by settings; CPU/Greek are fixed. Directory environment variables are process-wide and checked for conflicts.
-
-The 18 laboratory feature IDs are `analyze`, `batch`, `predict_pos`, `attestation`, `spelling`, `headwords`, `repair`, `tagger`, `paradigm`, `generate`, `morphology_diff`, `reconcile`, `normalization`, `nonlexical`, `citation`, `lookup`, `cache`, and `inventory`. `_evaluate` dispatches these to upstream operations, reports elapsed time, and converts dataclasses/enums/paths to JSON-compatible values. [The audit's laboratory inventory](CODEBASE_AUDIT.md#4-dilemma-laboratory-inventory) records each call and prerequisite.
-
-Artifact metadata fingerprints relative names, sizes and modification times, not file content. `revision_verified` is explicitly false. Base availability only checks lookup data/package version, so do not present it as full laboratory readiness.
+The adapter advertises `analyze` and lazily imports the exact pinned ikelos
+version. It preserves original headword identity, including numeric homograph
+suffixes, separately from the dictionary lookup lemma. It makes no
+context-sensitive identity claim.
 
 ## Canonical evidence and dialogue lexicons
 
-`ReaderApi.canonical_word_evidence` accepts exactly a `location` selecting one Greek word without punctuation. It resolves canonical text, calls basic analysis/dictionary collection, groups candidates by lemma, and organizes dictionary entries. `linguistic_evidence` optionally adds Dilemma normalization, spelling suggestions, attestation and paradigms; failure can yield partial evidence/warnings.
+`ReaderApi.canonical_word_evidence` accepts exactly a `location` selecting one Greek word without punctuation. It resolves canonical text, calls basic analysis/dictionary collection, groups candidates by lemma, and organizes dictionary entries. `linguistic_evidence` returns these source-specific candidates and entries without provider-specific supplementation. Its generic `morphology` field has status `not_requested`.
 
-`linguistics.dialogue-lexicon` uses the same word evidence, loads bounded reverse form inventories and explicit lexical relations, then intersects direct mappings with canonical dialogue tokens. Returned forms include counts, canonical locations, divisions, passages and mapping evidence. Related lemmas remain distinct from inflections and are sorted with dialogue-present targets first.
+`linguistics.dialogue-lexicon` uses the same word evidence and intersects source
+headword mappings with canonical tokens. For Morpheus, it reads only a ready
+dialogue/text-version build from
+`data/plato-greek-language-repository-v1.sqlite`, then filters
+by the selected headword/homograph. It never calls ikelos during normal lookup.
+Generic inventory and relation providers retain their independent cache path.
+Returned forms include counts, canonical locations, divisions, passages and
+mapping evidence. Related lemmas remain distinct from inflections and are
+sorted with dialogue-present targets first.
 
-`DialogueLexiconIndex` stores tokens once per dialogue/text version/policy and keeps provider form and relation caches separately. Provider fingerprints cover manifest/source/config metadata and optional artifact metadata. Ready entries are reused across selected forms of the same lemma. Supplied relation extraction is limited to LSJ etymology targets; accepted relation vocabulary is broader, and Dilemma does not advertise `lemma_relations`.
+`DialogueLexiconIndex` stores each canonical passage once and represents tokens
+as compact references to shared canonical forms. `DialogueMorphologyIndex`
+stores each provider/form analysis once and connects dialogue builds through a
+membership table. Provider fingerprints cover manifest/source/config metadata
+and optional artifact metadata. Ready entries are reused across dialogues and
+selected forms of the same lemma. Supplied relation extraction is limited to
+LSJ etymology targets; accepted relation vocabulary is broader.
 
-Important maintenance limits: canonical candidate projection reads nested `analysis.tag`, losing GLEM's top-level tag; deduplication excludes settings. Provider failures can be caught and cached as ready partial/empty inventories. Concurrent first requests lack a shared per-identity work lock. These are audited limitations, not promised behavior to extend uncritically.
+Important maintenance limits: canonical candidate projection reads nested `analysis.tag`; provider settings must be preserved when deduplicating evidence. Provider failures can be caught and cached as ready partial/empty inventories. Concurrent first requests lack a shared per-identity work lock. These are audited limitations, not promised behavior to extend uncritically.
 
 ## Model and personal-name research pipelines
 
@@ -342,16 +356,17 @@ The last path does not verify canonical/indexed revision equivalence. Dictionary
 
 `evidence_package` truncates each long dictionary XML at 8,000 characters with a flag and rejects packages exceeding 100,000 UTF-8 bytes. Cache identity covers evidence/prompts, provider identity/config digest, model digest and generation settings. Only successful results with both model digests are reusable; `fresh` bypasses a hit. Semantic accuracy remains unverified.
 
-### Personal-name research
+### Name research
 
-`ReaderApi.person_research` requires location+lemma, confirms that lemma is an analysis candidate, and requires a nested `proper=True` candidate. This is a capitalized-headword gate, not contextual named-entity recognition. It uses the sole enabled chat provider's configured model.
+`ReaderApi.person_research` validates the canonical location and candidate lemma, then requires morphology evidence with `proper=True`. That gate is not contextual entity recognition. The request operation remains `linguistics.person-research`; the response contract is now `platosi.person-research.v3` with a consolidated `overview`, unique `sources`, and stable identity candidates for reader notes.
 
-`PersonResearch.online_sources` queries Wikidata search, English Wikipedia search/intros, and an exact English Wiktionary title. Each URL response is cached; fetch timeout is 15 seconds and source excerpts are capped at 3,000 characters. Source organization deduplicates provider/URL and tags relevance but preserves retrieval order.
+[ResearchSources](src/platosi/research_sources.py) loads [config/name-research-sources.json](config/name-research-sources.json) for each request and dispatches two explicit authority adapters. The Humanistica adapter parses and caches the compact person dictionary and its source links from the Plato edition page. Supported Perseus links are resolved through CTS metadata to the open Perseus TEI repository; name-matching sections and their cited or nearby context are extracted and cached without person-specific rules. The Athenian Onomasticon adapter performs a bounded exact-name search and retains each stable person record separately. Wikipedia, Wikidata, Wiktionary, and Grokipedia are not queried. URLs are deduplicated across configured entries, and the source configuration is included in portable releases.
 
-`root_sources` combines model search proposals with a limited deterministic name-ending candidate, requires shared stem and dictionary hits, and stops after its first accepted lexical comparison. `summarize` requests JSON, filters sentences/relationships with invalid or absent source IDs, and labels unsupported derivation as a possible comparison. It does not verify identity or source entailment.
+`PersonResearch.summarize` first asks the configured chat model to select reference IDs using the selected passage and dialogue. The passage is disambiguation context, not biography. The Plato-specific record and its resolved historical citations cannot be dropped during selection; unrelated same-name people and related offices are excluded. The writer must produce a substantive account with enough supported statements to cover detailed historical evidence rather than reducing it to a generic sentence. It may use supplied scholarship but not uncited model memory. Its policy explicitly rejects occupations, relationships, dates, and statuses not stated by a source, including the inference that a dialogue participant was a philosopher. LSJ lookup and root proposals remain outside name research. `synthesis.max_tokens` defaults to 3,200. JSON shape, overview bounds, source-coverage minima, bounded exact quotations, and citation IDs are validated; fenced JSON is normalized before parsing. A separate model call audits the draft against its quotations, with one corrective writing/review attempt. Failure is explicit in the service response, while Chora shows one short failure message without dumping sources or raw exceptions. The same model performs writing and review; these checks do not certify entailment or historical truth.
 
-Context is passed into the service and included in summary cache identity, but is currently absent from both model prompts. JSON response schemas are sent to the model, while local validation does not fully enforce all field types/bounds. Web cache has no TTL, root cache omits model identity, and requests have limited cancellation during fetches. Consult the audit before relying on stronger grounding or invalidation guarantees.
+Successful cache keys include the synthesis policy, evidence, dialogue/context, model identity/digest and response budget. URL responses still have no TTL and web-fetch cancellation remains bounded by fetch timeout. Earlier per-candidate model summaries are not reused. Cached Wikidata identities remain available solely to retain old reader-note targets when sources are disabled, without retrieving or synthesizing their content. Chora owns all note persistence and shows its reader notes separately from the generated account.
 
+See [name-research.md](docs/name-research.md) for source fields, adapter behavior, response statuses and coordinated service/client upgrades. `CODEBASE_AUDIT.md` remains the historical audit snapshot; this section documents the subsequent implementation.
 ## API operations and integration contracts
 
 ### Local process protocol
@@ -375,7 +390,6 @@ An `ok` envelope returns `service`, application `version`, `protocol_version`, a
 | `linguistics.dialogue-lexicon` | Exactly `location`; dialogue forms/counts/locations and related lemmas |
 | `linguistics.person-research` | Exactly `location`, `lemma` ≤200; candidate gate, references and summary |
 | `lemma.matchForms` | `lemma` plus 1–500 distinct nonempty `forms`, each ≤200 characters; direct mapping evidence |
-| `dilemma.evaluate` | `feature` and object `options`; laboratory response/status |
 | `text.search` | `text` ≤4,000; exact indexed search, 20 records per provider |
 | `text.passage` | `edition` ≤500 and `citation` ≤100; indexed passage records |
 | `inquiry.ask` | `question` ≤4,000 plus location, text ≤4,000, or edition+ citation; grounded answer/evidence |
@@ -398,16 +412,15 @@ There is no process operation for model listing/selection, profile mutation, pro
 
 ### Test playground: browser/server architecture and HTTP routes
 
-This section describes PlatoSI's test harness, not Chora's Electron UI. `playground.Handler` serves fixed files and routes; no client framework or router is involved. `lookup.js`, `reader.js`, `app.js`, and `dilemma.js` own their page state and call `fetch`. DOM/text nodes render output; dictionary XML is parsed for text excerpts, not injected as executable HTML. Conversation supports limited inline formatting, not full Markdown.
+This section describes PlatoSI's test harness, not Chora's Electron UI. `playground.Handler` serves fixed files and routes; no client framework or router is involved. `lookup.js`, `reader.js`, and `app.js` own their page state and call `fetch`. DOM/text nodes render output; dictionary XML is parsed for text excerpts, not injected as executable HTML. Conversation supports limited inline formatting, not full Markdown.
 
 | Method / route | Purpose |
 | --- | --- |
-| `GET /`, `/reader`, `/conversation`, `/dilemma` | Lookup, indexed reading, conversation and laboratory pages; root becomes login when unauthenticated in LAN mode |
-| `GET /lookup.js`, `/reader.js`, `/app.js`, `/dilemma.js`, `/style.css` | Fixed static assets |
+| `GET /`, `/reader`, `/conversation` | Lookup, indexed reading and conversation pages; root becomes login when unauthenticated in LAN mode |
+| `GET /lookup.js`, `/reader.js`, `/app.js`, `/style.css` | Fixed static assets |
 | `GET /api/bootstrap` | Chat models, prompts, profile names and non-model resource metadata |
 | `GET /api/reader/options` | Profiles and provider metadata without config; no availability probe |
 | `GET /api/lookups` | Full capability discovery, including API-only operations |
-| `GET /api/dilemma` | Laboratory catalogue, provider/artifact/readiness metadata |
 | `GET /api/jobs/<id>` | Job status/result/error |
 | `POST /login` | LAN token form; session cookie and redirect |
 | `POST /api/lookup` | Only `word.analyze`, `text.search`, `text.passage` |
@@ -416,14 +429,13 @@ This section describes PlatoSI's test harness, not Chora's Electron UI. `playgro
 | `POST /api/reader/occurrences` | Candidate lemma occurrences within scope |
 | `POST /api/reader/examine` | Two-model assessment job |
 | `POST /api/jobs` | Free/grounded conversation job |
-| `POST /api/dilemma/jobs` | Laboratory job |
 | `POST /api/jobs/<id>/stop` | Stop signal and immediate cancelled state |
 
 HTTP is not a general mirror of `ReaderApi.execute`: canonical/linguistics operations and process `inquiry.ask` have no corresponding bundled HTTP endpoint. GET host/client checks apply; POST also requires matching Origin. LAN authentication gates all but login/root login page/stylesheet. JSON body size is 1–2,000,000 bytes; login form size is 1–4,096 bytes.
 
 `Playground` creates random-ID daemon jobs and locks status/result updates. Running jobs are retained; completed jobs are pruned on later submissions using creation-time cutoffs of 300 seconds for conversation/examination and 1,800 seconds for lab submissions. HTTP has no global job queue cap or response-size limit. Job memory is shared across authenticated users, without per-user ownership.
 
-`stop` marks a running job cancelled and signals its token. Dilemma's underlying evaluation receives no token; the reader has no examination stop control and changing selection can leave the old computation running. A failed Dilemma operation can be nested in a completed job because evaluation errors become result data. Clients should inspect both levels of status.
+`stop` marks a running job cancelled and signals its token. The reader has no examination stop control and changing selection can leave an old computation running.
 
 ## Persistence and index maintenance
 
@@ -435,9 +447,9 @@ HTTP is not a general mirror of `ReaderApi.execute`: canonical/linguistics opera
 | `data/lsj-logeion/`, `data/greek-morphology/` | Downloaded dictionary/research inputs |
 | `data/indexes/perseus-plato.sqlite` | `index_metadata`; `editions` with URN, source, text, normalized keys, structural/markup JSON |
 | `data/indexes/lsj-logeion.sqlite` | `index_metadata`; `entries` keyed by file/ordinal; `aliases` with classification/fragment |
-| `data/indexes/glem.sqlite` | `index_metadata`; source-line `mappings` of form/lemma/tag and keys |
 | `data/canonical-text-v1/` | Pinned source XML/metadata and verified `works/<dialogue>.json` |
-| `data/dialogue-lexicon-v1.sqlite` | Schema 2: token `index_builds`/`tokens`, `lemma_builds`/`lemma_forms`, `relation_builds`/`lemma_relations`, schema metadata |
+| `data/plato-greek-language-repository-v1.sqlite.xz` | Shipped compressed Greek language repository |
+| `data/plato-greek-language-repository-v1.sqlite` | Materialized local repository: canonical sections, compact token locations, shared canonical forms, dialogue memberships, shared complete ikelos analyses, provider provenance, reusable provider inventories, relation caches, and reviewed correction overlays |
 | `data/word-exploration-cache.sqlite` | `examinations(key,result)`; evidence/model-identity/settings-derived cache |
 | `data/person-research-cache-v1.sqlite` | URL-keyed `web_cache` and policy/input-keyed `model_cache`, timestamps |
 | Browser localStorage | `platosi-note:<JSON [provider,edition,scope,start]>` and `:lemma`; no canonical version key |
@@ -446,7 +458,16 @@ Conversation/laboratory histories, server jobs and LAN sessions are in memory. N
 
 Provider `build` methods verify selected pinned source sets, sizes, revisions and Git blob hashes. `storage.new_index` writes a temporary SQLite file and replaces the old one after successful completion; failed builds preserve old indexes. `read_index` opens `mode=ro`. The signature covers ID/version/source/config, not current source bytes, so post-build source edits are not automatically detected.
 
-Dialogue caches key builds by canonical version, policy and provider fingerprints. Schema 1→2 is handled; incompatible schema versions are rejected. There is no general cleanup/version-retention management command. Web research has no TTL/refresh control, and metadata-derived fingerprints do not provide content-hash invalidation. Avoid assuming cache reuse proves data is current or complete.
+Dialogue token and relation caches key builds by canonical version, policy and
+provider fingerprints. Provider lemma-form inventories are
+dialogue-independent and use capability-specific configuration and artifact
+fingerprints. Dialogue-index schemas 1 through 3 are upgraded to schema 4;
+incompatible versions are rejected. The separate morphology artifact is
+versioned and released deliberately rather than refreshed during reading.
+There is no general cleanup/version-retention management command. Web research
+has no TTL/refresh control, and metadata-derived fingerprints do not provide
+content-hash invalidation. Avoid assuming cache reuse proves data is current or
+complete.
 
 ## CLI reference
 
@@ -456,12 +477,12 @@ The parser in `cli.main` is the authoritative option reference. Global `--root P
 python .\scripts\platosi.py search "κατέβην" --profile reader --limit 20
 python .\scripts\platosi.py search "κατεβην" --mode accent-insensitive
 python .\scripts\platosi.py lookup "καταβαίνω"
-python .\scripts\platosi.py analyze "κατέβην" --include dilemma
+python .\scripts\platosi.py analyze "κατέβην" --include morpheus
 python .\scripts\platosi.py passage "urn:cts:greekLit:tlg0059.tlg030.perseus-grc2" "327a"
 python .\scripts\platosi.py inquire "Discuss the opening" --edition "urn:cts:greekLit:tlg0059.tlg030.perseus-grc2" --citation "327a" --provider ollama --model "qwen3.5:9b" --json
 ```
 
-Retrieval/inquiry commands accept `--profile`, repeated `--include` and `--exclude`. Applicable search/lookup/analyze limits are per provider. `inquire` additionally supports explicit text, repeatable headwords/forms, scholarly JSON query, generation JSON, provider/model and evidence limit. Indexing requires enabled providers with `build`; Dilemma and Ollama do not have builders. Generic `retrieve` requires an added scholarly provider.
+Retrieval/inquiry commands accept `--profile`, repeated `--include` and `--exclude`. Applicable search/lookup/analyze limits are per provider. `inquire` additionally supports explicit text, repeatable headwords/forms, scholarly JSON query, generation JSON, provider/model and evidence limit. Indexing requires enabled providers with `build`; Morpheus and Ollama do not have builders. Generic `retrieve` requires an added scholarly provider.
 
 ## Extending and maintaining the application
 
@@ -485,7 +506,7 @@ A browser feature separately needs an allowed `Handler` route, page controls and
 
 Treat canonical extraction, source pin, segmentation, annotations, fingerprints and persisted locations as a compatibility boundary. Update inventories deliberately and run shared Python/JavaScript conformance checks. Do not change code-point/UTF-16 semantics in place or relocate an old anchor by a similar-text guess.
 
-When changing lexical evidence, review cache identities and policy versions. Empty/partial results currently can become ready cached inventories after provider errors, and concurrent first-request serialization is incomplete. A cache/schema change requires explicit compatibility tests, not merely a successful lookup.
+When changing lexical evidence, review cache identities and policy versions. Provider errors leave form and relation retrievals uncached rather than turning incomplete results into ready inventories. Concurrent first-request serialization is still incomplete. A cache/schema change requires explicit compatibility tests, not merely a successful lookup.
 
 Chora's graph, annotations and migrations belong to another repository. PlatoSI exposes text/evidence contracts but does not implement or verify that application's reader behavior. Plans under `docs/` must be checked against code before being described as completed features.
 
@@ -499,7 +520,6 @@ node tests\text_location_contract.mjs
 node --check playground\app.js
 node --check playground\reader.js
 node --check playground\lookup.js
-node --check playground\dilemma.js
 ```
 
 For inherited Python subprocesses, `PYTHONDONTWRITEBYTECODE=1` can suppress bytecode writes; isolated `-I` processes ignore Python environment variables. The clean-install tests build/extract into temporary directories. Some tests exercise local sockets/private-address listeners and installed data.
@@ -513,7 +533,7 @@ For inherited Python subprocesses, `PYTHONDONTWRITEBYTECODE=1` can suppress byte
 | Models/reader | [test_inquiry.py](tests/test_inquiry.py), [test_ollama.py](tests/test_ollama.py), [test_word_reader.py](tests/test_word_reader.py): evidence selection, framing, cancellation, independent assessments/cache, scope occurrences |
 | Research/distribution | [test_person_research.py](tests/test_person_research.py), [test_local_distribution.py](tests/test_local_distribution.py): injected web/model data, research cache/deduplication, reproducible archives and synthetic clean-install workflow |
 
-The suite is not wholly isolated from optional local dependencies. `DilemmaThreadTests` assigns a fake `_engines` member that current code does not use; the test instead reaches real Dilemma and has no skip for missing package/artifacts. A local pass is not proof that the fake's intended thread-affinity assertion was exercised.
+Morpheus unit tests use recorded responses and synthetic identity controls without the public service. Socket tests still exercise local listeners.
 
 ### Acquisition and validation tooling
 
@@ -521,7 +541,7 @@ The suite is not wholly isolated from optional local dependencies. `DilemmaThrea
 | --- | --- |
 | [download-plato.ps1](scripts/download-plato.ps1), [validate-plato.ps1](scripts/validate-plato.ps1) | Pinned CTS/Greek TEI source; inventory/report checks hashes, XML and metadata linkage; not TEI schema/scholarly completeness |
 | [download-lsj.ps1](scripts/download-lsj.ps1), [validate-lsj.ps1](scripts/validate-lsj.ps1) | Pinned LSJ XML/metadata; UTF-8, structure, heads/IDs/duplicates; not lexicographic accuracy |
-| [download-morphology.ps1](scripts/download-morphology.ps1), [validate-morphology.ps1](scripts/validate-morphology.ps1) | Research inputs; hash/UTF-8/list/treebank/sample checks and exact-form overlap; overlap is not contextual analysis accuracy |
+| [download-morphology.ps1](scripts/download-morphology.ps1), [validate-morphology.ps1](scripts/validate-morphology.ps1) | Pinned Euthyphro research inputs; hash/UTF-8/XML/treebank/sample checks and Plato attestation; not corpus-wide analysis accuracy |
 | [plato-common.ps1](scripts/plato-common.ps1) | Shared Git blob SHA-1 helper |
 | [build-canonical-corpus.py](scripts/build-canonical-corpus.py) | Source SHA-256 and frozen segment/text-baseline verification before work output |
 
@@ -531,7 +551,7 @@ The validators write generated JSON reports. When working under a documentation-
 
 On 4 November 2026 the audit ran **73 Python tests with no failures/skips** using Python 3.12.10. Node v24.22.2 passed eight valid and nine invalid shared location cases and syntax checks for all four browser scripts. Read-only checks verified 175 pinned source files, reproduced all 35 canonical works/8,261 sections, and parsed all 41 project Python files.
 
-Local model discovery succeeded without generating answers. Fresh internet setup, live person-reference requests, generated-answer quality, all Dilemma laboratory operations, rendered-browser/accessibility behavior and external Chora integration were not verified. These are historical execution results; reorganizing these Markdown files does not constitute a new test run.
+Local model discovery succeeded without generating answers. Fresh internet setup, live person-reference requests, generated-answer quality, rendered-browser/accessibility behavior and external Chora integration were not verified. These are historical execution results; reorganizing these Markdown files does not constitute a new test run.
 
 ## Packaging and distribution
 
@@ -547,6 +567,6 @@ Provider manifests and upstream metadata record resource-specific terms/review s
 
 ## Known boundaries for future work
 
-The test playground's Relationships section is a placeholder; it does not present the canonical linguistic/name services. Chora does consume those services and owns a dialogue/version/lemma observation editor. Broader relation types, Dilemma equivalence import, reader-created graphs, cross-dialogue notes and automatic anchor migration remain outside this implementation. There is no automatic translation workflow or training pipeline.
+The test playground's Relationships section is a placeholder; it does not present the canonical linguistic/name services. Chora does consume those services and owns a dialogue/version/lemma observation editor. Broader relation types, reader-created graphs, cross-dialogue notes and automatic anchor migration remain outside this implementation. There is no automatic translation workflow or training pipeline.
 
 Availability is coarse; error isolation, configuration refresh, cancellation and cache invalidation differ across callers. HTTP resource limits differ from the process protocol. Model/source-ID checks establish syntax, not truth. These boundaries affect integration design and testing scope; the [audit's findings](CODEBASE_AUDIT.md#7-incomplete-disconnected-and-inconsistent-behavior) retain the detailed evidence and distinguish confirmed behavior from risks requiring reproduction.

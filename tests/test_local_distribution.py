@@ -35,10 +35,24 @@ class LocalDistributionTests(unittest.TestCase):
             installed = temp / "installed"
             with zipfile.ZipFile(archive) as package:
                 names = package.namelist()
-                self.assertFalse(any(name.startswith(("data/", "models/", "tests/")) for name in names))
+                self.assertFalse(any(name.startswith(("models/", "tests/")) for name in names))
+                self.assertEqual(
+                    [name for name in names if name.startswith("data/")],
+                    ["data/plato-greek-language-repository-v1.sqlite.xz"],
+                )
                 self.assertFalse(any("__pycache__" in name for name in names))
-                self.assertIn("playground/dilemma.html", names)
-                self.assertIn("playground/dilemma.js", names)
+                self.assertIn("config/name-research-sources.json", names)
+                self.assertIn("src/platosi/research_sources.py", names)
+                self.assertIn("plugins/morpheus/provider.py", names)
+                self.assertIn("scripts/verify-occurrences.py", names)
+                self.assertIn("src/platosi/occurrence_check.py", names)
+                self.assertIn("src/platosi/dialogue_morphology.py", names)
+                self.assertIn("docs/morpheus.md", names)
+                self.assertIn(
+                    "docs/plato-greek-language-repository-v1-inventory.json",
+                    names,
+                )
+                self.assertFalse(json.loads(package.read("plugins/morpheus/plugin.json"))["enabled_by_default"])
                 manifest = json.loads(package.read("release-manifest.json"))
                 self.assertEqual(manifest["version"], __version__)
                 self.assertEqual(manifest["protocol_version"], 1)

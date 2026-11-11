@@ -1,5 +1,10 @@
 # Lemma, dialogue-form, and relationship index plan
 
+For the implemented stages and remaining work, see the current
+[Morpheus implementation handoff](morpheus-implementation-handoff.md).
+Canonical tokens and generic provider inventories remain supported. Morpheus
+now supplies a permanent, dialogue-scoped PlatoSI morphology build.
+
 ## Purpose
 
 PlatoSI will own a durable local index that begins with a word selected at an
@@ -28,7 +33,7 @@ linguistic cache.
    relationships.
 5. The canonical dialogue is authoritative for dialogue counts and
    locations.
-6. Cached results are tied to the canonical text version, provider artifacts,
+6. Permanent results are tied to the canonical text version, provider identity,
    and the matching-policy version.
 
 ## Reader result
@@ -85,8 +90,7 @@ Related-lemma edges use explicit relation classes:
 - `etymological_relation`
 
 The initial relationship extractor will use structured local source evidence,
-beginning with explicit LSJ cross-references and Dilemma headword
-equivalences. Similar spelling alone does not create a relationship.
+beginning with explicit LSJ etymological references. Similar spelling alone does not create a relationship.
 
 ## Persistent storage
 
@@ -105,15 +109,15 @@ database will contain:
 ### `tokens`
 
 - stable token identifier
-- dialogue and text version
-- exact surface form
-- NFC lookup key
-- accent-insensitive secondary key
-- Stephanus reference
+- dialogue build reference
+- canonical section reference
+- shared canonical form reference
 - UTF-16 start and end offsets
-- passage text
 
-### `lemma_forms`
+`canonical_sections` stores each Stephanus passage and division once.
+`canonical_forms` stores each exact surface form and its normalized keys once.
+
+### `provider_lemma_forms`
 
 - normalized lemma
 - exact form key
@@ -122,6 +126,19 @@ database will contain:
 - provider and provider version
 - source and license metadata
 - artifact fingerprint
+
+Provider lemma inventories are stored independently of canonical dialogue
+builds. Dialogue counts and locations are derived at request time by
+intersecting those records with `tokens`.
+
+### `morphology_builds`, `morphology_build_forms`, `morphology_forms`, and `morphology_analyses`
+
+- one resumable build per canonical dialogue version and Morpheus identity;
+- one shared checked, unresolved, failed, or pending state per provider/form;
+- compact membership rows connecting each dialogue build to its forms;
+- every candidate lemma, source headword, homograph, grammatical reading, and
+  raw Morpheus evidence;
+- a ready state only after every distinct canonical form has a valid response.
 
 ### `lemma_relations`
 
@@ -133,36 +150,37 @@ database will contain:
 - source and license metadata
 - artifact fingerprint
 
-Observed counts and locations will be derived by joining `lemma_forms` to
+Observed counts and locations are derived by matching `provider_lemma_forms` to
 `tokens`. Locations will not be duplicated into opaque cached JSON.
 
 ## Build and cache behavior
 
 1. Tokenize each canonical dialogue once per text version.
-2. On the first request for a candidate lemma, compute its form mappings and
-   direct related-lemma edges in one transaction.
+2. On the first request for a candidate lemma, retrieve and store its provider
+   form inventory once for reuse across dialogues. Cache direct related-lemma
+   edges separately for the selected dialogue.
 3. Mark the cache entry ready only after all rows are committed.
 4. Reuse the ready entry for any selected form that resolves to the same
    lemma.
-5. Rebuild when the canonical version, provider fingerprint, or
-   matching-policy version changes.
+5. Rebuild dialogue tokens when the canonical version or matching policy
+   changes. Refresh provider inventories when their capability-specific
+   configuration or artifact fingerprint changes.
 6. Keep previous-version rows isolated until explicit cleanup so an
    interrupted rebuild cannot destroy the usable index.
-7. Serialize concurrent first requests for the same cache identity rather
-   than repeating provider work.
+7. Do not mark failed or partial provider retrievals as ready cache entries.
+   Concurrent first-request serialization remains future work.
 
 ## Provider strategy
 
-### Dilemma
+### Morpheus
 
-- Use direct lookup rows as the strongest form-to-lemma evidence.
-- Add a reverse lemma-form inventory operation to the PlatoSI adapter instead
-  of exporting Dilemma's complete cache.
-- Use named paradigm sources only to fill direct-lookup gaps.
-- Do not hard-filter by part of speech or dialect. POS and dialect may
-  annotate evidence, but related verbal nouns and genuine dialectal passages
-  must not be discarded.
-- Do not use the neural model in the deterministic form-index path.
+- Build through an exact, hash-verified ikelos wheel.
+- Analyze every distinct canonical form during an explicit resumable build.
+- Preserve the source headword, homograph and grammatical features for each reading.
+- Build PlatoSI's reverse lemma-to-observed-form mapping from those permanent rows.
+- Filter mappings by the selected source headword and homograph.
+- Count each token once even when multiple parses support the same headword.
+- Never use a partial or failed build for ordinary dialogue lookup.
 
 ### LSJ and other dictionaries
 
@@ -226,10 +244,10 @@ integration will render counts and expandable canonical locations.
 - Store and query Republic counts and locations.
 - Verify reconstruction through the canonical location contract.
 
-### Stage 2: Dilemma lemma-form inventory
+### Stage 2: Source-specific form evidence
 
-- Add a bounded reverse lookup operation to the Dilemma adapter.
-- Persist direct mappings with artifact provenance.
+- Build a compact, versioned morphology database from pinned ikelos.
+- Preserve source provenance, homographs, all readings, and unresolved forms.
 - Intersect mappings with the dialogue token index.
 - Return all observed forms and exact locations for each candidate lemma.
 
@@ -237,14 +255,12 @@ integration will render counts and expandable canonical locations.
 
 - Define provider-neutral relationship records.
 - Extract explicit LSJ cross-references.
-- Import Dilemma headword equivalence and documented compound relationships.
 - Persist direct edges and dialogue-presence summaries.
 
 The initial implementation persists a separate relation cache and extracts
 Greek targets from LSJ's structured `etym` elements. Targets must resolve to
-real LSJ headwords, and the exact XML fragment is retained as evidence. The
-configured Dilemma artifacts currently contain no `lemma_equivalences.json`,
-so Dilemma equivalence and compound edges remain pending rather than being
+real LSJ headwords, and the exact XML fragment is retained as evidence.
+Broader equivalence and compound edges remain pending rather than being
 inferred from spelling.
 
 ### Stage 4: Reader API and Chora

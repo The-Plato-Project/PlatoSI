@@ -1,0 +1,75 @@
+{
+  "artifact": "data/plato-greek-language-repository-v1.sqlite.xz",
+  "artifact_sha256": "6ce10fe666f5317470b45b731b91668f1c1a3299566c6e80922859e5d728288c",
+  "artifact_size": 4776784,
+  "database": "data/plato-greek-language-repository-v1.sqlite",
+  "database_sha256": "1ef184b35ef34e7df44191094f13414a5fc22f37a7caf91f5c6dc8d9cbc50c8d",
+  "database_size": 72949760,
+  "schema_versions": {
+    "canonical_index": 5,
+    "morphology": 2
+  },
+  "policy_version": "plato-morphology-v1",
+  "records": {
+    "dialogue_builds": 1,
+    "canonical_sections": 1355,
+    "canonical_forms": 15078,
+    "token_occurrences": 88261,
+    "morphology_builds": 1,
+    "morphology_forms": 15078,
+    "morphology_memberships": 15078,
+    "morphology_analyses": 27677
+  },
+  "builds": [
+    {
+      "dialogue": "republic",
+      "text_version": "sha256:0d5d71f80d42eee6ec5c5328d1d1926789ddb327f53c8787131b1a20aa4af5ef",
+      "build_id": 1,
+      "provider": "morpheus",
+      "provider_version": "3.0",
+      "provider_fingerprint": "e21002c21238a2b506ad88de43d3742c13c29817f4aa50bdf86197427afff926",
+      "provider_metadata": {
+        "id": "morpheus",
+        "identity": {
+          "ikelos_version": "0.1.0.dev1",
+          "policy": "ikelos-morpheus-v1",
+          "provider": "morpheus",
+          "provider_version": "3.0",
+          "source": {
+            "attribution": "Ancient Greek analysis from the ikelos pure-Python port of Perseus Morpheus.",
+            "original_repository": "https://github.com/perseids-tools/morpheus",
+            "release": "0.1.0.dev1",
+            "repository": "https://github.com/jmyerston/ikelos",
+            "wheel_sha256": "908f58a9136538f9f65a13fdb858d8f86e9e542914195493d09cade60df31ae9"
+          },
+          "strict_case": false
+        },
+        "license": {
+          "status": "MPL-2.0",
+          "terms": "ikelos code and bundled Greek stem library are licensed under MPL-2.0.",
+          "url": "https://github.com/jmyerston/ikelos/blob/main/LICENSE"
+        },
+        "source": {
+          "attribution": "Ancient Greek analysis from the ikelos pure-Python port of Perseus Morpheus.",
+          "original_repository": "https://github.com/perseids-tools/morpheus",
+          "release": "0.1.0.dev1",
+          "repository": "https://github.com/jmyerston/ikelos",
+          "wheel_sha256": "908f58a9136538f9f65a13fdb858d8f86e9e542914195493d09cade60df31ae9"
+        },
+        "version": "3.0"
+      },
+      "state": "ready",
+      "total_forms": 15078,
+      "checked_forms": 15078,
+      "analyzed_forms": 14933,
+      "unresolved_forms": 145,
+      "failed_forms": 0,
+      "pending_forms": 0,
+      "whole_dialogue_complete": true,
+      "context_reviewed": false,
+      "storage": "shipped_morphology_database",
+      "created_at": "2026-11-07 17:54:38",
+      "completed_at": "2026-11-07 17:57:11"
+    }
+  ]
+}
