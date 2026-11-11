@@ -6,7 +6,7 @@ import sqlite3
 import threading
 import unicodedata
 import xml.etree.ElementTree as ET
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 from platosi import __version__
@@ -144,6 +144,8 @@ class ReaderApi:
     def capabilities(self, registry):
         definitions = [
             ("word.analyze", "Word and dictionary", ("analyze", "lookup")),
+            ("word.search", "Word Search", ("search_headwords",)),
+            ("word.lookup", "Dictionary lookup", ("lookup",)),
             ("linguistics.evidence", "Canonical word evidence", ("analyze", "lookup")),
             ("linguistics.dialogue-lexicon", "Dialogue forms and related lemmas",
              ("analyze", "lookup", "lemma_forms", "lemma_relations")),
@@ -371,8 +373,44 @@ class ReaderApi:
         }
 
 
-    def dialogue_lexicon(self, registry, payload):
-        target = self.canonical_word_target(payload, "linguistics.dialogue-lexicon")
+    def lexical_search(self, registry, payload):
+        form = required_text(payload, "query", 100)
+        if not any(self.greek_word_character(char) for char in form) or any(
+                not self.greek_word_character(char) for char in form):
+            raise InvalidRequest("Enter one Greek word without spaces or punctuation")
+        analyzed = self.analyze(registry, {"form": form})
+        headwords = {}
+        for possibility in self.organize_possibilities(analyzed["analyses"]["records"]):
+            headwords[key(possibility["lemma"])] = possibility["lemma"]
+        for record in analyzed["entries"]["records"]:
+            entry = self.organize_dictionary_entry(record)
+            headwords[key(entry["headword"])] = entry["headword"]
+        found = self.collect(registry, "search_headwords",
+                             lambda provider: provider.search_headwords(form, 51))
+        for record in found["records"]:
+            headwords.setdefault(key(record["lemma"]), record["lemma"])
+        items = [{"lemma": lemma} for lemma in headwords.values()]
+        return {"contract": "platosi.word-search.v1", "query": form,
+                "items": items[:50], "possibly_truncated": len(items) > 50,
+                "warnings": list(dict.fromkeys([*analyzed["analyses"]["warnings"],
+                                               *analyzed["entries"]["warnings"], *found["warnings"]]))}
+
+    def lexical_evidence(self, registry, payload):
+        lemma = required_text(payload, "lemma", 200)
+        if not any(self.greek_word_character(char) for char in lemma) or any(
+                not self.greek_word_character(char) for char in lemma):
+            raise InvalidRequest("Enter a Greek headword")
+        scope = payload.get("scope")
+        if scope is not None and (not isinstance(scope, dict)
+                or set(scope) != {"dialogue", "text_version"}
+                or not all(isinstance(value, str) and value for value in scope.values())):
+            raise InvalidRequest("Invalid lexical lookup work scope")
+        target = {"text": lemma, "location": None, "context": []}
+        return self.dialogue_lexicon(registry, payload, target=target, scope=scope, lemma=lemma)
+
+    def dialogue_lexicon(self, registry, payload, *, target=None, scope=None, lemma=None):
+        if target is None:
+            target = self.canonical_word_target(payload, "linguistics.dialogue-lexicon")
         form_providers, form_problems = self.resources(registry, "lemma_forms")
         relation_providers, relation_problems = self.resources(registry, "lemma_relations")
         dictionary_providers, dictionary_problems = self.resources(registry, "lookup")
@@ -417,11 +455,13 @@ class ReaderApi:
 
         form_fingerprint = fingerprint(form_sources)
         relation_fingerprint = fingerprint(relation_sources)
-        location = target["location"]
+        location = scope or target["location"]
         index = DialogueLexiconIndex(self.root)
         morphology_index = DialogueMorphologyIndex(self.root)
-        with index.request_context(location["dialogue"], location["text_version"]) as context:
-            morphology = morphology_index.latest(context)
+        request = (index.request_context(location["dialogue"], location["text_version"])
+                   if location is not None else nullcontext(None))
+        with request as context:
+            morphology = morphology_index.latest(context) if context is not None else None
             if morphology is None:
                 morphology_records = []
                 morphology_warnings = [
@@ -439,8 +479,11 @@ class ReaderApi:
                         f"no morphological analysis for {target['text']}."
                     )
             evidence = self.word_evidence_from_records(
-                registry, target, morphology_records, morphology_warnings
+                registry, target, [] if lemma is not None else morphology_records,
+                morphology_warnings if location is not None else []
             )
+            if lemma is not None:
+                evidence["possibilities"] = [{"lemma": lemma, "candidates": []}]
             warnings = [*evidence["warnings"], *[
                 f"{item['id']}: {item['reason']}"
                 for item in [*form_problems, *relation_problems, *dictionary_problems]
@@ -457,6 +500,7 @@ class ReaderApi:
                 dictionary_providers,
                 morphology_index,
                 morphology,
+                scope=location,
             )
         analysis_ids = sorted({
             candidate["provider"]
@@ -489,6 +533,11 @@ class ReaderApi:
                 "cache_config": None,
                 "cache_artifacts": None,
             }
+        if lemma is not None:
+            result["contract"] = "platosi.lexical-evidence.v1"
+            result["scope"] = location
+            result["occurrences_status"] = ("unavailable" if location is None or morphology is None
+                                            else "indexed")
         result["providers"] = [provider_metadata[provider_id] for provider_id in sorted(provider_metadata)]
         result["coverage"] = {
             "analysis_providers": analysis_ids,
@@ -519,8 +568,9 @@ class ReaderApi:
         dictionary_providers,
         morphology_index,
         morphology,
+        scope=None,
     ):
-        location = evidence["target"]["location"]
+        location = scope or evidence["target"]["location"]
 
         definitions = {}
 
@@ -549,6 +599,8 @@ class ReaderApi:
             return definitions[lemma]
 
         def load_forms(lemma, candidates=None):
+            if location is None:
+                return [], False
             records = index.cached_lemma_forms(
                 location["dialogue"],
                 location["text_version"],
@@ -607,7 +659,7 @@ class ReaderApi:
             return observed, cache_hit
 
         def load_relations(lemma):
-            records = index.cached_lemma_relations(
+            records = None if location is None else index.cached_lemma_relations(
                 location["dialogue"],
                 location["text_version"],
                 lemma,
@@ -636,7 +688,7 @@ class ReaderApi:
                             f"{registration.manifest['id']}: lemma relations failed: "
                             f"{type(error).__name__}: {error}"
                         )
-                if complete:
+                if complete and location is not None:
                     records = index.store_lemma_relations(
                         location["dialogue"],
                         location["text_version"],
@@ -897,6 +949,10 @@ class ReaderApi:
                       "location_contract": CONTRACT}
         elif operation == "capabilities":
             result = self.capabilities(registry)
+        elif operation == "word.search":
+            result = self.lexical_search(registry, payload)
+        elif operation == "word.lookup":
+            result = self.lexical_evidence(registry, payload)
         elif operation == "word.analyze":
             result = self.analyze(registry, payload)
         elif operation == "linguistics.evidence":

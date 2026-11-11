@@ -110,6 +110,19 @@ class LSJProvider:
         return {"provider": self.manifest["id"], "entries": count, "aliases": alias_count,
                 "files": len(files), "index": str(self.index)}
 
+    def search_headwords(self, query, limit):
+        """Bounded accent-insensitive prefix search over the existing headword index."""
+        needle = key(query, "accent-insensitive").strip()
+        if not needle or not isinstance(limit, int) or not 1 <= limit <= 100:
+            raise ValueError("Invalid headword search")
+        with read_index(self.index) as db:
+            rows = db.execute(
+                "SELECT headword, accent FROM entries WHERE accent >= ? AND accent < ? "
+                "ORDER BY CASE WHEN accent = ? THEN 0 ELSE 1 END, accent, headword LIMIT ?",
+                (needle, needle + chr(0x10ffff), needle, limit),
+            ).fetchall()
+        return [{"lemma": row["headword"]} for row in rows]
+
     def lookup(self, headword, mode, limit):
         needle = key(headword, mode).strip()
         if not needle:
