@@ -2,7 +2,7 @@
 
 This document describes the writing-first architecture in the stable Chora and
 PlatoSI main branches. Future work is identified explicitly; the separate Goose
-experiment remains a draft Chora PR.
+experiment is merged into Chora main and remains an optional, experimental feature.
 
 ## Responsibilities
 
@@ -60,9 +60,9 @@ lookup; a maintainer analyzer is not required at runtime.
 Stable Chora uses PlatoSI's optional model synthesis for personal-name research.
 Reading, dictionary lookup and shipped morphology do not require a model.
 
-The draft [Agentian Stranger PR](https://github.com/The-Plato-Project/Chora/pull/2)
+The merged [Agentian Stranger PR](https://github.com/The-Plato-Project/Chora/pull/2)
 experiments with a replaceable local Goose backend owned by Chora. This is
-separate from PlatoSI's research providers and is not a stable-main capability.
+separate from PlatoSI's research providers and is available in Chora main.
 It exposes existing feature services through read-only tools rather than
 copying the text database, Vision persistence or linguistic implementations.
 

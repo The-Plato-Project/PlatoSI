@@ -91,7 +91,7 @@ Chora keeps the reader's saved notes separately from generated research. Existin
 This remains experimental. Proper-name morphology does not identify the intended entity, and exact quotation checks do not independently establish historical truth. Same-name records remain separate during retrieval, and the synthesis rules forbid inferring an occupation from participation in a philosophical dialogue.
 ## Optional AI and additional service tools
 
-The model's role is to support reader-directed inquiry. Reading, dictionary lookup and deterministic dialogue-form evidence do not require an AI model. Chora's stable interface uses PlatoSI model-assisted synthesis for personal-name research. A separate, draft [Agentian Stranger integration](https://github.com/The-Plato-Project/Chora/pull/2) experiments with a replaceable Goose backend in Chora; that runtime is not PlatoSI's research provider and is not part of Chora's stable main branch. Neither service owns or writes the reader's interpretations.
+The model's role is to support reader-directed inquiry. Reading, dictionary lookup and deterministic dialogue-form evidence do not require an AI model. Chora's stable interface uses PlatoSI model-assisted synthesis for personal-name research. The merged, optional [Agentian Stranger integration](https://github.com/The-Plato-Project/Chora/pull/2) experiments with a replaceable Goose backend in Chora; that experimental runtime is available in Chora's main branch and remains separate from PlatoSI's research provider. Neither service owns or writes the reader's interpretations.
 
 PlatoSI additionally implements tools for independent testing and integration:
 
