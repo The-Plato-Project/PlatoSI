@@ -1,10 +1,10 @@
 # PlatoSI — Architecture, Implementation, and Development Reference
 
-This guide explains the implementation reviewed on **4 November 2026** and how to configure, maintain, test, extend, and integrate it. [README.md](README.md) describes user capabilities and workflows. [CODEBASE_AUDIT.md](CODEBASE_AUDIT.md) remains the comprehensive source-backed inventory, including confirmed gaps, inferred risks, and verification boundaries. Historical test and installation observations below refer to that audit; the documentation reorganization did not rerun the application suite.
+This guide explains the implementation reviewed on **4 November 2026** and how to configure, maintain, test, extend, and integrate it. [README.md](../README.md) describes user capabilities and workflows. [CODEBASE_AUDIT.md](CODEBASE_AUDIT.md) remains the comprehensive source-backed inventory, including confirmed gaps, inferred risks, and verification boundaries. Historical test and installation observations below refer to that audit; the documentation reorganization did not rerun the application suite.
 
 ## System architecture
 
-PlatoSI was built as Chora's text and linguistic service. Chora owns the reader-facing workspace, Dreams, Signals and reader observations; PlatoSI supplies canonical text, exact locations, linguistic evidence and optional research synthesis. The local process API is the integration path used by Chora. The CLI and threaded HTTP playground support independent inspection and testing; the playground reader is not the primary product interface.
+PlatoSI was built as Chora's text and linguistic service. Chora owns the reader-facing workspace, Markdown Visions, exact anchors, document placements and reader-authored word notes; PlatoSI supplies canonical text, exact locations, linguistic evidence and optional research synthesis. A Vision is authoritative reader prose and can exist before a passage is selected. Anchors are independently identified, versioned source ranges reused by placements in that prose. The local process API is the integration path used by Chora. The CLI and threaded HTTP playground support independent inspection and testing; the playground reader is not the primary product interface.
 
 The implementation is a Python source-tree package. Core text retrieval and serving use the standard library. Ollama is an optional external local HTTP service. Personal-name research additionally uses the Platonis Humanistica Digitalia person dictionary and Athenian Onomasticon search.
 
@@ -38,7 +38,7 @@ The test playground's edition/scope reader and the canonical API used by Chora u
 
 ### Chora integration
 
-The adjacent Chora repository's `PlatoSiGateway` calls `canonical.catalog`, `canonical.work`, `linguistics.dialogue-lexicon` and `linguistics.person-research`. Its word pane presents dialogue-wide occurrences, related lemmas and name research. Chora persists lemma observations by dialogue/text version/lemma through its own observation repository, separately from PlatoSI caches. These integration paths were source-reviewed while preparing the [Chora user guide](../Chora/README.md); Chora was not launched for that documentation change.
+The adjacent Chora repository's `PlatoSiGateway` calls `canonical.catalog`, `canonical.work`, `linguistics.dialogue-lexicon` and `linguistics.person-research`. Its word pane presents dialogue-wide occurrences, related lemmas and name research. Chora persists lemma observations by dialogue/text version/lemma through its own observation repository, separately from PlatoSI caches. These integration paths were source-reviewed while preparing the [Chora user guide](https://github.com/The-Plato-Project/Chora/blob/main/README.md); Chora was not launched for that documentation change.
 
 Chora starts the process service itself. Running `scripts/playground.py` is not a prerequisite for Chora, and the standalone conversation should not be described as Chora screens.
 
@@ -46,38 +46,38 @@ Chora starts the process service itself. Running `scripts/playground.py` is not 
 
 | Location | Responsibility and useful starting points |
 | --- | --- |
-| [src/platosi/](src/platosi/) | Application services and shared infrastructure |
-| [plugins/](plugins/) | Four manifest/provider pairs: Perseus, LSJ/Logeion, Morpheus, Ollama |
-| [playground/](playground/) | Test interfaces: five HTML files, four JavaScript files, shared CSS; no build step |
-| [scripts/](scripts/) | Launchers, source acquisition/validation, canonical building, dependency checking, packaging |
-| [tests/](tests/) | Twelve Python test modules, an independent JavaScript contract check, shared fixture |
-| [docs/](docs/) | Pinned inventories, generated validation reports, contract documentation, research and plans |
+| [src/platosi/](../src/platosi/) | Application services and shared infrastructure |
+| [plugins/](../plugins/) | Four manifest/provider pairs: Perseus, LSJ/Logeion, Morpheus, Ollama |
+| [playground/](../playground/) | Test interfaces: five HTML files, four JavaScript files, shared CSS; no build step |
+| [scripts/](../scripts/) | Launchers, source acquisition/validation, canonical building, dependency checking, packaging |
+| [tests/](../tests/) | Twelve Python test modules, an independent JavaScript contract check, shared fixture |
+| [docs/]() | Pinned inventories, generated validation reports, contract documentation, research and plans |
 | `data/` | Downloaded sources, local overrides/preferences, canonical works, indexes and caches; mostly ignored by Git |
 | `dist/` | Generated portable archives and checksums; ignored by Git |
 
-The package version is `0.1.0.dev1` in [__init__.py](src/platosi/__init__.py). There is no root `pyproject.toml`, `setup.py`, dependency requirements/lockfile, frontend package manifest, CI workflow directory, or application `LICENSE` in the reviewed checkout. Launchers add `<root>/src` to `sys.path`; the source tree is directly runnable.
+The package version is `0.1.0.dev1` in [__init__.py](../src/platosi/__init__.py). There is no root `pyproject.toml`, `setup.py`, dependency requirements/lockfile, frontend package manifest, CI workflow directory, or application `LICENSE` in the reviewed checkout. Launchers add `<root>/src` to `sys.path`; the source tree is directly runnable.
 
 ### Major modules
 
 | Component | Relevant symbols |
 | --- | --- |
-| [registry.py](src/platosi/registry.py) | `Registry`, `RegisteredProvider.load`: discovery, config, activation, lazy loading |
-| [profiles.py](src/platosi/profiles.py) | `Profiles`, `select`: persisted ordered preferences and per-request selection |
-| [contracts.py](src/platosi/contracts.py) | Typing protocols for corpus, reading, dictionary, morphology, scholarly and model providers |
-| [storage.py](src/platosi/storage.py) | `new_index`, `read_index`, `signature`, `stamp`, `current`, `verify_blob` |
-| [unicode_search.py](src/platosi/unicode_search.py) | `normalize`, `key`, `matches`: explicit normalization and offset mapping |
-| [cli.py](src/platosi/cli.py) | `main`, `print_inquiry`: commands and output |
-| [playground.py](src/platosi/playground.py) | `Playground`, `Server`, `Handler`, `serve`: HTTP, discovery and background jobs |
-| [reader_api.py](src/platosi/reader_api.py) | `ReaderApi.execute`: shared operation dispatcher and organized evidence |
-| [reader_protocol.py](src/platosi/reader_protocol.py) | `serve`: versioned process envelopes, workers, limits and cancellation |
-| [word_reader.py](src/platosi/word_reader.py) | `WordReader`, `tokens`, `occurrence`: indexed scope exploration and occurrences |
-| [canonical_build.py](src/platosi/canonical_build.py) | `Collector`, `extract_segments`: deterministic TEI extraction |
-| [canonical_text.py](src/platosi/canonical_text.py) | `CanonicalCorpus`, `make_work`, `text_version`, `python_offset`: canonical validation and locations |
-| [dialogue_lexicon.py](src/platosi/dialogue_lexicon.py) | `DialogueLexiconIndex`: canonical tokens, form/relation caches and joins |
-| [inquiry.py](src/platosi/inquiry.py) | `inquire`, `model_provider`, `evidence_record`: selected evidence and model generation |
-| [word_models.py](src/platosi/word_models.py) | `Examination`, `evidence_package`, `parse_assessment`, `compare`: two-model word assessment |
-| [person_research.py](src/platosi/person_research.py) | `PersonResearch`, `PersonResearchCache`: references, lexical comparisons, summaries and caches |
-| [cancellation.py](src/platosi/cancellation.py) | `Cancellation`, `Cancelled`: cooperative event-based cancellation |
+| [registry.py](../src/platosi/registry.py) | `Registry`, `RegisteredProvider.load`: discovery, config, activation, lazy loading |
+| [profiles.py](../src/platosi/profiles.py) | `Profiles`, `select`: persisted ordered preferences and per-request selection |
+| [contracts.py](../src/platosi/contracts.py) | Typing protocols for corpus, reading, dictionary, morphology, scholarly and model providers |
+| [storage.py](../src/platosi/storage.py) | `new_index`, `read_index`, `signature`, `stamp`, `current`, `verify_blob` |
+| [unicode_search.py](../src/platosi/unicode_search.py) | `normalize`, `key`, `matches`: explicit normalization and offset mapping |
+| [cli.py](../src/platosi/cli.py) | `main`, `print_inquiry`: commands and output |
+| [playground.py](../src/platosi/playground.py) | `Playground`, `Server`, `Handler`, `serve`: HTTP, discovery and background jobs |
+| [reader_api.py](../src/platosi/reader_api.py) | `ReaderApi.execute`: shared operation dispatcher and organized evidence |
+| [reader_protocol.py](../src/platosi/reader_protocol.py) | `serve`: versioned process envelopes, workers, limits and cancellation |
+| [word_reader.py](../src/platosi/word_reader.py) | `WordReader`, `tokens`, `occurrence`: indexed scope exploration and occurrences |
+| [canonical_build.py](../src/platosi/canonical_build.py) | `Collector`, `extract_segments`: deterministic TEI extraction |
+| [canonical_text.py](../src/platosi/canonical_text.py) | `CanonicalCorpus`, `make_work`, `text_version`, `python_offset`: canonical validation and locations |
+| [dialogue_lexicon.py](../src/platosi/dialogue_lexicon.py) | `DialogueLexiconIndex`: canonical tokens, form/relation caches and joins |
+| [inquiry.py](../src/platosi/inquiry.py) | `inquire`, `model_provider`, `evidence_record`: selected evidence and model generation |
+| [word_models.py](../src/platosi/word_models.py) | `Examination`, `evidence_package`, `parse_assessment`, `compare`: two-model word assessment |
+| [person_research.py](../src/platosi/person_research.py) | `PersonResearch`, `PersonResearchCache`: references, lexical comparisons, summaries and caches |
+| [cancellation.py](../src/platosi/cancellation.py) | `Cancellation`, `Cancelled`: cooperative event-based cancellation |
 
 ## Entry points and runtime lifecycle
 
@@ -159,7 +159,7 @@ database. The repository and release package carry its deterministic XZ
 artifact at `data/plato-greek-language-repository-v1.sqlite.xz`; PlatoSI materializes the local
 SQLite file on first use. Normal dialogue lookup reads
 that ready artifact without importing ikelos. Standalone analysis and explicit
-bounded checks call ikelos in-process. See [Morpheus](docs/morpheus.md).
+bounded checks call ikelos in-process. See [Morpheus](morpheus.md).
 
 `linguistics.verify-occurrences` is an explicit bounded operation using a
 provider's `analyze` capability and canonical token locations. Its default
@@ -171,7 +171,7 @@ this explicit operation does not alter it. Use
 
 ### Optional local models
 
-Install/run Ollama and acquire models separately. [The manifest](plugins/ollama/plugin.json) defaults to `http://127.0.0.1:11434`, model `qwen3.5:9b`, `think=false`, temperature 0.2 and `num_predict=500`. PlatoSI does not pull or train models.
+Install/run Ollama and acquire models separately. [The manifest](../plugins/ollama/plugin.json) defaults to `http://127.0.0.1:11434`, model `qwen3.5:9b`, `think=false`, temperature 0.2 and `num_predict=500`. PlatoSI does not pull or train models.
 
 ```powershell
 python .\scripts\platosi.py models
@@ -222,10 +222,10 @@ Provider lifetime differs by entry point:
 
 | Provider | Type / capabilities | Default activation and dependencies |
 | --- | --- | --- |
-| [perseus-plato](plugins/perseus-plato/provider.py) | Corpus: `search`, `passage`, `reading` | Enabled; downloaded source directory and current index |
-| [lsj-logeion](plugins/lsj-logeion/provider.py) | Dictionary: `lookup`, `lemma_relations` | Enabled; LSJ XML and current index |
-| [morpheus](plugins/morpheus/provider.py) | Morphology: `analyze` | Disabled by default; pinned ikelos package for maintainer builds and direct analysis |
-| [ollama](plugins/ollama/provider.py) | Language model: `models`, `generate`, `chat` | Enabled; local Ollama and installed model |
+| [perseus-plato](../plugins/perseus-plato/provider.py) | Corpus: `search`, `passage`, `reading` | Enabled; downloaded source directory and current index |
+| [lsj-logeion](../plugins/lsj-logeion/provider.py) | Dictionary: `lookup`, `lemma_relations` | Enabled; LSJ XML and current index |
+| [morpheus](../plugins/morpheus/provider.py) | Morphology: `analyze` | Disabled by default; pinned ikelos package for maintainer builds and direct analysis |
+| [ollama](../plugins/ollama/provider.py) | Language model: `models`, `generate`, `chat` | Enabled; local Ollama and installed model |
 
 Manifest defaults differ from local overrides. Morpheus is locally enabled and ships disabled. Discovery does not test the remote service.
 
@@ -243,7 +243,7 @@ Raw body extraction includes labels, bibliographic material and editorial additi
 
 ### Canonical dialogue text
 
-The canonical inventory [canonical-corpus-v1-inventory.json](docs/canonical-corpus-v1-inventory.json) independently pins revision `9a424880e535b7b24258feda413fa37580f8971f` and a frozen 35-work baseline. It is implemented through `canonical_build.extract_segments`, `canonical_text.make_work`, and `CanonicalCorpus`.
+The canonical inventory [canonical-corpus-v1-inventory.json](canonical-corpus-v1-inventory.json) independently pins revision `9a424880e535b7b24258feda413fa37580f8971f` and a frozen 35-work baseline. It is implemented through `canonical_build.extract_segments`, `canonical_text.make_work`, and `CanonicalCorpus`.
 
 Extraction walks `p`, `sp`, and `lg` blocks, flushes at section/paragraph boundaries, collapses source whitespace, preserves explicit and verse line breaks, normalizes NFC, and records quotation/citation annotations. Contiguous segments sharing a reference form one section, joined by LF. Books are recorded where available; otherwise chapter `1` is assigned. Reappearing noncontiguous references and inconsistent divisions are rejected.
 
@@ -288,7 +288,7 @@ The canonical location object contains exactly these fields:
 
 The example identifies the audited Republic baseline and selects `κατέβην`; obtain the installed version from catalogue/work responses in client code. Persist it with every location. `python_offset` converts UTF-16 boundaries explicitly and rejects offsets splitting a surrogate pair. Empty ranges are valid; reversed ranges, unknown sections and unavailable versions are errors. Cross-section selections follow stored section order and join with LF; returned context contains boundary sections.
 
-The fingerprint is SHA-256 over length-prefixed UTF-8 contract ID, dialogue ID, section count and ordered reference/text values. It does not cover titles, annotations or division labels; the separate segment baseline check covers additional structure. See [the complete location contract](docs/text-location-contract.md) and [shared conformance fixture](tests/fixtures/text-location-v1.json). Do not silently reinterpret indexed offsets or substitute another revision when resolving a canonical location.
+The fingerprint is SHA-256 over length-prefixed UTF-8 contract ID, dialogue ID, section count and ordered reference/text values. It does not cover titles, annotations or division labels; the separate segment baseline check covers additional structure. See [the complete location contract](text-location-contract.md) and [shared conformance fixture](../tests/fixtures/text-location-v1.json). Do not silently reinterpret indexed offsets or substitute another revision when resolving a canonical location.
 
 ## Dictionary and morphology implementation
 
@@ -360,13 +360,13 @@ The last path does not verify canonical/indexed revision equivalence. Dictionary
 
 `ReaderApi.person_research` validates the canonical location and candidate lemma, then requires morphology evidence with `proper=True`. That gate is not contextual entity recognition. The request operation remains `linguistics.person-research`; the response contract is now `platosi.person-research.v3` with a consolidated `overview`, unique `sources`, and stable identity candidates for reader notes.
 
-[ResearchSources](src/platosi/research_sources.py) loads [config/name-research-sources.json](config/name-research-sources.json) for each request and dispatches two explicit authority adapters. The Humanistica adapter parses and caches the compact person dictionary and its source links from the Plato edition page. Supported Perseus links are resolved through CTS metadata to the open Perseus TEI repository; name-matching sections and their cited or nearby context are extracted and cached without person-specific rules. The Athenian Onomasticon adapter performs a bounded exact-name search and retains each stable person record separately. Wikipedia, Wikidata, Wiktionary, and Grokipedia are not queried. URLs are deduplicated across configured entries, and the source configuration is included in portable releases.
+[ResearchSources](../src/platosi/research_sources.py) loads [config/name-research-sources.json](../config/name-research-sources.json) for each request and dispatches two explicit authority adapters. The Humanistica adapter parses and caches the compact person dictionary and its source links from the Plato edition page. Supported Perseus links are resolved through CTS metadata to the open Perseus TEI repository; name-matching sections and their cited or nearby context are extracted and cached without person-specific rules. The Athenian Onomasticon adapter performs a bounded exact-name search and retains each stable person record separately. Wikipedia, Wikidata, Wiktionary, and Grokipedia are not queried. URLs are deduplicated across configured entries, and the source configuration is included in portable releases.
 
 `PersonResearch.summarize` first asks the configured chat model to select reference IDs using the selected passage and dialogue. The passage is disambiguation context, not biography. The Plato-specific record and its resolved historical citations cannot be dropped during selection; unrelated same-name people and related offices are excluded. The writer must produce a substantive account with enough supported statements to cover detailed historical evidence rather than reducing it to a generic sentence. It may use supplied scholarship but not uncited model memory. Its policy explicitly rejects occupations, relationships, dates, and statuses not stated by a source, including the inference that a dialogue participant was a philosopher. LSJ lookup and root proposals remain outside name research. `synthesis.max_tokens` defaults to 3,200. JSON shape, overview bounds, source-coverage minima, bounded exact quotations, and citation IDs are validated; fenced JSON is normalized before parsing. A separate model call audits the draft against its quotations, with one corrective writing/review attempt. Failure is explicit in the service response, while Chora shows one short failure message without dumping sources or raw exceptions. The same model performs writing and review; these checks do not certify entailment or historical truth.
 
 Successful cache keys include the synthesis policy, evidence, dialogue/context, model identity/digest and response budget. URL responses still have no TTL and web-fetch cancellation remains bounded by fetch timeout. Earlier per-candidate model summaries are not reused. Cached Wikidata identities remain available solely to retain old reader-note targets when sources are disabled, without retrieving or synthesizing their content. Chora owns all note persistence and shows its reader notes separately from the generated account.
 
-See [name-research.md](docs/name-research.md) for source fields, adapter behavior, response statuses and coordinated service/client upgrades. `CODEBASE_AUDIT.md` remains the historical audit snapshot; this section documents the subsequent implementation.
+See [name-research.md](name-research.md) for source fields, adapter behavior, response statuses and coordinated service/client upgrades. `CODEBASE_AUDIT.md` remains the historical audit snapshot; this section documents the subsequent implementation.
 ## API operations and integration contracts
 
 ### Local process protocol
@@ -408,7 +408,7 @@ Active IDs must be nonempty strings of at most 128 characters and unique among p
 
 Messages are limited to 2,000,000 bytes, responses to 8,000,000 bytes, and pending requests to 16; four workers run operations. Cancellation acknowledgement reports whether the target was pending and does not replace its terminal response. EOF requests cancellation and waits for workers. Non-cooperative work can delay exit.
 
-There is no process operation for model listing/selection, profile mutation, provider activation, indexing, note storage or generic scholarly retrieval. Use CLI/browser controls where implemented. The [local dependency guide](docs/local-dependency.md) provides further installation/lifecycle context; the audit describes interface gaps.
+There is no process operation for model listing/selection, profile mutation, provider activation, indexing, note storage or generic scholarly retrieval. Use CLI/browser controls where implemented. The [local dependency guide](local-dependency.md) provides further installation/lifecycle context; the audit describes interface gaps.
 
 ### Test playground: browser/server architecture and HTTP routes
 
@@ -454,7 +454,7 @@ HTTP is not a general mirror of `ReaderApi.execute`: canonical/linguistics opera
 | `data/person-research-cache-v1.sqlite` | URL-keyed `web_cache` and policy/input-keyed `model_cache`, timestamps |
 | Browser localStorage | `platosi-note:<JSON [provider,edition,scope,start]>` and `:lemma`; no canonical version key |
 
-Conversation/laboratory histories, server jobs and LAN sessions are in memory. Notes are browser-origin/device-specific, have no synchronization/export, and are not sent to models. Backend caches are not a user notebook. [.gitignore](.gitignore) excludes downloaded corpora, indexes, caches, settings, distributions, and common model-weight formats.
+Conversation/laboratory histories, server jobs and LAN sessions are in memory. Notes are browser-origin/device-specific, have no synchronization/export, and are not sent to models. Backend caches are not a user notebook. [.gitignore](../.gitignore) excludes downloaded corpora, indexes, caches, settings, distributions, and common model-weight formats.
 
 Provider `build` methods verify selected pinned source sets, sizes, revisions and Git blob hashes. `storage.new_index` writes a temporary SQLite file and replaces the old one after successful completion; failed builds preserve old indexes. `read_index` opens `mode=ro`. The signature covers ID/version/source/config, not current source bytes, so post-build source edits are not automatically detected.
 
@@ -526,12 +526,12 @@ For inherited Python subprocesses, `PYTHONDONTWRITEBYTECODE=1` can suppress byte
 
 | Test area | Files / coverage |
 | --- | --- |
-| Providers/search/profiles | [test_retrieval.py](tests/test_retrieval.py), [test_profiles.py](tests/test_profiles.py): Unicode rules, real-source samples, plugin independence, failed rebuilds, aliases/relations, ordered selection |
-| Canonical contracts | [test_canonical_text.py](tests/test_canonical_text.py), [test_text_location_contract.py](tests/test_text_location_contract.py), [text_location_contract.mjs](tests/text_location_contract.mjs): production and independent hash/range checks, tampering, segmentation/annotations |
-| Dialogue index | [test_dialogue_lexicon.py](tests/test_dialogue_lexicon.py): token counts, UTF-16 positions, form joins, relation persistence/cache identity |
-| APIs/browser server | [test_reader_api.py](tests/test_reader_api.py), [test_playground.py](tests/test_playground.py): NDJSON, payloads, cancellation, routes, markup IDs, host/origin/LAN access |
-| Models/reader | [test_inquiry.py](tests/test_inquiry.py), [test_ollama.py](tests/test_ollama.py), [test_word_reader.py](tests/test_word_reader.py): evidence selection, framing, cancellation, independent assessments/cache, scope occurrences |
-| Research/distribution | [test_person_research.py](tests/test_person_research.py), [test_local_distribution.py](tests/test_local_distribution.py): injected web/model data, research cache/deduplication, reproducible archives and synthetic clean-install workflow |
+| Providers/search/profiles | [test_retrieval.py](../tests/test_retrieval.py), [test_profiles.py](../tests/test_profiles.py): Unicode rules, real-source samples, plugin independence, failed rebuilds, aliases/relations, ordered selection |
+| Canonical contracts | [test_canonical_text.py](../tests/test_canonical_text.py), [test_text_location_contract.py](../tests/test_text_location_contract.py), [text_location_contract.mjs](../tests/text_location_contract.mjs): production and independent hash/range checks, tampering, segmentation/annotations |
+| Dialogue index | [test_dialogue_lexicon.py](../tests/test_dialogue_lexicon.py): token counts, UTF-16 positions, form joins, relation persistence/cache identity |
+| APIs/browser server | [test_reader_api.py](../tests/test_reader_api.py), [test_playground.py](../tests/test_playground.py): NDJSON, payloads, cancellation, routes, markup IDs, host/origin/LAN access |
+| Models/reader | [test_inquiry.py](../tests/test_inquiry.py), [test_ollama.py](../tests/test_ollama.py), [test_word_reader.py](../tests/test_word_reader.py): evidence selection, framing, cancellation, independent assessments/cache, scope occurrences |
+| Research/distribution | [test_person_research.py](../tests/test_person_research.py), [test_local_distribution.py](../tests/test_local_distribution.py): injected web/model data, research cache/deduplication, reproducible archives and synthetic clean-install workflow |
 
 Morpheus unit tests use recorded responses and synthetic identity controls without the public service. Socket tests still exercise local listeners.
 
@@ -539,11 +539,11 @@ Morpheus unit tests use recorded responses and synthetic identity controls witho
 
 | Scripts | Outputs / verification boundary |
 | --- | --- |
-| [download-plato.ps1](scripts/download-plato.ps1), [validate-plato.ps1](scripts/validate-plato.ps1) | Pinned CTS/Greek TEI source; inventory/report checks hashes, XML and metadata linkage; not TEI schema/scholarly completeness |
-| [download-lsj.ps1](scripts/download-lsj.ps1), [validate-lsj.ps1](scripts/validate-lsj.ps1) | Pinned LSJ XML/metadata; UTF-8, structure, heads/IDs/duplicates; not lexicographic accuracy |
-| [download-morphology.ps1](scripts/download-morphology.ps1), [validate-morphology.ps1](scripts/validate-morphology.ps1) | Pinned Euthyphro research inputs; hash/UTF-8/XML/treebank/sample checks and Plato attestation; not corpus-wide analysis accuracy |
-| [plato-common.ps1](scripts/plato-common.ps1) | Shared Git blob SHA-1 helper |
-| [build-canonical-corpus.py](scripts/build-canonical-corpus.py) | Source SHA-256 and frozen segment/text-baseline verification before work output |
+| [download-plato.ps1](../scripts/download-plato.ps1), [validate-plato.ps1](../scripts/validate-plato.ps1) | Pinned CTS/Greek TEI source; inventory/report checks hashes, XML and metadata linkage; not TEI schema/scholarly completeness |
+| [download-lsj.ps1](../scripts/download-lsj.ps1), [validate-lsj.ps1](../scripts/validate-lsj.ps1) | Pinned LSJ XML/metadata; UTF-8, structure, heads/IDs/duplicates; not lexicographic accuracy |
+| [download-morphology.ps1](../scripts/download-morphology.ps1), [validate-morphology.ps1](../scripts/validate-morphology.ps1) | Pinned Euthyphro research inputs; hash/UTF-8/XML/treebank/sample checks and Plato attestation; not corpus-wide analysis accuracy |
+| [plato-common.ps1](../scripts/plato-common.ps1) | Shared Git blob SHA-1 helper |
+| [build-canonical-corpus.py](../scripts/build-canonical-corpus.py) | Source SHA-256 and frozen segment/text-baseline verification before work output |
 
 The validators write generated JSON reports. When working under a documentation-only/no-data-change constraint, do not run them against the checkout without allowing those mutations; inspect or reproduce appropriate checks read-only.
 

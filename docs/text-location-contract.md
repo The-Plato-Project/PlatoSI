@@ -182,12 +182,19 @@ distinguishable error for an unknown dialogue, unavailable or mismatched
 version, unknown reference, invalid offset, and reversed range. Do not return
 an empty success for invalid input or normalize a request to make it fit.
 
-Chora's existing Dream source and Signal selections persist a `documentId`
-and start/end `segmentKey` plus segment-relative UTF-16 offset. The initial
-mapping must use the exact legacy snapshot and account for one LF between
-segments. Existing records do not include this contract's text fingerprint;
-establish their legacy snapshot before mapping. Preserve original records
-and report ambiguous or unresolvable cases. Reader data stays in Chora.
+Chora's current exact anchors persist this canonical contract: dialogue identity,
+`text_version`, and start/end `{ stephanus, offset }` positions. Word and range
+placements in Markdown Visions retain their own placement and Vision identities
+alongside the independent anchor identity. Chora validates the source version
+when resolving an anchor; no migration is needed merely to display a current
+canonical record.
+
+Older unversioned selections may instead contain a `documentId` and start/end
+`segmentKey` plus segment-relative UTF-16 offset. Any recovery must use the exact
+legacy snapshot and account for one LF between segments. Establish that snapshot
+before mapping, preserve original records, and report ambiguous or unresolvable
+cases. Never guess an anchor's version or relocate it by similar text. Reader
+records and recovery decisions remain owned by Chora.
 
 ## Conformance fixtures
 

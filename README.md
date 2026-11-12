@@ -4,18 +4,18 @@
 
 **PlatoSI was built to support Chora's reading and inquiry experience.** It supplies Plato's Greek texts, precise passage locations, dictionary and morphology evidence, dialogue-wide word occurrences, related lexical evidence, and optional model-assisted research.
 
-**Chora is the reader's workspace.** It presents the text, Dreams, Signals, lemma observations, and research results while keeping the reader's developing understanding at the center. PlatoSI supplies the underlying material and services. See the [Chora user guide](../Chora/README.md) for the experience of reading and working with that evidence.
+**Chora is the reader's workspace.** It presents the text, reader-authored Markdown Visions, exact versioned anchors, word notes, and research results while keeping the reader's developing understanding at the center. A Vision can begin without selecting a passage; exact Greek words or ranges can be placed within its prose. PlatoSI supplies the underlying material and services. See the [Chora user guide](https://github.com/The-Plato-Project/Chora/blob/main/README.md) for the experience of reading and working with that evidence.
 
 The browser pages included in this repository are the **PlatoSI test playground**. They exist to exercise and inspect functionality during development. Their reader and conversation page are useful test interfaces; their menus and limitations do not define Chora's product experience.
 
-This overview describes the implemented PlatoSI capabilities reviewed on **5 November 2026**. [DEVELOPER.md](DEVELOPER.md) explains architecture, configuration, commands, testing and integration. [CODEBASE_AUDIT.md](CODEBASE_AUDIT.md) preserves the detailed technical inventory and its verification boundaries.
+This overview describes the implemented PlatoSI capabilities reviewed on **5 November 2026**. [DEVELOPER.md](docs/DEVELOPER.md) explains architecture, configuration, commands, testing and integration. [CODEBASE_AUDIT.md](docs/CODEBASE_AUDIT.md) preserves the detailed technical inventory and its verification boundaries.
 
 ## How Chora and PlatoSI work together
 
 | Responsibility | Application |
 | --- | --- |
-| Reading workspace, selection, navigation, Dreams and Signals | Chora |
-| Reader-authored Reflections and lemma observations | Chora |
+| Reading workspace, selection, navigation and Markdown Visions | Chora |
+| Exact anchors, Vision placements and reader-authored word notes | Chora |
 | Canonical Greek catalogue, dialogue text and exact locations | PlatoSI |
 | Dictionary, morphology and dialogue occurrence evidence | PlatoSI |
 | Explicit lexical relationships and personal-name research | PlatoSI, presented by Chora |
@@ -91,7 +91,7 @@ Chora keeps the reader's saved notes separately from generated research. Existin
 This remains experimental. Proper-name morphology does not identify the intended entity, and exact quotation checks do not independently establish historical truth. Same-name records remain separate during retrieval, and the synthesis rules forbid inferring an occupation from participation in a philosophical dialogue.
 ## Optional AI and additional service tools
 
-The model's role is to support reader-directed inquiry. Reading, dictionary lookup and deterministic dialogue-form evidence do not require an AI model. In Chora's current interface, model-assisted synthesis is used for personal-name research; it does not provide a general Dream chat or write the reader's observations.
+The model's role is to support reader-directed inquiry. Reading, dictionary lookup and deterministic dialogue-form evidence do not require an AI model. Chora's stable interface uses PlatoSI model-assisted synthesis for personal-name research. A separate, draft [Agentian Stranger integration](https://github.com/The-Plato-Project/Chora/pull/2) experiments with a replaceable Goose backend in Chora; that runtime is not PlatoSI's research provider and is not part of Chora's stable main branch. Neither service owns or writes the reader's interpretations.
 
 PlatoSI additionally implements tools for independent testing and integration:
 
@@ -111,7 +111,7 @@ These testing and service capabilities are not automatically Chora features. The
 
 ## Notes and persistence
 
-Chora owns the reader's durable work: Dreams, Signals, Reflections and dialogue/version/lemma observations. They are separate from PlatoSI's downloaded resources and generated research caches. See the Chora guide for saving, recovery and backup behavior.
+Chora owns the reader's durable work: Markdown Visions, real Vision folders, independent exact anchors, document placements and dialogue/version/lemma notes. Visions live under `Documents/Chora/<work name>/Visions/`; anchors live under the same work's `Anchors/` directory. A placement refers to an anchor without owning it. These records are separate from PlatoSI's downloaded resources and generated research caches. See the Chora guide for saving, recovery and backup behavior.
 
 PlatoSI stores downloaded texts and dictionaries locally, maintains generated indexes, and caches provider lemma-form inventories, dialogue occurrences, personal-name references and model results. These caches support reuse; they are not the reader's notebook.
 
@@ -124,7 +124,7 @@ the cache; the model itself runs locally.
 
 ## Getting started with Chora and PlatoSI
 
-For the reading experience, follow the [Chora user guide](../Chora/README.md#getting-started). Chora needs a local PlatoSI installation with the canonical corpus and paths to the service's Python interpreter and reader API script.
+For the reading experience, follow the [Chora user guide](https://github.com/The-Plato-Project/Chora/blob/main/README.md#first-use). Chora needs a local PlatoSI installation with the canonical corpus and paths to the service's Python interpreter and reader API script.
 
 To prepare the canonical texts from this repository:
 
@@ -133,7 +133,7 @@ python .\scripts\build-canonical-corpus.py
 python .\scripts\check-local-dependency.py
 ```
 
-Python is required; the audited environment used Python 3.12.10 and the source uses Python 3.10+ syntax. Dictionary and richer linguistic research require separate resource setup. The [developer setup reference](DEVELOPER.md#setup-and-configuration) covers LSJ, Morpheus, Ollama, configuration and command-line diagnostics.
+Python is required; the audited environment used Python 3.12.10 and the source uses Python 3.10+ syntax. Dictionary and richer linguistic research require separate resource setup. The [developer setup reference](docs/DEVELOPER.md#setup-and-configuration) covers LSJ, Morpheus, Ollama, configuration and command-line diagnostics.
 
 You do not launch the playground as part of Chora startup. For development, it can be started separately to inspect service behavior; its commands and routes are described in the developer guide.
 
@@ -145,4 +145,4 @@ Some optional dependencies have incomplete data provisioning. Readiness checks, 
 
 The audit verified automated retrieval and location checks, including all 35 canonical works, but did not establish the semantic quality of live model answers or every optional provider operation. Its Chora coverage boundary remains a record of that audit's scope; the separate Chora user guide has since been checked against relevant Chora source.
 
-Texts, dictionaries, linguistic datasets and models have their own attribution and licensing terms. See [DEVELOPER.md](DEVELOPER.md) for technical and distribution boundaries and [CODEBASE_AUDIT.md](CODEBASE_AUDIT.md) for detailed evidence and open questions.
+Texts, dictionaries, linguistic datasets and models have their own attribution and licensing terms. See [DEVELOPER.md](docs/DEVELOPER.md) for technical and distribution boundaries and [CODEBASE_AUDIT.md](docs/CODEBASE_AUDIT.md) for detailed evidence and open questions.
